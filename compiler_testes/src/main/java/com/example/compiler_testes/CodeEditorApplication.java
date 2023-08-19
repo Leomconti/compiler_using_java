@@ -30,20 +30,21 @@ public class CodeEditorApplication extends Application {
         messageArea.setPromptText("Output messages here...");
         messageArea.setEditable(false); // disable writing in the message area, only output there
 
-        // Creating the top left menus for interacting
-        Menu saveMenu = new Menu("Save");
-        saveMenu.setOnAction(e -> onSaveClicked());
+        // Creating the top left toolbar for interacting. when needing dropdowns, use MenuBar instead
+        Button saveButton = new Button("Save");
+        saveButton.setOnAction(e -> onSaveClicked());
 
-        Menu clearMenu = new Menu("Clear");
-        clearMenu.setOnAction(e -> onClearClicked());
+        Button clearButton = new Button("Clear");
+        clearButton.setOnAction(e -> onClearClicked());
 
-        Menu buildMenu = new Menu("Build");
-        buildMenu.setOnAction(e -> onBuildClicked());
+        Button buildButton = new Button("Build");
+        buildButton.setOnAction(e -> onBuildClicked());
 
-        Menu runMenu = new Menu("Run");
-        runMenu.setOnAction(e -> onRunClicked());
+        Button runButton = new Button("Run");
+        runButton.setOnAction(e -> onRunClicked());
 
-        MenuBar menuBar = new MenuBar(saveMenu, clearMenu, buildMenu, runMenu);
+        // Use a ToolBar instead of MenuBar to host the buttons
+        ToolBar toolBar = new ToolBar(saveButton, clearButton, buildButton, runButton);
 
 
         // Create a SplitPane and add the codeArea and messageArea to it
@@ -57,7 +58,7 @@ public class CodeEditorApplication extends Application {
         splitPane.setDividerPositions(0.7);
 
         BorderPane borderPane = new BorderPane();
-        borderPane.setTop(menuBar);
+        borderPane.setTop(toolBar);
         borderPane.setCenter(splitPane);
         borderPane.setPadding(new Insets(10));
 
