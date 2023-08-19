@@ -28,9 +28,9 @@ public class CodeEditorApplication extends Application {
         // Create the TextArea for messages/output
         messageArea = new TextArea();
         messageArea.setPromptText("Output messages here...");
-        messageArea.setEditable(false); // disable writing in the message area
+        messageArea.setEditable(false); // disable writing in the message area, only output there
 
-        // Creating the top left menus
+        // Creating the top left menus for interacting
         Menu saveMenu = new Menu("Save");
         saveMenu.setOnAction(e -> onSaveClicked());
 
@@ -54,13 +54,12 @@ public class CodeEditorApplication extends Application {
         // Set the orientation to VERTICAL
         splitPane.setOrientation(Orientation.VERTICAL);
 
-        // Set the initial divider position (0.0 means top/left, 1.0 means bottom/right)
         splitPane.setDividerPositions(0.7);
 
         BorderPane borderPane = new BorderPane();
-        borderPane.setTop(menuBar);       // Set the MenuBar at the top
-        borderPane.setCenter(splitPane);  // Set the SplitPane at the center
-        borderPane.setPadding(new Insets(10));  // 10 units of padding on all sides
+        borderPane.setTop(menuBar);
+        borderPane.setCenter(splitPane);
+        borderPane.setPadding(new Insets(10));
 
         Scene scene = new Scene(borderPane, 600, 500);
 
