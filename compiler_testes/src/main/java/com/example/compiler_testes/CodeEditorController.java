@@ -1,4 +1,5 @@
 package com.example.compiler_testes;
+
 import com.example.compiler_testes.Compiler;
 import com.example.compiler_testes.Token;
 import javafx.stage.FileChooser;
@@ -62,19 +63,36 @@ public class CodeEditorController {
     public void onExitClicked() {
         System.exit(0);
     }
+
     // aqui vamos implementar a logica que vai buildar o codigo, chamando o analizador lexico e mostrnando os resultados na tela
     public String compileCode(String code) {
         try {
             Compiler lexer = new Compiler(new java.io.StringReader(code));
-            StringBuilder tokens = new StringBuilder();
+            StringBuilder tokensOutput = new StringBuilder();
+
+            tokensOutput.append(String.format("%-20s %-10s %-10s %-30s\n", "Lexema", "Linha", "Coluna", "Categoria"));
+
             while (true) {
                 Token token = lexer.getNextToken();
                 if (token.kind == Compiler.EOF) break;
-                tokens.append(token.image).append(" ");
+
+                String lexema = token.image;
+                int line = token.beginLine;
+                int column = token.beginColumn;
+                String category = getTokenCategory(token.kind); // Assuming you have a method to get the category
+
+                tokensOutput.append(String.format("%-20s %-10d %-10d %-30s\n", lexema, line, column, category));
             }
-            return "Build successful!\n\nTokens: " + tokens.toString();
+
+            return "Build successful!\n\n" + tokensOutput.toString();
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
     }
+    private String getTokenCategory(int kind) {
+        // You can implement this method to return the category of the token based on its kind.
+        // For now, I'm just returning a placeholder string.
+        return "Category for " + kind;
+    }
+
 }
