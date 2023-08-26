@@ -1,0 +1,56 @@
+options {
+    STATIC = false;
+}
+
+PARSER_BEGIN(Compiler)
+package com.example.compiler_testes;
+
+
+public class Compiler {
+    public static void main(String[] args) {
+        // Test the lexer here
+    }
+}
+
+PARSER_END(Compiler)
+
+
+SKIP :
+{
+    " " | "\t" | "\n" | "\r"
+}
+
+
+TOKEN :
+{
+    < IDENTIFICADOR: <MAIUSCULA> ( <LETRA> | <UNDERLINE_SEGUIDO_POR_LETRA> | <UM_DIGITO> | <DOIS_DIGITOS_SEGUIDO_POR_LETRA> )* <LETRA_OU_UNDERLINE> >
+|   < PALAVRARESERVADA: "do" | "this" | "body" | "description" | "declaration" | "type" | "is" | "constant" | "and" | "variable" | "designate" | "as" | "read" | "write" | "all" | "repeat" | "true" | "untrue" | "integer" | "real" | "string" | "logic" >
+|   < INTEGER: <DIGITO> | <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> >
+|   < REAL: <DIGITO> "." <DIGITO> >
+|   < LOGIC: "true" | "untrue" >
+|   < OPERATOR: "+" | "-" | "*" | "/" | "**" | "%" | "%%" >
+|   < RELACIONAL: "<" | "<<=" | ">>=" | "==" | "!=" >
+|   < LOGICO: "&" | "|" | "!" >
+|   < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
+|   < COMENTARIOBLOCO: "/*" ( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )* "*/" >  // nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
+|   < ESPECIAL: [" ", "!", "#", "$", "%", "&", "(", ")", ",", ".", ":", ";", "<", "=", ">", "?", "@", "[", "]", "^", "_", "`", "{", "|", "}", "~"] >
+
+
+}
+TOKEN :
+{
+    < #MAIUSCULA: ["A"-"Z"] >
+|   < #MINUSCULA: ["a"-"z"] >
+|   < #DIGITO: ["0"-"9"] >
+|   < #LETRA: <MAIUSCULA> | <MINUSCULA> >
+|   < #UNDERLINE: "_" >
+|   < #UNDERLINE_SEGUIDO_POR_LETRA: <UNDERLINE> <LETRA> >
+|   < #UM_DIGITO: <DIGITO> (<LETRA> | <UNDERLINE>) >
+|   < #DOIS_DIGITOS_SEGUIDO_POR_LETRA: <DIGITO> <DIGITO> (<LETRA> | <UNDERLINE> ) >
+|   < #LETRA_OU_UNDERLINE: <LETRA> | <UNDERLINE> >
+|   < #ASCII: ["\u0000" - "\u007F"] >
+|   < #DENTROSEMLINHA: ["\u0000" - "\u0009", "\u000B" - "\u007F"] >  // tabela ascii sem o \n (quebra de linha, vulgo final)
+|   < #SEM_ESTRELA: ["\u0000"-"\u0029", "\u002B"-"\uFFFF"] >  // ascii sem estrela
+|   < #SEM_BARRA: ["\u0000"-"\u002E", "\u0030"-"\uFFFF"] >  // ascci sem a barra (para nao poder colocar estrela e barra e contar como inside do texto ali )
+
+}

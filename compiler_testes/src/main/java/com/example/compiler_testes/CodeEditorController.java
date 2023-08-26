@@ -1,5 +1,6 @@
 package com.example.compiler_testes;
-
+import com.example.compiler_testes.Compiler;
+import com.example.compiler_testes.Token;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -63,6 +64,17 @@ public class CodeEditorController {
     }
     // aqui vamos implementar a logica que vai buildar o codigo, chamando o analizador lexico e mostrnando os resultados na tela
     public String compileCode(String code) {
-        return "Build successful!\n\n" + code;
+        try {
+            Compiler lexer = new Compiler(new java.io.StringReader(code));
+            StringBuilder tokens = new StringBuilder();
+            while (true) {
+                Token token = lexer.getNextToken();
+                if (token.kind == Compiler.EOF) break;
+                tokens.append(token.image).append(" ");
+            }
+            return "Build successful!\n\nTokens: " + tokens.toString();
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
     }
 }

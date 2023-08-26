@@ -46,6 +46,8 @@ public class CodeEditorApplication extends Application {
         scrollPane.setFitToHeight(true);
 
         codeArea.textProperty().addListener((obs, oldText, newText) -> updateLineNumbers());
+
+        // listener para atualizar o numero da linha e coluna que o cursor esta
         codeArea.caretPositionProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -54,7 +56,7 @@ public class CodeEditorApplication extends Application {
                 highlightLine(currentLine);
                 int col = caretPosition;
                 for (int i = 0; i < currentLine; i++) {
-                    col -= codeArea.getParagraphs().get(i).length() + 1; // +1 for the newline character
+                    col -= codeArea.getParagraphs().get(i).length() + 1;
                 }
                 updateFooter(currentLine, col);
             }
@@ -96,7 +98,7 @@ public class CodeEditorApplication extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
+    // funao que vai catar a linha pela posicao da parada
     private int getCurrentLine(int caretPosition) {
         int line = 0;
         int passedChars = 0;
@@ -105,7 +107,7 @@ public class CodeEditorApplication extends Application {
             if (caretPosition - passedChars <= length) {
                 return line;
             }
-            passedChars += length + 1; // +1 for the newline character
+            passedChars += length + 1;
             line++;
         }
         return Math.min(line, codeArea.getParagraphs().size() - 1);
