@@ -61,7 +61,7 @@ public class CodeEditorController {
     public void onExitClicked() {
         System.exit(0);
     }
-
+    // aqui vamos implementar a logica que vai buildar o codigo, chamando o analizador lexico e mostrnando os resultados na tela
     public String compileCode(String code) {
         return "Build successful!\n\n" + code;
     }

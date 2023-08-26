@@ -1,14 +1,18 @@
 package com.example.compiler_testes;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.geometry.Orientation;
 import javafx.geometry.Insets;
-import javafx.scene.layout.VBox;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,37 +24,117 @@ public class CodeEditorApplication extends Application {
     private TextArea codeArea;
     private TextArea messageArea;
     private CodeEditorController controller;
-    private Stage primaryStage; // titulozao la em cima para a classe toda conseguir atualiza-lo
+    private Stage primaryStage;
+    private VBox lineNumberBox;
+    private ScrollPane scrollPane;
+    private Label footerLabel;
 
     @Override
     public void start(Stage stage) {
-        controller = new CodeEditorController();  // chama o controlador do backend, que tera as funcoes necessarias
-        // criar a area do codigo
+        controller = new CodeEditorController();
+
         codeArea = new TextArea();
         codeArea.setPromptText("Escreva o codigo na linguagem 2023.2 aqui...");
 
-        // criar a area do output
+        lineNumberBox = new VBox();
+        lineNumberBox.setPrefWidth(30);
+        lineNumberBox.setSpacing(2);
+
+        HBox codeBox = new HBox(lineNumberBox, codeArea);
+        scrollPane = new ScrollPane(codeBox);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+
+        codeArea.textProperty().addListener((obs, oldText, newText) -> updateLineNumbers());
+        codeArea.caretPositionProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                int caretPosition = newValue.intValue();
+                int currentLine = getCurrentLine(caretPosition);
+                highlightLine(currentLine);
+                int col = caretPosition;
+                for (int i = 0; i < currentLine; i++) {
+                    col -= codeArea.getParagraphs().get(i).length() + 1; // +1 for the newline character
+                }
+                updateFooter(currentLine, col);
+            }
+        });
+        // aqui o handle pra contar o tab como 4 espacos, pq quem nao coloca isso, tem problemas serios!
+        codeArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.TAB) {
+                    String tabReplacement = "    "; // 4 spaces
+                    codeArea.insertText(codeArea.getCaretPosition(), tabReplacement);
+                    event.consume(); // this stops the event from being propagated further
+                }
+            }
+        });
+
+
+
         messageArea = new TextArea();
         messageArea.setPromptText("Mensagens de saida aqui...");
-        messageArea.setEditable(false); // proibido escrever na area de output
-        // informacoes do arquibo selecionado
+        messageArea.setEditable(false);
+
         this.primaryStage = stage;
         stage.setTitle("Compilador - Sem arquivo");
 
-        // criar o split pane para poder mexer cima e baixo
-        SplitPane splitPane = new SplitPane(codeArea, messageArea);
+        SplitPane splitPane = new SplitPane(scrollPane, messageArea);
         splitPane.setOrientation(Orientation.VERTICAL);
         splitPane.setDividerPositions(0.7);
 
         BorderPane borderPane = new BorderPane();
-        borderPane.setTop(new VBox(initMenuBar(), initToolBar())); // menu e toolbar em cima
+        borderPane.setTop(new VBox(initMenuBar(), initToolBar()));
         borderPane.setCenter(splitPane);
         borderPane.setPadding(new Insets(10));
 
-        Scene scene = new Scene(borderPane, 600, 500);
+        footerLabel = new Label();
+        borderPane.setBottom(footerLabel);
 
+        Scene scene = new Scene(borderPane, 600, 500);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private int getCurrentLine(int caretPosition) {
+        int line = 0;
+        int passedChars = 0;
+        for (CharSequence paragraph : codeArea.getParagraphs()) {
+            int length = paragraph.length();
+            if (caretPosition - passedChars <= length) {
+                return line;
+            }
+            passedChars += length + 1; // +1 for the newline character
+            line++;
+        }
+        return Math.min(line, codeArea.getParagraphs().size() - 1);
+    }
+
+
+    private void updateLineNumbers() {
+        lineNumberBox.getChildren().clear();
+        int lineCount = codeArea.getParagraphs().size();
+        for (int i = 1; i <= lineCount; i++) {
+            Label lineNumber = new Label(String.valueOf(i));
+            lineNumber.setPrefHeight(codeArea.getFont().getSize() + 5);
+            lineNumberBox.getChildren().add(lineNumber);
+        }
+    }
+
+    private void highlightLine(int currentLine) {
+        for (int i = 0; i < lineNumberBox.getChildren().size(); i++) {
+            if (i == currentLine) {
+                lineNumberBox.getChildren().get(i).setStyle("-fx-background-color: lightgray;");
+            } else {
+                lineNumberBox.getChildren().get(i).setStyle("");
+            }
+        }
+    }
+
+
+    private void updateFooter(int line, int col) {
+        footerLabel.setText("Line: " + (line + 1) + " Col: " + col);
     }
 
     // montando os menus ( que clica e abre outros)
