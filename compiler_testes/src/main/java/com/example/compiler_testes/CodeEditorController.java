@@ -11,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CodeEditorController {
     private File currentFile = null;
@@ -103,46 +105,91 @@ public class CodeEditorController {
         }
     }
 
+    public class ErrorInfo {
+        public String error;
+        public int linha;
+        public int coluna;
+        public String tipo;
+
+        public ErrorInfo(String tipo, String error, int linha, int coluna) {
+            this.error = error;
+            this.linha = linha;
+            this.coluna = coluna;
+            this.tipo = tipo;
+
+        }
+
+        @Override
+        public String toString() {
+            return "Erro!\n" + "Linha: " + linha + ", Coluna: " + coluna + "\nTipo: " + tipo + "\nErro: " + error;
+        }
+    }
+
     public String compileCode(String code) {
         List<TokenInfo> tokensList = new ArrayList<>();
+        ErrorInfo errorInfo = null;
+
         try {
             Compiler lexer = new Compiler(new java.io.StringReader(code));
             Token token;
+
             while (true) {
                 try {
                     token = lexer.getNextToken();
                 } catch (TokenMgrError e) {
-                    System.out.println("Erro léxico: " + e.getMessage());
-                    break;
-                } catch (Exception e) {
-                    System.out.println("Erro durante a compilação: " + e.getMessage());
+                    Pattern pattern = Pattern.compile("at line (\\d+), column (\\d+)");
+                    Matcher matcher = pattern.matcher(e.getMessage());
+
+                    int line = -1;
+                    int column = -1;
+
+                    if (matcher.find()) {
+                        line = Integer.parseInt(matcher.group(1));
+                        column = Integer.parseInt(matcher.group(2));
+                    }
+
+                    String tipo = "Léxico";  // TokenMgrError eh um erro lexico
+
+                    // pegar a mensagem apos o primeiro ponto, pois eh la que fala o erro que encontrou
+                    String errorMsg = e.getMessage();
+                    int index = errorMsg.indexOf('.');
+                    if (index >= 0 && index + 1 < errorMsg.length()) {
+                        errorMsg = errorMsg.substring(index + 1).trim();
+                    }
+
+                    errorInfo = new ErrorInfo(tipo, errorMsg, line, column);
                     break;
                 }
+
+
                 if (token.kind == Compiler.EOF) break;
 
                 String lexema = token.image;
                 int line = token.beginLine;
                 int column = token.beginColumn;
-                String category = getTokenCategory(token.kind); // suponho que essa função retorna o nome da categoria baseado no número da categoria
                 int categoryNumber = token.kind;
 
                 tokensList.add(new TokenInfo(lexema, line, column, categoryNumber));
             }
         } catch (Exception e) {
-            System.out.println(tokensList);
             return "Erro durante a compilação: " + e.getMessage();
         }
 
-        if (tokensList.isEmpty()) {
-            return "Nenhum token foi encontrado.";
+        StringBuilder output = new StringBuilder();
+
+        if (!tokensList.isEmpty()) {
+            for (TokenInfo tokenInfo : tokensList) {
+                output.append(tokenInfo.toString()).append("\n");
+            }
+        } else {
+            output.append("Nenhum token foi encontrado.\n");
         }
 
-        StringBuilder tokensOutput = new StringBuilder();
-        for (TokenInfo tokenInfo : tokensList) {
-            tokensOutput.append(tokenInfo.toString()).append("\n\n");
+        if (errorInfo != null) {
+            output.append("\n").append(errorInfo.toString());
         }
 
-        return tokensOutput.toString();
+        return output.toString();
     }
 
 
