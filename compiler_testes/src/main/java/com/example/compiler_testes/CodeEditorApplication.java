@@ -65,7 +65,7 @@ public class CodeEditorApplication extends Application {
         codeArea.caretPositionProperty().addListener((obs, oldPos, newPos) -> {
             int pos = newPos;
             int line = codeArea.getCurrentParagraph();
-            int col = pos - codeArea.getAbsolutePosition(line, 0);
+            int col = pos+1 - codeArea.getAbsolutePosition(line, 0);
             updateFooter(line, col);
         });
 
@@ -269,7 +269,13 @@ public class CodeEditorApplication extends Application {
 
     private void onBuildClicked() {
         String code = codeArea.getText();
-        String result = controller.compileCode(code);
+        String result = "";
+        try {
+            result = controller.compileCode(code);
+        }
+        catch (Exception e) {
+            result = e.getMessage();
+        }
         messageArea.setText(result);
     }
 

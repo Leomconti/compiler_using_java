@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CodeEditorController {
     private File currentFile = null;
@@ -79,76 +81,78 @@ public class CodeEditorController {
         return lexema.substring(0, maxSize) + "\n" + formatLexema(lexema.substring(maxSize), maxSize);
     }
 
-    public String compileCode(String code) {
-        try {
-            Compiler lexer = new Compiler(new java.io.StringReader(code));
-            StringBuilder tokensOutput = new StringBuilder();
+    // classe para deixar mais facil mostrar um token ( utilizando override no tostring)
+    public class TokenInfo {
+        public String lexema;
+        public int line;
+        public int column;
+        public String category;
+        public int categoryNumber;
 
-            int lexemaSize = 40; // Aumentando o espaço para o lexema
-            int lineSize = 10;
-            int columnSize = 10;
-            int categorySize = 30;
-            int categoryNumberSize = 20;
+        public TokenInfo(String lexema, int line, int column, int categoryNumber) {
+            this.lexema = lexema;
+            this.line = line;
+            this.column = column;
+            this.category = getTokenCategory(categoryNumber);
+            this.categoryNumber = categoryNumber;
+        }
 
-            tokensOutput.append(String.format(
-                    "%-" + lexemaSize + "s | " +
-                            "%-" + lineSize + "s | " +
-                            "%-" + columnSize + "s | " +
-                            "%-" + categorySize + "s | " +
-                            "%-" + categoryNumberSize + "s\n",
-                    "Lexema", "Linha", "Coluna", "Categoria", "Número da Categoria"
-            ));
-            tokensOutput.append("-".repeat(lexemaSize + lineSize + columnSize + categorySize + categoryNumberSize + 12) + "\n");
-
-            while (true) {
-                Token token = lexer.getNextToken();
-                if (token.kind == Compiler.EOF) break;
-
-                String lexema = formatLexema(token.image, lexemaSize);
-                String[] lexemaLines = lexema.split("\n");
-
-                int line = token.beginLine;
-                int column = token.beginColumn;
-                String category = getTokenCategory(token.kind);
-                int categoryNumber = token.kind;
-
-                // Adicione as linhas do lexema que foram quebradas
-                for (int i = 0; i < 5; i++) {
-                    if (i < lexemaLines.length) {
-                        tokensOutput.append(String.format(
-                                "%-" + lexemaSize + "s | ", lexemaLines[i]
-                        ));
-                    } else {
-                        tokensOutput.append(String.format(
-                                "%-" + lexemaSize + "s | ", ""
-                        ));
-                    }
-
-                    if (i == lexemaLines.length - 1) { // Adicione as outras informações na última linha do lexema
-                        tokensOutput.append(String.format(
-                                "%-" + lineSize + "d | " +
-                                        "%-" + columnSize + "d | " +
-                                        "%-" + categorySize + "s | " +
-                                        "%-" + categoryNumberSize + "d\n",
-                                line, column, category, categoryNumber
-                        ));
-                    } else {
-                        tokensOutput.append("\n");
-                    }
-                }
-            }
-
-            return "Compilação bem-sucedida!\n\n" + tokensOutput.toString();
-        } catch (Exception e) {
-            return "Erro durante a compilação: " + e.getMessage();
+        @Override
+        public String toString() {
+            return "Linha: " + line + ", Coluna: " + column + "\nCategoria " + categoryNumber + ": " + category + "\nLexema: " + lexema;
         }
     }
+
+    public String compileCode(String code) {
+        List<TokenInfo> tokensList = new ArrayList<>();
+        try {
+            Compiler lexer = new Compiler(new java.io.StringReader(code));
+            Token token;
+            while (true) {
+                try {
+                    token = lexer.getNextToken();
+                } catch (TokenMgrError e) {
+                    System.out.println("Erro léxico: " + e.getMessage());
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Erro durante a compilação: " + e.getMessage());
+                    break;
+                }
+                if (token.kind == Compiler.EOF) break;
+
+                String lexema = token.image;
+                int line = token.beginLine;
+                int column = token.beginColumn;
+                String category = getTokenCategory(token.kind); // suponho que essa função retorna o nome da categoria baseado no número da categoria
+                int categoryNumber = token.kind;
+
+                tokensList.add(new TokenInfo(lexema, line, column, categoryNumber));
+            }
+        } catch (Exception e) {
+            System.out.println(tokensList);
+            return "Erro durante a compilação: " + e.getMessage();
+        }
+
+        if (tokensList.isEmpty()) {
+            return "Nenhum token foi encontrado.";
+        }
+
+        StringBuilder tokensOutput = new StringBuilder();
+        for (TokenInfo tokenInfo : tokensList) {
+            tokensOutput.append(tokenInfo.toString()).append("\n");
+        }
+
+        return tokensOutput.toString();
+    }
+
 
     private String getTokenCategory(int kind) {
         // slk, intellij reformatou pra esse switch, olha que baita @anderson
         return switch (kind) {
             case (0) -> "EOF";
             case (1) -> "IDENTIFIER";
+            case (13) -> "Comentario de Linha";
+            case (14) -> "Comentario de Bloco";
             default -> "Category for " + kind;
         };
     }
