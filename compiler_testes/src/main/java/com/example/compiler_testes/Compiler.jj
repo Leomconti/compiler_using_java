@@ -24,16 +24,16 @@ SKIP :
 TOKEN :
 {
     < IDENTIFICADOR: <MAIUSCULA> ( <LETRA> | <UNDERLINE_SEGUIDO_POR_LETRA> | <UM_DIGITO> | <DOIS_DIGITOS_SEGUIDO_POR_LETRA> )* <LETRA_OU_UNDERLINE> >
-|   < PALAVRARESERVADA: "do" | "this" | "body" | "description" | "declaration" | "type" | "is" | "constant" | "and" | "variable" | "designate" | "as" | "read" | "write" | "all" | "repeat" | "true" | "untrue" | "integer" | "real" | "string" | "logic" >
+|   < PALAVRARESERVADA: "do" | "this" | "body" | "description" | "declaration" | "type" | "is" | "constant" | "and" | "variable" | "designate" | "as" | "read" | "write" | "all" | "repeat" | "integer" | "real" | "string" | "logic" >
 |   < INTEGER: <DIGITO> | <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> >
-|   < REAL: <DIGITO> "." <DIGITO> >
+|   < REAL: <INTEGER> "." <INTEGER> >
 |   < LOGIC: "true" | "untrue" >
 |   < OPERATOR: "+" | "-" | "*" | "/" | "**" | "%" | "%%" >
 |   < RELACIONAL: "<" | "<<=" | ">>=" | "==" | "!=" >
 |   < LOGICO: "&" | "|" | "!" >
 |   < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
 |   < COMENTARIOBLOCO: "/*" ( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )* "*/" >  // nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
-|   < ESPECIAL: [" ", "!", "#", "$", "%", "&", "(", ")", ",", ".", ":", ";", "<", "=", ">", "?", "@", "[", "]", "^", "_", "`", "{", "|", "}", "~"] >
+|   < ESPECIAL: [" ", "!", "#", "$", "%", "(", ")", ",", ".", ":", ";", "<", "=", ">", "?", "@", "[", "]", "^", "_", "`", "{", "|", "}", "~"] >
 
 
 }

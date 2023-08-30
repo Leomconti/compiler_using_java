@@ -139,7 +139,7 @@ public class CodeEditorController {
 
         StringBuilder tokensOutput = new StringBuilder();
         for (TokenInfo tokenInfo : tokensList) {
-            tokensOutput.append(tokenInfo.toString()).append("\n");
+            tokensOutput.append(tokenInfo.toString()).append("\n\n");
         }
 
         return tokensOutput.toString();
@@ -150,9 +150,16 @@ public class CodeEditorController {
         // slk, intellij reformatou pra esse switch, olha que baita @anderson
         return switch (kind) {
             case (0) -> "EOF";
-            case (1) -> "IDENTIFIER";
+            case (5) -> "Identificador";
+            case (6) -> "Palavra Reservada";
+            case (7) -> "Inteiro";
+            case (8) -> "Real";
+            case (10) -> "Operador Aritmético";
+            case (11) -> "Operador Relacional";
+            case (12) -> "Operador Logico";
             case (13) -> "Comentario de Linha";
             case (14) -> "Comentario de Bloco";
+            case (15) -> "Caracter Especial";
             default -> "Category for " + kind;
         };
     }
