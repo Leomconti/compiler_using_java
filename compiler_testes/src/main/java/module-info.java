@@ -1,6 +1,7 @@
 module com.example.compiler_testes {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.fxmisc.richtext;
 
     requires org.kordamp.ikonli.javafx;
 

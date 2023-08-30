@@ -18,49 +18,37 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
+
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.model.Paragraph;
+
 
 public class CodeEditorApplication extends Application {
 
-    private TextArea codeArea;
     private TextArea messageArea;
     private CodeEditorController controller;
     private Stage primaryStage;
-    private VBox lineNumberBox;
     private ScrollPane scrollPane;
     private Label footerLabel;
+    private CodeArea codeArea;
+
 
     @Override
     public void start(Stage stage) {
         controller = new CodeEditorController();
 
-        codeArea = new TextArea();
-        codeArea.setPromptText("Escreva o codigo na linguagem 2023.2 aqui...");
+        codeArea = new CodeArea();
+        codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
 
-        lineNumberBox = new VBox();
-        lineNumberBox.setPrefWidth(30);
-        lineNumberBox.setSpacing(2);
-
-        HBox codeBox = new HBox(lineNumberBox, codeArea);
+        HBox codeBox = new HBox(codeArea);
+        HBox.setHgrow(codeArea, Priority.ALWAYS); // se nao tava ficando pequeno num canto ali, dai isso expande
         scrollPane = new ScrollPane(codeBox);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
 
-        codeArea.textProperty().addListener((obs, oldText, newText) -> updateLineNumbers());
 
-        // listener para atualizar o numero da linha e coluna que o cursor esta
-        codeArea.caretPositionProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                int caretPosition = newValue.intValue();
-                int currentLine = getCurrentLine(caretPosition);
-                highlightLine(currentLine);
-                int col = caretPosition;
-                for (int i = 0; i < currentLine; i++) {
-                    col -= codeArea.getParagraphs().get(i).length() + 1;
-                }
-                updateFooter(currentLine, col);
-            }
-        });
         // aqui o handle pra contar o tab como 4 espacos, pq quem nao coloca isso, tem problemas serios!
         codeArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
@@ -73,7 +61,13 @@ public class CodeEditorApplication extends Application {
             }
         });
 
-
+        // criar uma funcao para escutar o cursor e pegar a posicao
+        codeArea.caretPositionProperty().addListener((obs, oldPos, newPos) -> {
+            int pos = newPos;
+            int line = codeArea.getCurrentParagraph();
+            int col = pos - codeArea.getAbsolutePosition(line, 0);
+            updateFooter(line, col);
+        });
 
         messageArea = new TextArea();
         messageArea.setPromptText("Mensagens de saida aqui...");
@@ -99,40 +93,6 @@ public class CodeEditorApplication extends Application {
         stage.show();
     }
     // funao que vai catar a linha pela posicao da parada
-    private int getCurrentLine(int caretPosition) {
-        int line = 0;
-        int passedChars = 0;
-        for (CharSequence paragraph : codeArea.getParagraphs()) {
-            int length = paragraph.length();
-            if (caretPosition - passedChars <= length) {
-                return line;
-            }
-            passedChars += length + 1;
-            line++;
-        }
-        return Math.min(line, codeArea.getParagraphs().size() - 1);
-    }
-
-
-    private void updateLineNumbers() {
-        lineNumberBox.getChildren().clear();
-        int lineCount = codeArea.getParagraphs().size();
-        for (int i = 1; i <= lineCount; i++) {
-            Label lineNumber = new Label(String.valueOf(i));
-            lineNumber.setPrefHeight(codeArea.getFont().getSize() + 5);
-            lineNumberBox.getChildren().add(lineNumber);
-        }
-    }
-
-    private void highlightLine(int currentLine) {
-        for (int i = 0; i < lineNumberBox.getChildren().size(); i++) {
-            if (i == currentLine) {
-                lineNumberBox.getChildren().get(i).setStyle("-fx-background-color: lightgray;");
-            } else {
-                lineNumberBox.getChildren().get(i).setStyle("");
-            }
-        }
-    }
 
 
     private void updateFooter(int line, int col) {
@@ -244,7 +204,7 @@ public class CodeEditorApplication extends Application {
         if (selectedFile != null) {
             try {
                 String content = new String(Files.readAllBytes(Paths.get(selectedFile.getPath())));
-                codeArea.setText(content);
+                codeArea.replaceText(content);
                 primaryStage.setTitle("Compilador - " + selectedFile.getName()); // Update the title
                 messageArea.setText(controller.onOpenFileClicked(selectedFile, codeArea.getText()));
             } catch (IOException e) {
@@ -268,8 +228,28 @@ public class CodeEditorApplication extends Application {
     }
 
     private void onExitClicked() {
-        controller.onExitClicked();
+        System.out.println("Saindo...");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmação");
+        alert.setHeaderText("O arquivo foi modificado.");
+        alert.setContentText("Deseja salvar as alterações antes de sair?");
+
+        ButtonType buttonYes = new ButtonType("Sim");
+        ButtonType buttonNo = new ButtonType("Não");
+        ButtonType buttonCancel = new ButtonType("Cancelar");
+
+        alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
+
+        java.util.Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == buttonYes) {
+            String saved = controller.onSaveClicked(codeArea.getText());
+            System.exit(0);
+        } else if (result.get() == buttonNo) {
+            System.exit(0);
+        }
     }
+
 
     private void onCopyClicked() {
         codeArea.copy();
