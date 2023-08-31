@@ -179,7 +179,7 @@ public class CodeEditorController {
 
         if (!tokensList.isEmpty()) {
             for (TokenInfo tokenInfo : tokensList) {
-                output.append(tokenInfo.toString()).append("\n");
+                output.append(tokenInfo.toString()).append("\n\n");
             }
         } else {
             output.append("Nenhum token foi encontrado.\n");

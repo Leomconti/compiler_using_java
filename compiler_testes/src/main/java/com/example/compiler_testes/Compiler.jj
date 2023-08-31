@@ -33,7 +33,7 @@ TOKEN :
 |   < LOGICO: "&" | "|" | "!" >
 |   < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
 |   < COMENTARIOBLOCO: "/*" ( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )* "*/" >  // nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
-|   < ESPECIAL: [" ", "!", "#", "$", "%", "(", ")", ",", ".", ":", ";", "<", "=", ">", "?", "@", "[", "]", "^", "_", "`", "{", "|", "}", "~"] >
+|   < ESPECIAL: [" ", "!", "#", "$", "%", "(", ")", ",", ".", ":", ";", "?", "@", "[", "]", "^", "_", "`", "{", "|", "}", "~"] >
 
 
 }
