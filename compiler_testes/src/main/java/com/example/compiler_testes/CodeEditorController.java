@@ -120,6 +120,7 @@ public class CodeEditorController {
         }
 
         private String classifyError(String error) {
+
             String split_end = error.split("after prefix")[1].trim();
             String msg = error;
             if (error.contains("after prefix")) {
