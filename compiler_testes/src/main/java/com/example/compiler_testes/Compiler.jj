@@ -19,12 +19,11 @@ SKIP :
 {
     " " | "\t" | "\n" | "\r"
 }
-
-// nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
+// avaliate deveria ser evaluate! ;D
 TOKEN :
 {
     < IDENTIFICADOR: <MAIUSCULA> ((<DIGITO> | (<DIGITO> <DIGITO>))? (("_") | (<LETRA>)+("_")?)+)* >
-|   < PALAVRARESERVADA: "do" | "this" | "body" | "description" | "declaration" | "type" | "is" | "constant" | "and" | "variable" | "designate" | "as" | "read" | "write" | "all" | "repeat" | "integer" | "real" | "string" | "logic" >
+|   < PALAVRARESERVADA: "avaliate" | "do" | "this" | "body" | "description" | "declaration" | "type" | "is" | "constant" | "and" | "variable" | "designate" | "as" | "read" | "write" | "all" | "repeat" | "integer" | "real" | "string" | "logic" >
 |   < INTEGER: <DIGITO> | <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> >
 |   < REAL: <INTEGER> "." <INTEGER> >
 |   < LOGIC: "true" | "untrue" >
@@ -32,8 +31,9 @@ TOKEN :
 |   < RELACIONAL: "<<" | "<<=" | ">>=" | ">>" | "==" | "!=" >
 |   < LOGICO: "&" | "|" | "!" >
 |   < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
-|   < COMENTARIOBLOCO: "/*" ( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )* "*/" >
-|   < ESPECIAL: ["#", "$", "(", ")", ",", ".", ":", ";", "<", ">", "?", "@", "[", "]", "^", "`", "{", "}", "~"] >
+|   < COMENTARIOBLOCO: "/*" ( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )* "*/" > // nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
+|   < ESPECIAL: "#" | "$" | "(" | ")" | "," | "." | ":" | ";" | "<" | ">" | "?" | "@" | "[" | "]" | "^" | "`" | "{" | "}" | "~" >
+|   < STRING: "\"" ( <ASCII> )* "\"" >
 
 }
 TOKEN :
@@ -43,8 +43,9 @@ TOKEN :
 |   < #DIGITO: ["0"-"9"] >
 |   < #LETRA: <MAIUSCULA> | <MINUSCULA> >
 |   < #ASCII: ["\u0000" - "\u007F"] >
+// parando para pensar daria para colocar o ascii e tirar so o negocio do conjunto
 |   < #DENTROSEMLINHA: ["\u0000" - "\u0009", "\u000B" - "\u007F"] >  // tabela ascii sem o \n (quebra de linha, vulgo final)
-|   < #SEM_ESTRELA: ["\u0000"-"\u0029", "\u002B"-"\uFFFF"] >  // ascii sem estrela
-|   < #SEM_BARRA: ["\u0000"-"\u002E", "\u0030"-"\uFFFF"] >  // ascci sem a barra (para nao poder colocar estrela e barra e contar como inside do texto ali )
+|   < #SEM_ESTRELA: ["\u0000"-"\u0029"] | ["\u002B"-"\uFFFF"] >  // ascii sem estrela
+|   < #SEM_BARRA: ["\u0000"-"\u002E"] | ["\u0030"-"\uFFFF"] >  // ascci sem a barra (para nao poder colocar estrela e barra e contar como inside do texto ali )
 
 }
