@@ -112,11 +112,22 @@ public class CodeEditorController {
         public String tipo;
 
         public ErrorInfo(String tipo, String error, int linha, int coluna) {
-            this.error = error;
+            this.error = this.classifyError(error);
             this.linha = linha;
             this.coluna = coluna;
             this.tipo = tipo;
 
+        }
+
+        private String classifyError(String error) {
+            String split_end = error.split("after prefix")[1].trim();
+            String msg = error;
+            if (error.contains("after prefix")) {
+                msg = "Palavra reservada com erro, prefixo: " + split_end;
+            } else if (split_end.startsWith("\"tr") || split_end.startsWith("\"u")) {
+                msg = "Variavel logica com erro: " + split_end;
+            }
+            return msg; // default case if no classifications match
         }
 
         @Override
