@@ -29,11 +29,11 @@ TOKEN :
 |   < REAL: <INTEGER> "." <INTEGER> >
 |   < LOGIC: "true" | "untrue" >
 |   < OPERATOR: "+" | "-" | "*" | "/" | "**" | "%" | "%%" >
-|   < RELACIONAL: "<" | "<<=" | ">>=" | "<" | "==" | "!=" >
+|   < RELACIONAL: "<<" | "<<=" | ">>=" | ">>" | "==" | "!=" >
 |   < LOGICO: "&" | "|" | "!" >
 |   < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
 |   < COMENTARIOBLOCO: "/*" ( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )* "*/" >
-|   < ESPECIAL: ["#", "$", "(", ")", ",", ".", ":", ";", "?", "@", "[", "]", "^", "`", "{", "}", "~"] >
+|   < ESPECIAL: ["#", "$", "(", ")", ",", ".", ":", ";", "<", ">", "?", "@", "[", "]", "^", "`", "{", "}", "~"] >
 
 }
 TOKEN :
