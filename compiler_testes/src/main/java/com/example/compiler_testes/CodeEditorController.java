@@ -207,6 +207,7 @@ public class CodeEditorController {
             case (13) -> "Comentario de Linha";
             case (14) -> "Comentario de Bloco";
             case (15) -> "Caracter Especial";
+            case (16) -> "String";
             default -> "Category for " + kind;
         };
     }

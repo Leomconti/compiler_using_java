@@ -23,17 +23,17 @@ SKIP :
 TOKEN :
 {
     < IDENTIFICADOR: <MAIUSCULA> ((<DIGITO> | (<DIGITO> <DIGITO>))? (("_") | (<LETRA>)+("_")?)+)* >
-|   < PALAVRARESERVADA: "avaliate" | "do" | "this" | "body" | "description" | "declaration" | "type" | "is" | "constant" | "and" | "variable" | "designate" | "as" | "read" | "write" | "all" | "repeat" | "integer" | "real" | "string" | "logic" >
+|   < PALAVRARESERVADA: "result" | "avaliate" | "do" | "this" | "body" | "description" | "declaration" | "type" | "is" | "constant" | "and" | "variable" | "designate" | "as" | "read" | "write" | "all" | "repeat" | "integer" | "real" | "string" | "logic" >
 |   < INTEGER: <DIGITO> | <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> >
-|   < REAL: <INTEGER> "." <INTEGER> >
+|   < REAL:  (<INTEGER> | <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> <DIGITO>) "." <INTEGER> >
 |   < LOGIC: "true" | "untrue" >
 |   < OPERATOR: "+" | "-" | "*" | "/" | "**" | "%" | "%%" >
 |   < RELACIONAL: "<<" | "<<=" | ">>=" | ">>" | "==" | "!=" >
 |   < LOGICO: "&" | "|" | "!" >
 |   < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
-|   < COMENTARIOBLOCO: "/*" ( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )* "*/" > // nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
-|   < ESPECIAL: "#" | "$" | "(" | ")" | "," | "." | ":" | ";" | "<" | ">" | "?" | "@" | "[" | "]" | "^" | "`" | "{" | "}" | "~" >
-|   < STRING: "\"" ( <ASCII> )* "\"" >
+|   < COMENTARIOBLOCO: "/*" (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) "*/" > // nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
+|   < ESPECIAL: "#" | "$" | "(" | ")" | "," | "." | ":" | ";" | "<" | ">" | "?" | "@" | "[" | "]" | "^" | "`" | "{" | "}" | "~" | "=">
+|   < STRING: "\"" ( <ASCII_ASPAS> )* "\"" >  // nao sei se foi pedido mas constante literal caberia a uma string
 
 }
 TOKEN :
@@ -43,6 +43,7 @@ TOKEN :
 |   < #DIGITO: ["0"-"9"] >
 |   < #LETRA: <MAIUSCULA> | <MINUSCULA> >
 |   < #ASCII: ["\u0000" - "\u007F"] >
+|   < #ASCII_ASPAS: ["\u0000" - "\u0021"] | ["\u0023" - "\u007F"] >
 // parando para pensar daria para colocar o ascii e tirar so o negocio do conjunto
 |   < #DENTROSEMLINHA: ["\u0000" - "\u0009", "\u000B" - "\u007F"] >  // tabela ascii sem o \n (quebra de linha, vulgo final)
 |   < #SEM_ESTRELA: ["\u0000"-"\u0029"] | ["\u002B"-"\uFFFF"] >  // ascii sem estrela

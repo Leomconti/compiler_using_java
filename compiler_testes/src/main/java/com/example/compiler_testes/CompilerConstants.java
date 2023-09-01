@@ -33,21 +33,25 @@ public interface CompilerConstants {
   /** RegularExpression Id. */
   int ESPECIAL = 15;
   /** RegularExpression Id. */
-  int MAIUSCULA = 16;
+  int STRING = 16;
   /** RegularExpression Id. */
-  int MINUSCULA = 17;
+  int MAIUSCULA = 17;
   /** RegularExpression Id. */
-  int DIGITO = 18;
+  int MINUSCULA = 18;
   /** RegularExpression Id. */
-  int LETRA = 19;
+  int DIGITO = 19;
   /** RegularExpression Id. */
-  int ASCII = 20;
+  int LETRA = 20;
   /** RegularExpression Id. */
-  int DENTROSEMLINHA = 21;
+  int ASCII = 21;
   /** RegularExpression Id. */
-  int SEM_ESTRELA = 22;
+  int ASCII_ASPAS = 22;
   /** RegularExpression Id. */
-  int SEM_BARRA = 23;
+  int DENTROSEMLINHA = 23;
+  /** RegularExpression Id. */
+  int SEM_ESTRELA = 24;
+  /** RegularExpression Id. */
+  int SEM_BARRA = 25;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -70,11 +74,13 @@ public interface CompilerConstants {
     "<COMENTARIOLINHA>",
     "<COMENTARIOBLOCO>",
     "<ESPECIAL>",
+    "<STRING>",
     "<MAIUSCULA>",
     "<MINUSCULA>",
     "<DIGITO>",
     "<LETRA>",
     "<ASCII>",
+    "<ASCII_ASPAS>",
     "<DENTROSEMLINHA>",
     "<SEM_ESTRELA>",
     "<SEM_BARRA>",
