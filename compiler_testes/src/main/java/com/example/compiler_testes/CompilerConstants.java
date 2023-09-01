@@ -47,11 +47,13 @@ public interface CompilerConstants {
   /** RegularExpression Id. */
   int ASCII_ASPAS = 22;
   /** RegularExpression Id. */
-  int DENTROSEMLINHA = 23;
+  int ASCII_APOSTROFO = 23;
   /** RegularExpression Id. */
-  int SEM_ESTRELA = 24;
+  int DENTROSEMLINHA = 24;
   /** RegularExpression Id. */
-  int SEM_BARRA = 25;
+  int SEM_ESTRELA = 25;
+  /** RegularExpression Id. */
+  int SEM_BARRA = 26;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -81,6 +83,7 @@ public interface CompilerConstants {
     "<LETRA>",
     "<ASCII>",
     "<ASCII_ASPAS>",
+    "<ASCII_APOSTROFO>",
     "<DENTROSEMLINHA>",
     "<SEM_ESTRELA>",
     "<SEM_BARRA>",

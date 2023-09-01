@@ -110,13 +110,23 @@ public class CodeEditorController {
         public int linha;
         public int coluna;
         public String tipo;
+        public int code;
 
         public ErrorInfo(String tipo, String error, int linha, int coluna) {
             this.error = this.classifyError(error);
             this.linha = linha;
             this.coluna = coluna;
             this.tipo = tipo;
+            this.code = getCode(tipo);
 
+        }
+
+        private int getCode(String tipo) {
+            if (tipo.contains("xico")) { // lexico
+                return 1;
+            } else {
+                return 0;
+            }
         }
 
         private String classifyError(String error) {
@@ -133,7 +143,7 @@ public class CodeEditorController {
 
         @Override
         public String toString() {
-            return "Erro!\n" + "Linha: " + linha + ", Coluna: " + coluna + "\nTipo: " + tipo + "\nErro: " + error;
+            return "Erro!\n" + "Linha: " + linha + ", Coluna: " + coluna + "\nCodigo: " + code + "\nTipo: " + tipo + "\nErro: " + error;
         }
     }
 
