@@ -20,16 +20,8 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/fxmisc/undo/undofx/2.1.0/undofx-2.1.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-fxml/20-ea+4/javafx-fxml-20-ea+4-mac-aarch64.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/kordamp/ikonli/ikonli-javafx/12.3.1/ikonli-javafx-12.3.1.jar" path-in-jar="/" />
-      <element id="library" level="project" name="Maven: org.controlsfx:controlsfx:11.1.2" />
-      <element id="library" level="project" name="Maven: org.fxmisc.richtext:richtextfx:0.10.6" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:20-ea+4" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:mac-aarch64:20-ea+4" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:20-ea+4" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:mac-aarch64:20-ea+4" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-fxml:mac-aarch64:20-ea+4" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-fxml:20-ea+4" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:20-ea+4" />
-      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:mac-aarch64:20-ea+4" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-controls/20-ea+4/javafx-controls-20-ea+4.jar" path-in-jar="/" />
+      <element id="dir-copy" path="/Library/Java/JavaVirtualMachines/javafx-sdk-20.0.2" />
     </root>
   </artifact>
 </component>
