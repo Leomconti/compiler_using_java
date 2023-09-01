@@ -20,21 +20,20 @@ SKIP :
     " " | "\t" | "\n" | "\r"
 }
 
-
+// nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
 TOKEN :
 {
-    < IDENTIFICADOR: <MAIUSCULA> ( <LETRA> | <UNDERLINE_SEGUIDO_POR_LETRA> | <UM_DIGITO> | <DOIS_DIGITOS_SEGUIDO_POR_LETRA> )* <LETRA_OU_UNDERLINE> >
+    < IDENTIFICADOR: <MAIUSCULA> ((<DIGITO> | (<DIGITO> <DIGITO>))? (("_") | (<LETRA>)+("_")?)+)* >
 |   < PALAVRARESERVADA: "do" | "this" | "body" | "description" | "declaration" | "type" | "is" | "constant" | "and" | "variable" | "designate" | "as" | "read" | "write" | "all" | "repeat" | "integer" | "real" | "string" | "logic" >
 |   < INTEGER: <DIGITO> | <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> >
 |   < REAL: <INTEGER> "." <INTEGER> >
 |   < LOGIC: "true" | "untrue" >
 |   < OPERATOR: "+" | "-" | "*" | "/" | "**" | "%" | "%%" >
-|   < RELACIONAL: "<" | "<<=" | ">>=" | "==" | "!=" >
+|   < RELACIONAL: "<" | "<<=" | ">>=" | "<" | "==" | "!=" >
 |   < LOGICO: "&" | "|" | "!" >
 |   < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
-|   < COMENTARIOBLOCO: "/*" ( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )* "*/" >  // nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
-|   < ESPECIAL: [" ", "!", "#", "$", "%", "(", ")", ",", ".", ":", ";", "?", "@", "[", "]", "^", "_", "`", "{", "|", "}", "~"] >
-
+|   < COMENTARIOBLOCO: "/*" ( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )* "*/" >
+|   < ESPECIAL: ["#", "$", "(", ")", ",", ".", ":", ";", "?", "@", "[", "]", "^", "`", "{", "}", "~"] >
 
 }
 TOKEN :
@@ -43,11 +42,6 @@ TOKEN :
 |   < #MINUSCULA: ["a"-"z"] >
 |   < #DIGITO: ["0"-"9"] >
 |   < #LETRA: <MAIUSCULA> | <MINUSCULA> >
-|   < #UNDERLINE: "_" >
-|   < #UNDERLINE_SEGUIDO_POR_LETRA: <UNDERLINE> <LETRA> >
-|   < #UM_DIGITO: <DIGITO> (<LETRA> | <UNDERLINE>) >
-|   < #DOIS_DIGITOS_SEGUIDO_POR_LETRA: <DIGITO> <DIGITO> (<LETRA> | <UNDERLINE> ) >
-|   < #LETRA_OU_UNDERLINE: <LETRA> | <UNDERLINE> >
 |   < #ASCII: ["\u0000" - "\u007F"] >
 |   < #DENTROSEMLINHA: ["\u0000" - "\u0009", "\u000B" - "\u007F"] >  // tabela ascii sem o \n (quebra de linha, vulgo final)
 |   < #SEM_ESTRELA: ["\u0000"-"\u0029", "\u002B"-"\uFFFF"] >  // ascii sem estrela
