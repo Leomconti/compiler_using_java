@@ -15,27 +15,113 @@ public class Compiler {
 PARSER_END(Compiler)
 
 
+
 SKIP :
 {
-    " " | "\t" | "\n" | "\r"
+    " " | "\t" | "\n" | "\r" | <COMENTARIOBLOCO> | <COMENTARIOLINHA>
 }
-// avaliate deveria ser evaluate! ;D
+
+// Palavras reservadas
 TOKEN :
 {
     < IDENTIFICADOR: <MAIUSCULA> ((<DIGITO> | (<DIGITO> <DIGITO>))? (("_") | (<LETRA>)+("_")?)+)* >
-|   < PALAVRARESERVADA: "result" | "avaliate" | "do" | "this" | "body" | "description" | "declaration" | "type" | "is" | "constant" | "and" | "variable" | "designate" | "as" | "read" | "write" | "all" | "repeat" | "integer" | "real" | "string" | "logic" >
-|   < INTEGER: <DIGITO> | <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> >
-|   < REAL:  (<INTEGER> | <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> <DIGITO>) "." <INTEGER> >
-|   < LOGIC: "true" | "untrue" >
-|   < OPERATOR: "+" | "-" | "*" | "/" | "**" | "%" | "%%" >
-|   < RELACIONAL: "<<" | "<<=" | ">>=" | ">>" | "==" | "!=" >
-|   < LOGICO: "&" | "|" | "!" >
-|   < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
-|   < COMENTARIOBLOCO: "/*" (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) "*/" > // nao pode ter estrela seguido de barra, dai como nao tem estrela no primeiro, coloca mais estrelas ali
-|   < ESPECIAL: "#" | "$" | "(" | ")" | "," | "." | ":" | ";" | "<" | ">" | "?" | "@" | "[" | "]" | "^" | "`" | "{" | "}" | "~" | "=">
-|   < STRING: ("\"" ( <ASCII_ASPAS> )* "\"") | "\'" ( <ASCII_APOSTROFO> )* "\'" >  // nao sei se foi pedido mas constante literal caberia a uma string
-
+|   < RESULT: "result" >
+|   < AVALIATE: "avaliate" >
+|   < DO: "do" >
+|   < THIS: "this" >
+|   < BODY: "body" >
+|   < DESCRIPTION: "description" >
+|   < DECLARATION: "declaration" >
+|   < TYPE: "type" >
+|   < IS: "is" >
+|   < CONSTANT: "constant" >
+|   < AND: "and" >
+|   < VARIABLE: "variable" >
+|   < DESIGNATE: "designate" >
+|   < AS: "as" >
+|   < READ: "read" >
+|   < WRITE: "write" >
+|   < ALL: "all" >
+|   < REPEAT: "repeat" >
+|   < INTEGER_DEF: "integer" >
+|   < REAL_DEF: "real" >
+|   < STRING_DEF: "string" >
+|   < LOGIC_DEF: "logic" >
 }
+
+// Valores
+TOKEN :
+{
+    < INTEGER: <DIGITO> | <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> >
+|   < REAL:  (<INTEGER> | <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> <DIGITO>) "." <INTEGER> >
+|   < TRUE: "true">
+|   < FALSE: "false">
+|   < STRING: ("\"" ( <ASCII_ASPAS> )* "\"") | "\'" ( <ASCII_APOSTROFO> )* "\'" >
+}
+
+// Operadores aritmeticos
+TOKEN :
+{
+    < PLUS: "+" >
+|   < MINUS: "-" >
+|   < MULTIPLY: "*" >
+|   < DIVIDE: "/" >
+|   < POWER: "**" >
+|   < MODULO: "%" >
+|   < DOUBLE_MODULO: "%%" >
+}
+
+// Relational Operators
+TOKEN :
+{
+    < LESS_THAN: "<<" >
+|   < LESS_THAN_EQUAL: "<<=" >
+|   < GREATER_THAN_EQUAL: ">>=" >
+|   < GREATER_THAN: ">>" >
+|   < EQUAL: "==" >
+|   < NOT_EQUAL: "!=" >
+}
+
+// Operadores logicos
+TOKEN :
+{
+    < AND_LOGIC: "&" >
+|   < OR_LOGIC: "|" >
+|   < NOT_LOGIC: "!" >
+}
+
+// Caracteres Especiais
+TOKEN :
+{
+    < HASH: "#" >
+|   < DOLLAR: "$" >
+|   < OPEN_PAREN: "(" >
+|   < CLOSE_PAREN: ")" >
+|   < COMMA: "," >
+|   < DOT: "." >
+|   < COLON: ":" >
+|   < SEMICOLON: ";" >
+|   < S_LESS_THAN: "<" >
+|   < S_GREATER_THAN: ">" >
+|   < QUESTION_MARK: "?" >
+|   < AT_SIGN: "@" >
+|   < OPEN_BRACKET: "[" >
+|   < CLOSE_BRACKET: "]" >
+|   < BACKTICK: "`" >
+|   < OPEN_BRACE: "{" >
+|   < CLOSE_BRACE: "}" >
+|   < TILDE: "~" >
+|   < EQUALS: "=" >
+}
+
+// Comentarios
+TOKEN :
+{
+    < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
+|   < COMENTARIOBLOCO: "/*" (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) "*/" >
+}
+
+// Auxiliares
 TOKEN :
 {
     < #MAIUSCULA: ["A"-"Z"] >
@@ -45,9 +131,60 @@ TOKEN :
 |   < #ASCII: ["\u0000" - "\u007F"] >
 |   < #ASCII_ASPAS: ["\u0000" - "\u0021"] | ["\u0023" - "\u007F"] >
 |   < #ASCII_APOSTROFO: ["\u0000" - "\u0026"] | ["\u0028" - "\u007F"] >
-// parando para pensar daria para colocar o ascii e tirar so o negocio do conjunto
 |   < #DENTROSEMLINHA: ["\u0000" - "\u0009", "\u000B" - "\u007F"] >  // tabela ascii sem o \n (quebra de linha, vulgo final)
 |   < #SEM_ESTRELA: ["\u0000"-"\u0029"] | ["\u002B"-"\uFFFF"] >  // ascii sem estrela
 |   < #SEM_BARRA: ["\u0000"-"\u002E"] | ["\u0030"-"\uFFFF"] >  // ascci sem a barra (para nao poder colocar estrela e barra e contar como inside do texto ali )
-
 }
+
+// Erros
+
+// Palavras reservadas
+TOKEN :
+{
+    < ERROR_IDENTIFICADOR: <MAIUSCULA> ((<DIGITO>)+ (("_") | (<LETRA>)+("_")?)+)* >
+    {mensagem += "Erro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_IDENTIFICADOR_START_DIGIT: <DIGITO> (<LETRA> | <DIGITO> | "_")+ >
+    {mensagem += "Erro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> ((<LETRA> | <DIGITO>)* "__" (<LETRA> | <DIGITO> | "_")*)+ >
+    {mensagem += "Erro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_IDENTIFICADOR_END_UNDERSCORE: <MAIUSCULA> ((<LETRA> | <DIGITO>)+ "_")+ >
+    {mensagem += "Erro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
+    {mensagem += "Erro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+}
+
+// Valores
+TOKEN :
+{
+    < ERROR_INTEGER: <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ >
+    {mensagem += "Erro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_REAL:  <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ "." <INTEGER> >
+    {mensagem += "Erro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_STRING_START: ("\"" ( <ASCII_ASPAS> )* | ( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
+    {mensagem += "Erro! String sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_STRING_END: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
+    {mensagem += "Erro! String sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+}
+
+// Comentarios
+TOKEN :
+{
+    < ERROR_COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* >
+    {mensagem += "Erro! Comentário de linha sem quebra de linha no final. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_COMENTARIOBLOCO_START: (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) "*/" >
+    {mensagem += "Erro! Comentário de bloco não iniciado. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_COMENTARIOBLOCO_END: "/*" (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) >
+    {mensagem += "Erro! Comentário de bloco não fechado. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+}
+
+
+
