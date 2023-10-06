@@ -11,18 +11,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.geometry.Orientation;
 import javafx.geometry.Insets;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collection;
 
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.model.Paragraph;
 
 
 public class CodeEditorApplication extends Application {
