@@ -49,7 +49,7 @@ TOKEN :
 |   < REPEAT: "repeat" >
 |   < INTEGER_DEF: "integer" >
 |   < REAL_DEF: "real" >
-|   < STRING_DEF: "string" >
+|   < LITERAL_DEF: "literal" >
 |   < LOGIC_DEF: "logic" >
 }
 
@@ -59,8 +59,8 @@ TOKEN :
     < INTEGER: <DIGITO> | <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> >
 |   < REAL:  (<INTEGER> | <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> | <DIGITO> <DIGITO> <DIGITO> <DIGITO>) "." <INTEGER> >
 |   < TRUE: "true">
-|   < FALSE: "false">
-|   < STRING: ("\"" ( <ASCII_ASPAS> )* "\"") | "\'" ( <ASCII_APOSTROFO> )* "\'" >
+|   < UNTRUE: "untrue">
+|   < LITERAL: ("\"" ( <ASCII_ASPAS> )* "\"") | "\'" ( <ASCII_APOSTROFO> )* "\'" >
 }
 
 // Operadores aritmeticos
@@ -170,11 +170,11 @@ TOKEN :
 |   < ERROR_REAL:  <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ "." <INTEGER> >
     {mensagem += "Erro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
-|   < ERROR_STRING_START: ("\"" ( <ASCII_ASPAS> )* | ( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
-    {mensagem += "Erro! String sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+|   < ERROR_LITERAL_START: ("\"" ( <ASCII_ASPAS> )* | ( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
+    {mensagem += "Erro! Literal sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
-|   < ERROR_STRING_END: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
-    {mensagem += "Erro! String sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+|   < ERROR_LITERAL_END: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
+    {mensagem += "Erro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
 
 // Comentarios
@@ -217,4 +217,79 @@ double saida():{}{""}
 double write():{}{""}
 double read():{}{""}
 
+void expressao():
+{}
+{
+    expressaoAritOuLogica() expressao_()
+}
 
+// the [] means that the token is optional, sooo, it's basically the OR Episolon
+void expressao_():{}
+{
+    [
+      <EQUAL> expressaoAritOuLogica()
+    | <NOT_EQUAL> expressaoAritOuLogica()
+    | <LESS_THAN> expressaoAritOuLogica()
+    | <GREATER_THAN>  expressaoAritOuLogica()
+    | <LESS_THAN_EQUAL> expressaoAritOuLogica()
+    | <GREATER_THAN_EQUAL> expressaoAritOuLogica()
+    ]
+}
+
+void expressaoAritOuLogica():{}
+{
+    termo2() menorPrioridade()
+}
+
+void menorPrioridade():{}
+{
+    [
+      <PLUS> termo2() menorPrioridade()
+    | <MINUS> termo2() menorPrioridade()
+    | <OR_LOGIC> termo2() menorPrioridade()
+    ]
+}
+
+
+void termo2():{}
+{
+    termo1() mediaPrioridade()
+}
+
+void mediaPrioridade():{}
+{
+      < MULTIPLY> termo1() mediaPrioridade()
+    | < DIVIDE> termo1() mediaPrioridade()
+    | < MODULO> termo1() mediaPrioridade()
+    | < AND > termo1() mediaPrioridade()
+    | < OR_LOGIC> termo1() mediaPrioridade()
+}
+
+void termo1():{}
+{
+    elemento() maiorPrioridade()
+}
+
+void maiorPrioridade(): {}
+{
+[
+    < POWER > elemento() maiorPrioridade()
+]
+}
+
+void elemento():{}
+{
+      < IDENTIFICADOR> indice()
+    | < INTEGER>
+    | < REAL >
+    | < LITERAL >
+    | < TRUE >
+    | < UNTRUE>
+    | <OPEN_PAREN> expressao() <CLOSE_PAREN>
+    | <NOT_LOGIC> <OPEN_PAREN> expressao() <CLOSE_PAREN>
+}
+
+void indice(): {}
+{
+    [ <OPEN_BRACE> expressao() <CLOSE_BRACE> ]
+}
