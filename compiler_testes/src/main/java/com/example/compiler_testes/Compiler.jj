@@ -190,32 +190,32 @@ TOKEN :
     {mensagem += "Erro! Comentário de bloco não fechado. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
 
-double programa():{}
-{
-    "do this" <IDENTIFICADOR> "[]" enumerado() constAndVars() "body" [listaComandos()] finalPrograma()
-}
+//double programa():{}
+//{
+//    "do this" <IDENTIFICADOR> "[]" enumerado() constAndVars() "body" [listaComandos()] finalPrograma()
+//}
 
-double enumerado():{}
-{
-""
-}
-
-double constAndVars():{}
-{
-""
-}
-double listaComandos():{}
-{
-""
-}
-double finalPrograma():{}
-{
-""
-}
-double atribuicao():{}{""}
-double saida():{}{""}
-double write():{}{""}
-double read():{}{""}
+//double enumerado():{}
+//{
+//""
+//}
+//
+//double constAndVars():{}
+//{
+//""
+//}
+//double listaComandos():{}
+//{
+//""
+//}
+//double finalPrograma():{}
+//{
+//""
+//}
+//double atribuicao():{}{""}
+//double saida():{}{""}
+//double write():{}{""}
+//double read():{}{""}
 
 void expressao():
 {}
