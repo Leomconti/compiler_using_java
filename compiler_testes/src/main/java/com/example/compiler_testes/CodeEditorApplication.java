@@ -1,4 +1,6 @@
 package com.example.compiler_testes;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -148,34 +150,74 @@ public class CodeEditorApplication extends Application {
 
     // montando a toolbar, que tera um botao para cada opcao do menu
     private ToolBar initToolBar() {
-        Button newFileButton = new Button("Novo");
+        Image newFileIcon = new Image("file:resources/Newfile.png");
+        ImageView iconNewFile = new ImageView(newFileIcon);
+        iconNewFile.setFitWidth(16);
+        iconNewFile.setFitHeight(16);
+        Button newFileButton = new Button("Novo", iconNewFile);
         newFileButton.setOnAction(e -> onNewFileClicked());
 
-        Button openFileButton = new Button("Abrir");
+        Image openFileIcon = new Image("file:resources/Open File.png");
+        ImageView iconOpenFile = new ImageView(openFileIcon);
+        iconOpenFile.setFitWidth(16);
+        iconOpenFile.setFitHeight(16);
+        Button openFileButton = new Button("Abrir", iconOpenFile);
         openFileButton.setOnAction(e -> onOpenFileClicked());
 
-        Button saveFileButton = new Button("Salvar");
+        Image saveFileIcon = new Image("file:resources/floppy disk.png");
+        ImageView iconSaveFile = new ImageView(saveFileIcon);
+        iconSaveFile.setFitWidth(16);
+        iconSaveFile.setFitHeight(16);
+        Button saveFileButton = new Button("Salvar", iconSaveFile);
         saveFileButton.setOnAction(e -> onSaveClicked());
 
-        Button saveAsButton = new Button("Salvar Como");
+        Image saveAsIcon = new Image("file:resources/diskette.png");
+        ImageView iconSaveAs = new ImageView(saveAsIcon);
+        iconSaveAs.setFitWidth(16);
+        iconSaveAs.setFitHeight(16);
+        Button saveAsButton = new Button("Salvar Como", iconSaveAs);
         saveAsButton.setOnAction(e -> onSaveAsClicked());
 
-        Button exitButton = new Button("Sair");
+        Image exitIcon = new Image("file:resources/Arrow Right.png");
+        ImageView iconExit = new ImageView(exitIcon);
+        iconExit.setFitWidth(16);
+        iconExit.setFitHeight(16);
+        Button exitButton = new Button("Sair", iconExit);
         exitButton.setOnAction(e -> onExitClicked());
 
-        Button copyButton = new Button("Copiar");
+        Image copyIcon = new Image("file:resources/files.png");
+        ImageView iconCopy = new ImageView(copyIcon);
+        iconCopy.setFitWidth(16);
+        iconCopy.setFitHeight(16);
+        Button copyButton = new Button("Copiar", iconCopy);
         copyButton.setOnAction(e -> onCopyClicked());
 
-        Button pasteButton = new Button("Colar");
+        Image pasteIcon = new Image("file:resources/Paste icon.png");
+        ImageView iconPaste = new ImageView(pasteIcon);
+        iconPaste.setFitWidth(16);
+        iconPaste.setFitHeight(16);
+        Button pasteButton = new Button("Colar", iconPaste);
         pasteButton.setOnAction(e -> onPasteClicked());
 
-        Button cutButton = new Button("Recortar");
+        Image cutIcon = new Image("file:resources/Scissors.png");
+        ImageView iconCut = new ImageView(cutIcon);
+        iconCut.setFitWidth(16);
+        iconCut.setFitHeight(16);
+        Button cutButton = new Button("Recortar", iconCut);
         cutButton.setOnAction(e -> onCutClicked());
 
-        Button compileButton = new Button("Compilar");
+        Image compileIcon = new Image("file:resources/BuildOk.png");
+        ImageView iconCompile = new ImageView(compileIcon);
+        iconCompile.setFitWidth(16);
+        iconCompile.setFitHeight(16);
+        Button compileButton = new Button("Compilar", iconCompile);
         compileButton.setOnAction(e -> onBuildClicked());
 
-        Button runButton = new Button("Executar");
+        Image runIcon = new Image("file:resources/Arrow Right.png");
+        ImageView iconRun = new ImageView(runIcon);
+        iconRun.setFitWidth(16);
+        iconRun.setFitHeight(16);
+        Button runButton = new Button("Executar", iconRun);
         runButton.setOnAction(e -> onRunClicked());
 
         ToolBar toolBar = new ToolBar(
