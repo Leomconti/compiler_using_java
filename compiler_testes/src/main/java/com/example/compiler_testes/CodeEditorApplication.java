@@ -304,7 +304,7 @@ public class CodeEditorApplication extends Application {
     private void onExitClicked() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmação");
-        alert.setHeaderText("O arquivo foi modificado.");
+        alert.setHeaderText("Cuidado!");
         alert.setContentText("Deseja salvar as alterações antes de sair?");
 
         ButtonType buttonYes = new ButtonType("Sim");
