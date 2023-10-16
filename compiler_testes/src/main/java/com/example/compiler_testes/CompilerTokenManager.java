@@ -1432,7 +1432,6 @@ public Token getNextToken()
         {
            matchedToken = jjFillToken();
            matchedToken.specialToken = specialToken;
-           TokenLexicalActions(matchedToken);
        if (jjnewLexState[jjmatchedKind] != -1)
          curLexState = jjnewLexState[jjmatchedKind];
            return matchedToken;
@@ -1495,6 +1494,22 @@ void SkipLexicalActions(Token matchedToken)
      System.err.println("Line: " + input_stream.getEndLine() + " Column: " + input_stream.getEndColumn() + " String constatnt has a \\n: " + image);
      countLexErrors++;
          break;
+      case 86 :
+         image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
+     mensagem += "Erro! Limite de d\u00edgitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+         break;
+      case 87 :
+         image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
+     mensagem += "Erro! Mais de 5 d\u00edgitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+         break;
+      case 88 :
+         image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
+     mensagem += "Erro! Literal sem aspas no in\u00edcio. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+         break;
+      case 89 :
+         image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
+     mensagem += "Erro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+         break;
       case 90 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
      mensagem += "Erro! Identificador com muitos d\u00edgitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
@@ -1532,22 +1547,6 @@ void TokenLexicalActions(Token matchedToken)
 {
    switch(jjmatchedKind)
    {
-      case 86 :
-        image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "Erro! Limite de d\u00edgitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
-         break;
-      case 87 :
-        image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "Erro! Mais de 5 d\u00edgitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
-         break;
-      case 88 :
-        image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "Erro! Literal sem aspas no in\u00edcio. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
-         break;
-      case 89 :
-        image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "Erro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
-         break;
       default :
          break;
    }
@@ -1649,13 +1648,13 @@ public static final int[] jjnewLexState = {
    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 
 };
 static final long[] jjtoToken = {
-   0xfffffffffffff801L, 0x3c003ffL, 
+   0xfffffffffffff801L, 0x3ffL, 
 };
 static final long[] jjtoSkip = {
-   0x7feL, 0x7c300000L, 
+   0x7feL, 0x7ff00000L, 
 };
 static final long[] jjtoSpecial = {
-   0x0L, 0x7c300000L, 
+   0x0L, 0x7ff00000L, 
 };
 static final long[] jjtoMore = {
    0x0L, 0x0L, 

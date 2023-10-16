@@ -115,8 +115,7 @@ public class CodeEditorController {
             String errorMessages = lexer.token_source.mensagem;
             // will only run once and point out the errors
             if (!errorMessages.isEmpty()) {
-                //output.append("\n").append(errorMessages);
-                System.out.println("a");
+                output.append("\n").append(errorMessages);
             }
         } else if (tokensList.isEmpty()) {
             output.append("Nenhum token foi encontrado.\n");

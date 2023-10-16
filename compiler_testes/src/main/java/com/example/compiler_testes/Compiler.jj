@@ -187,7 +187,7 @@ SPECIAL_TOKEN :
 // Palavras reservadas
 
 // Valores
-TOKEN :
+SPECIAL_TOKEN :
 {
     < ERROR_INTEGER: <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ >
     {mensagem += "Erro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
