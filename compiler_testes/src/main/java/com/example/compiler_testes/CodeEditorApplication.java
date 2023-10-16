@@ -231,25 +231,61 @@ public class CodeEditorApplication extends Application {
 
     // setando as funcoes que vao chamar o controller do backend para executar as acoes do botao
     private void onNewFileClicked() {
-        codeArea.clear();
-        messageArea.setText(controller.onNewFileClicked());
-        primaryStage.setTitle("Compilador - Sem arquivo");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmação");
+        alert.setHeaderText("Cuidado!");
+        alert.setContentText("Deseja salvar as alterações antes de sair?");
+
+        ButtonType buttonYes = new ButtonType("Sim");
+        ButtonType buttonNo = new ButtonType("Não");
+        ButtonType buttonCancel = new ButtonType("Cancelar");
+
+        alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
+
+        java.util.Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == buttonYes) {
+            String saved = controller.onSaveClicked(codeArea.getText());
+            System.exit(0);
+        } else if (result.get() == buttonNo) {
+            codeArea.clear();
+            messageArea.setText(controller.onNewFileClicked());
+            primaryStage.setTitle("Compilador - Sem arquivo");
+        }
     }
 
     private void onOpenFileClicked() {
-        FileChooser fileChooser = new FileChooser();
-        File selectedFile = fileChooser.showOpenDialog(null);
-        if (selectedFile != null) {
-            try {
-                String content = new String(Files.readAllBytes(Paths.get(selectedFile.getPath())));
-                codeArea.replaceText(content);
-                primaryStage.setTitle("Compilador - " + selectedFile.getName()); // Update the title
-                messageArea.setText(controller.onOpenFileClicked(selectedFile, codeArea.getText()));
-            } catch (IOException e) {
-                messageArea.setText("Erro lendo o arquivo: " + e.getMessage());
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmação");
+        alert.setHeaderText("Cuidado!");
+        alert.setContentText("Deseja salvar as alterações antes de sair?");
+
+        ButtonType buttonYes = new ButtonType("Sim");
+        ButtonType buttonNo = new ButtonType("Não");
+        ButtonType buttonCancel = new ButtonType("Cancelar");
+
+        alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
+
+        java.util.Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == buttonYes) {
+            String saved = controller.onSaveClicked(codeArea.getText());
+            System.exit(0);
+        } else if (result.get() == buttonNo) {
+            FileChooser fileChooser = new FileChooser();
+            File selectedFile = fileChooser.showOpenDialog(null);
+            if (selectedFile != null) {
+                try {
+                    String content = new String(Files.readAllBytes(Paths.get(selectedFile.getPath())));
+                    codeArea.replaceText(content);
+                    primaryStage.setTitle("Compilador - " + selectedFile.getName()); // Update the title
+                    messageArea.setText(controller.onOpenFileClicked(selectedFile, codeArea.getText()));
+                } catch (IOException e) {
+                    messageArea.setText("Erro lendo o arquivo: " + e.getMessage());
+                }
+            } else {
+                messageArea.setText("Selecao de arquivo cancelada.");
             }
-        } else {
-            messageArea.setText("Selecao de arquivo cancelada.");
         }
     }
 
@@ -266,7 +302,6 @@ public class CodeEditorApplication extends Application {
     }
 
     private void onExitClicked() {
-        System.out.println("Saindo...");
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmação");
         alert.setHeaderText("O arquivo foi modificado.");
