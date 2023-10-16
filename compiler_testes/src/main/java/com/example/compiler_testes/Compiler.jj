@@ -190,34 +190,34 @@ SPECIAL_TOKEN :
 SPECIAL_TOKEN :
 {
     < ERROR_INTEGER: <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ >
-    {mensagem += "Erro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {mensagem += "\nErro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_REAL:  <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ "." <INTEGER> >
-    {mensagem += "Erro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {mensagem += "\nErro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_LITERAL_START: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
-    {mensagem += "Erro! Literal sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {mensagem += "\nErro! Literal sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_LITERAL_END: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
-    {mensagem += "Erro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {mensagem += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
 
 SPECIAL_TOKEN :
 {
     < ERROR_IDENTIFICADOR: <MAIUSCULA> ((<DIGITO>)+ (("_") | (<LETRA>)+("_")?)+)* >
-    {mensagem += "Erro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {mensagem += "\nErro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_IDENTIFICADOR_START_DIGIT: <DIGITO> (<LETRA> | <DIGITO> | "_")+ >
-    {mensagem += "Erro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {mensagem += "\nErro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> ((<LETRA> | <DIGITO>)* "__" (<LETRA> | <DIGITO> | "_")*)+ >
-    {mensagem += "Erro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {mensagem += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_IDENTIFICADOR_END_UNDERSCORE: <MAIUSCULA> ((<LETRA> | <DIGITO>)+ "_")+ >
-    {mensagem += "Erro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {mensagem += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
-    {mensagem += "Erro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {mensagem += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
 
 //double programa():{}

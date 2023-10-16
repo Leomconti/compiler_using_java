@@ -86,6 +86,7 @@ public class CodeEditorController {
                 try {
                     token = lexer.getNextToken();
                 } catch (TokenMgrError e) {
+                    System.out.println(e.getMessage());
                     // Add error message directly to the output or store for later
                     // For example, you could append e.getMessage() to output or store it in a list
                     continue;  // Continue to process the remaining tokens
