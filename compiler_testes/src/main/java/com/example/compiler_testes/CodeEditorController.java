@@ -126,7 +126,7 @@ public class CodeEditorController {
     }
 
     public String getTokenCategory(int kind) {
-        System.out.println(kind);
+        //System.out.println(kind);
         switch (kind) {
             case CompilerConstants.IDENTIFICADOR:
                 return "Identificador";

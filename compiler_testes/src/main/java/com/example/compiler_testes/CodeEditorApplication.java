@@ -24,7 +24,7 @@ import org.fxmisc.richtext.LineNumberFactory;
 
 
 public class CodeEditorApplication extends Application {
-
+    private boolean isFileModified = false;
     private TextArea messageArea;
     private CodeEditorController controller;
     private Stage primaryStage;
@@ -66,6 +66,11 @@ public class CodeEditorApplication extends Application {
             int col = pos+1 - codeArea.getAbsolutePosition(line, 0);
             updateFooter(line, col);
         });
+
+        codeArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            isFileModified = true;
+        });
+
 
         messageArea = new TextArea();
         messageArea.setPromptText("Mensagens de saida aqui...");
@@ -231,34 +236,26 @@ public class CodeEditorApplication extends Application {
 
     // setando as funcoes que vao chamar o controller do backend para executar as acoes do botao
     private void onNewFileClicked() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmação");
-        alert.setHeaderText("Cuidado!");
-        alert.setContentText("Deseja salvar as alterações antes de sair?");
-
-        ButtonType buttonYes = new ButtonType("Sim");
-        ButtonType buttonNo = new ButtonType("Não");
-        ButtonType buttonCancel = new ButtonType("Cancelar");
-
-        alert.getButtonTypes().setAll(buttonYes, buttonNo, buttonCancel);
-
-        java.util.Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.get() == buttonYes) {
-            String saved = controller.onSaveClicked(codeArea.getText());
-            System.exit(0);
-        } else if (result.get() == buttonNo) {
-            codeArea.clear();
-            messageArea.setText(controller.onNewFileClicked());
-            primaryStage.setTitle("Compilador - Sem arquivo");
+        if (isFileModified) {
+            showSaveConfirmationDialog("create a new file");
+        } else {
+            createNewFile();
         }
     }
 
     private void onOpenFileClicked() {
+        if (isFileModified) {
+            showSaveConfirmationDialog("open a new file");
+        } else {
+            openFile();
+        }
+    }
+
+    private void showSaveConfirmationDialog(String action) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmação");
         alert.setHeaderText("Cuidado!");
-        alert.setContentText("Deseja salvar as alterações antes de sair?");
+        alert.setContentText("Deseja salvar as alterações antes de " + action + "?");
 
         ButtonType buttonYes = new ButtonType("Sim");
         ButtonType buttonNo = new ButtonType("Não");
@@ -269,25 +266,46 @@ public class CodeEditorApplication extends Application {
         java.util.Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == buttonYes) {
-            String saved = controller.onSaveClicked(codeArea.getText());
-            System.exit(0);
-        } else if (result.get() == buttonNo) {
-            FileChooser fileChooser = new FileChooser();
-            File selectedFile = fileChooser.showOpenDialog(null);
-            if (selectedFile != null) {
-                try {
-                    String content = new String(Files.readAllBytes(Paths.get(selectedFile.getPath())));
-                    codeArea.replaceText(content);
-                    primaryStage.setTitle("Compilador - " + selectedFile.getName()); // Update the title
-                    messageArea.setText(controller.onOpenFileClicked(selectedFile, codeArea.getText()));
-                } catch (IOException e) {
-                    messageArea.setText("Erro lendo o arquivo: " + e.getMessage());
-                }
+            onSaveClicked();
+            if (action.equals("create a new file")) {
+                createNewFile();
             } else {
-                messageArea.setText("Selecao de arquivo cancelada.");
+                openFile();
+            }
+        } else if (result.get() == buttonNo) {
+            if (action.equals("create a new file")) {
+                createNewFile();
+            } else {
+                openFile();
             }
         }
     }
+
+    private void createNewFile() {
+        codeArea.clear();
+        messageArea.setText(controller.onNewFileClicked());
+        primaryStage.setTitle("Compilador - Sem arquivo");
+        isFileModified = false;  // Reset the flag after creating a new file
+    }
+
+    private void openFile() {
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            try {
+                String content = new String(Files.readAllBytes(Paths.get(selectedFile.getPath())));
+                codeArea.replaceText(content);
+                primaryStage.setTitle("Compilador - " + selectedFile.getName());
+                messageArea.setText(controller.onOpenFileClicked(selectedFile, codeArea.getText()));
+                isFileModified = false;  // Reset the flag after opening a file
+            } catch (IOException e) {
+                messageArea.setText("Erro lendo o arquivo: " + e.getMessage());
+            }
+        } else {
+            messageArea.setText("Selecao de arquivo cancelada.");
+        }
+    }
+
 
 
     private void onSaveAsClicked() {
@@ -296,6 +314,7 @@ public class CodeEditorApplication extends Application {
         if (file != null) {
             messageArea.setText(controller.onSaveAsClicked(file, codeArea.getText()));
             primaryStage.setTitle("Compilador - " + file.getName()); // atualiza o titulo para o nome do arquivo salvo
+            isFileModified = false;  // Reset the flag after saving.
         } else {
             messageArea.setText("File save cancelled.");
         }
@@ -338,6 +357,7 @@ public class CodeEditorApplication extends Application {
 
     private void onSaveClicked() {
         controller.onSaveClicked(codeArea.getText());
+        isFileModified = false;  // Reset the flag after saving
     }
 
     private void onBuildClicked() {
@@ -360,4 +380,5 @@ public class CodeEditorApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
+
 }
