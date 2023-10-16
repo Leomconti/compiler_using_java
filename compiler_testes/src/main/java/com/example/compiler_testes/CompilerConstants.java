@@ -11,182 +11,180 @@ public interface CompilerConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int IDENTIFICADOR = 5;
+  int IDENTIFICADOR = 11;
   /** RegularExpression Id. */
-  int RESULT = 6;
+  int RESULT = 12;
   /** RegularExpression Id. */
-  int AVALIATE = 7;
+  int AVALIATE = 13;
   /** RegularExpression Id. */
-  int DO = 8;
+  int DO = 14;
   /** RegularExpression Id. */
-  int THIS = 9;
+  int THIS = 15;
   /** RegularExpression Id. */
-  int BODY = 10;
+  int BODY = 16;
   /** RegularExpression Id. */
-  int DESCRIPTION = 11;
+  int DESCRIPTION = 17;
   /** RegularExpression Id. */
-  int DECLARATION = 12;
+  int DECLARATION = 18;
   /** RegularExpression Id. */
-  int TYPE = 13;
+  int TYPE = 19;
   /** RegularExpression Id. */
-  int IS = 14;
+  int IS = 20;
   /** RegularExpression Id. */
-  int CONSTANT = 15;
+  int CONSTANT = 21;
   /** RegularExpression Id. */
-  int AND = 16;
+  int AND = 22;
   /** RegularExpression Id. */
-  int VARIABLE = 17;
+  int VARIABLE = 23;
   /** RegularExpression Id. */
-  int DESIGNATE = 18;
+  int DESIGNATE = 24;
   /** RegularExpression Id. */
-  int AS = 19;
+  int AS = 25;
   /** RegularExpression Id. */
-  int READ = 20;
+  int READ = 26;
   /** RegularExpression Id. */
-  int WRITE = 21;
+  int WRITE = 27;
   /** RegularExpression Id. */
-  int ALL = 22;
+  int ALL = 28;
   /** RegularExpression Id. */
-  int REPEAT = 23;
+  int REPEAT = 29;
   /** RegularExpression Id. */
-  int INTEGER_DEF = 24;
+  int INTEGER_DEF = 30;
   /** RegularExpression Id. */
-  int REAL_DEF = 25;
+  int REAL_DEF = 31;
   /** RegularExpression Id. */
-  int LITERAL_DEF = 26;
+  int LITERAL_DEF = 32;
   /** RegularExpression Id. */
-  int LOGIC_DEF = 27;
+  int LOGIC_DEF = 33;
   /** RegularExpression Id. */
-  int INTEGER = 28;
+  int INTEGER = 34;
   /** RegularExpression Id. */
-  int REAL = 29;
+  int REAL = 35;
   /** RegularExpression Id. */
-  int TRUE = 30;
+  int TRUE = 36;
   /** RegularExpression Id. */
-  int UNTRUE = 31;
+  int UNTRUE = 37;
   /** RegularExpression Id. */
-  int LITERAL = 32;
+  int LITERAL = 38;
   /** RegularExpression Id. */
-  int PLUS = 33;
+  int PLUS = 39;
   /** RegularExpression Id. */
-  int MINUS = 34;
+  int MINUS = 40;
   /** RegularExpression Id. */
-  int MULTIPLY = 35;
+  int MULTIPLY = 41;
   /** RegularExpression Id. */
-  int DIVIDE = 36;
+  int DIVIDE = 42;
   /** RegularExpression Id. */
-  int POWER = 37;
+  int POWER = 43;
   /** RegularExpression Id. */
-  int MODULO = 38;
+  int MODULO = 44;
   /** RegularExpression Id. */
-  int DOUBLE_MODULO = 39;
+  int DOUBLE_MODULO = 45;
   /** RegularExpression Id. */
-  int LESS_THAN = 40;
+  int LESS_THAN = 46;
   /** RegularExpression Id. */
-  int LESS_THAN_EQUAL = 41;
+  int LESS_THAN_EQUAL = 47;
   /** RegularExpression Id. */
-  int GREATER_THAN_EQUAL = 42;
+  int GREATER_THAN_EQUAL = 48;
   /** RegularExpression Id. */
-  int GREATER_THAN = 43;
+  int GREATER_THAN = 49;
   /** RegularExpression Id. */
-  int EQUAL = 44;
+  int EQUAL = 50;
   /** RegularExpression Id. */
-  int NOT_EQUAL = 45;
+  int NOT_EQUAL = 51;
   /** RegularExpression Id. */
-  int AND_LOGIC = 46;
+  int AND_LOGIC = 52;
   /** RegularExpression Id. */
-  int OR_LOGIC = 47;
+  int OR_LOGIC = 53;
   /** RegularExpression Id. */
-  int NOT_LOGIC = 48;
+  int NOT_LOGIC = 54;
   /** RegularExpression Id. */
-  int HASH = 49;
+  int HASH = 55;
   /** RegularExpression Id. */
-  int DOLLAR = 50;
+  int DOLLAR = 56;
   /** RegularExpression Id. */
-  int OPEN_PAREN = 51;
+  int OPEN_PAREN = 57;
   /** RegularExpression Id. */
-  int CLOSE_PAREN = 52;
+  int CLOSE_PAREN = 58;
   /** RegularExpression Id. */
-  int COMMA = 53;
+  int COMMA = 59;
   /** RegularExpression Id. */
-  int DOT = 54;
+  int DOT = 60;
   /** RegularExpression Id. */
-  int COLON = 55;
+  int COLON = 61;
   /** RegularExpression Id. */
-  int SEMICOLON = 56;
+  int SEMICOLON = 62;
   /** RegularExpression Id. */
-  int S_LESS_THAN = 57;
+  int S_LESS_THAN = 63;
   /** RegularExpression Id. */
-  int S_GREATER_THAN = 58;
+  int S_GREATER_THAN = 64;
   /** RegularExpression Id. */
-  int QUESTION_MARK = 59;
+  int QUESTION_MARK = 65;
   /** RegularExpression Id. */
-  int AT_SIGN = 60;
+  int AT_SIGN = 66;
   /** RegularExpression Id. */
-  int OPEN_BRACKET = 61;
+  int OPEN_BRACKET = 67;
   /** RegularExpression Id. */
-  int CLOSE_BRACKET = 62;
+  int CLOSE_BRACKET = 68;
   /** RegularExpression Id. */
-  int BACKTICK = 63;
+  int BACKTICK = 69;
   /** RegularExpression Id. */
-  int OPEN_BRACE = 64;
+  int OPEN_BRACE = 70;
   /** RegularExpression Id. */
-  int CLOSE_BRACE = 65;
+  int CLOSE_BRACE = 71;
   /** RegularExpression Id. */
-  int TILDE = 66;
+  int TILDE = 72;
   /** RegularExpression Id. */
-  int EQUALS = 67;
+  int EQUALS = 73;
   /** RegularExpression Id. */
-  int COMENTARIOLINHA = 68;
+  int MAIUSCULA = 74;
   /** RegularExpression Id. */
-  int COMENTARIOBLOCO = 69;
+  int MINUSCULA = 75;
   /** RegularExpression Id. */
-  int MAIUSCULA = 70;
+  int DIGITO = 76;
   /** RegularExpression Id. */
-  int MINUSCULA = 71;
+  int LETRA = 77;
   /** RegularExpression Id. */
-  int DIGITO = 72;
+  int ASCII = 78;
   /** RegularExpression Id. */
-  int LETRA = 73;
+  int ASCII_ASPAS = 79;
   /** RegularExpression Id. */
-  int ASCII = 74;
+  int ASCII_APOSTROFO = 80;
   /** RegularExpression Id. */
-  int ASCII_ASPAS = 75;
+  int DENTROSEMLINHA = 81;
   /** RegularExpression Id. */
-  int ASCII_APOSTROFO = 76;
+  int SEM_ESTRELA = 82;
   /** RegularExpression Id. */
-  int DENTROSEMLINHA = 77;
+  int SEM_BARRA = 83;
   /** RegularExpression Id. */
-  int SEM_ESTRELA = 78;
+  int INVALID_LEXICAL = 84;
   /** RegularExpression Id. */
-  int SEM_BARRA = 79;
+  int INVALID_CONST = 85;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR = 80;
+  int ERROR_INTEGER = 86;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_DIGIT = 81;
+  int ERROR_REAL = 87;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 82;
+  int ERROR_LITERAL_START = 88;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_END_UNDERSCORE = 83;
+  int ERROR_LITERAL_END = 89;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_LOWERCASE = 84;
+  int ERROR_IDENTIFICADOR = 90;
   /** RegularExpression Id. */
-  int ERROR_INTEGER = 85;
+  int ERROR_IDENTIFICADOR_START_DIGIT = 91;
   /** RegularExpression Id. */
-  int ERROR_REAL = 86;
+  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 92;
   /** RegularExpression Id. */
-  int ERROR_LITERAL_START = 87;
+  int ERROR_IDENTIFICADOR_END_UNDERSCORE = 93;
   /** RegularExpression Id. */
-  int ERROR_LITERAL_END = 88;
-  /** RegularExpression Id. */
-  int ERROR_COMENTARIOLINHA = 89;
-  /** RegularExpression Id. */
-  int ERROR_COMENTARIOBLOCO_START = 90;
-  /** RegularExpression Id. */
-  int ERROR_COMENTARIOBLOCO_END = 91;
+  int ERROR_IDENTIFICADOR_START_LOWERCASE = 94;
 
   /** Lexical state. */
   int DEFAULT = 0;
+  /** Lexical state. */
+  int singlelinecomment = 1;
+  /** Lexical state. */
+  int multilinecomment = 2;
 
   /** Literal token values. */
   String[] tokenImage = {
@@ -195,6 +193,12 @@ public interface CompilerConstants {
     "\"\\t\"",
     "\"\\n\"",
     "\"\\r\"",
+    "\"/*\"",
+    "\"//\"",
+    "<token of kind 7>",
+    "<token of kind 8>",
+    "\"*/\"",
+    "<token of kind 10>",
     "<IDENTIFICADOR>",
     "\"result\"",
     "\"avaliate\"",
@@ -258,8 +262,6 @@ public interface CompilerConstants {
     "\"}\"",
     "\"~\"",
     "\"=\"",
-    "<COMENTARIOLINHA>",
-    "<COMENTARIOBLOCO>",
     "<MAIUSCULA>",
     "<MINUSCULA>",
     "<DIGITO>",
@@ -270,18 +272,17 @@ public interface CompilerConstants {
     "<DENTROSEMLINHA>",
     "<SEM_ESTRELA>",
     "<SEM_BARRA>",
+    "<INVALID_LEXICAL>",
+    "<INVALID_CONST>",
+    "<ERROR_INTEGER>",
+    "<ERROR_REAL>",
+    "<ERROR_LITERAL_START>",
+    "<ERROR_LITERAL_END>",
     "<ERROR_IDENTIFICADOR>",
     "<ERROR_IDENTIFICADOR_START_DIGIT>",
     "<ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES>",
     "<ERROR_IDENTIFICADOR_END_UNDERSCORE>",
     "<ERROR_IDENTIFICADOR_START_LOWERCASE>",
-    "<ERROR_INTEGER>",
-    "<ERROR_REAL>",
-    "<ERROR_LITERAL_START>",
-    "<ERROR_LITERAL_END>",
-    "<ERROR_COMENTARIOLINHA>",
-    "<ERROR_COMENTARIOBLOCO_START>",
-    "<ERROR_COMENTARIOBLOCO_END>",
   };
 
 }

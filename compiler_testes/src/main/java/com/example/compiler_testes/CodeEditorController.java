@@ -1,5 +1,6 @@
 package com.example.compiler_testes;
 
+import com.example.compiler_testes.CompilerConstants;
 import com.example.compiler_testes.Compiler;
 import com.example.compiler_testes.Token;
 import javafx.stage.FileChooser;
@@ -73,125 +74,26 @@ public class CodeEditorController {
         }
     }
 
-    // aqui vamos implementar a logica que vai buildar o codigo, chamando o analizador lexico e mostrnando os resultados na tela
-
-    private String formatLexema(String lexema, int maxSize) {
-        if (lexema.length() <= maxSize) {
-            return lexema;
-        }
-
-        return lexema.substring(0, maxSize) + "\n" + formatLexema(lexema.substring(maxSize), maxSize);
-    }
-
-    // classe para deixar mais facil mostrar um token ( utilizando override no tostring)
-    public class TokenInfo {
-        public String lexema;
-        public int line;
-        public int column;
-        public String category;
-        public int categoryNumber;
-
-        public TokenInfo(String lexema, int line, int column, int categoryNumber) {
-            this.lexema = lexema;
-            this.line = line;
-            this.column = column;
-            this.category = getTokenCategory(categoryNumber);
-            this.categoryNumber = categoryNumber;
-        }
-
-        @Override
-        public String toString() {
-            return "Linha: " + line + ", Coluna: " + column + "\nCategoria " + categoryNumber + ": " + category + "\nLexema: " + lexema;
-        }
-    }
-
-    public class ErrorInfo {
-        public String error;
-        public int linha;
-        public int coluna;
-        public String tipo;
-        public int code;
-
-        public ErrorInfo(String tipo, String error, int linha, int coluna) {
-            this.error = this.classifyError(error);
-            this.linha = linha;
-            this.coluna = coluna;
-            this.tipo = tipo;
-            this.code = getCode(tipo);
-
-        }
-
-        private int getCode(String tipo) {
-            if (tipo.contains("xico")) { // lexico
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-
-        private String classifyError(String error) {
-
-            String split_end = error.split("after prefix")[1].trim();
-            String msg = error;
-            if (error.contains("after prefix")) {
-                msg = "Palavra reservada com erro, prefixo: " + split_end;
-            } else if (split_end.startsWith("\"tr") || split_end.startsWith("\"u")) {
-                msg = "Variavel logica com erro: " + split_end;
-            }
-            return msg; // default case if no classifications match
-        }
-
-        @Override
-        public String toString() {
-            return "Erro!\n" + "Linha: " + linha + ", Coluna: " + coluna + "\nCodigo: " + code + "\nTipo: " + tipo + "\nErro: " + error;
-        }
-    }
-
     public String compileCode(String code) {
-        List<TokenInfo> tokensList = new ArrayList<>();
-        ErrorInfo errorInfo = null;
+        List<Token> tokensList = new ArrayList<>();
 
+        Compiler lexer = null;
         try {
-            Compiler lexer = new Compiler(new java.io.StringReader(code));
+            lexer = new Compiler(new java.io.StringReader(code));
             Token token;
 
             while (true) {
                 try {
                     token = lexer.getNextToken();
                 } catch (TokenMgrError e) {
-                    Pattern pattern = Pattern.compile("at line (\\d+), column (\\d+)");
-                    Matcher matcher = pattern.matcher(e.getMessage());
-
-                    int line = -1;
-                    int column = -1;
-
-                    if (matcher.find()) {
-                        line = Integer.parseInt(matcher.group(1));
-                        column = Integer.parseInt(matcher.group(2));
-                    }
-
-                    String tipo = "Léxico";  // TokenMgrError eh um erro lexico
-
-                    // pegar a mensagem apos o primeiro ponto, pois eh la que fala o erro que encontrou
-                    String errorMsg = e.getMessage();
-                    int index = errorMsg.indexOf('.');
-                    if (index >= 0 && index + 1 < errorMsg.length()) {
-                        errorMsg = errorMsg.substring(index + 1).trim();
-                    }
-
-                    errorInfo = new ErrorInfo(tipo, errorMsg, line, column);
-                    break;
+                    // Add error message directly to the output or store for later
+                    // For example, you could append e.getMessage() to output or store it in a list
+                    continue;  // Continue to process the remaining tokens
                 }
-
 
                 if (token.kind == Compiler.EOF) break;
 
-                String lexema = token.image;
-                int line = token.beginLine;
-                int column = token.beginColumn;
-                int categoryNumber = token.kind;
-
-                tokensList.add(new TokenInfo(lexema, line, column, categoryNumber));
+                tokensList.add(token);  // Store the Token object directly
             }
         } catch (Exception e) {
             return "Erro durante a compilação: " + e.getMessage();
@@ -199,39 +101,163 @@ public class CodeEditorController {
 
         StringBuilder output = new StringBuilder();
 
-        if (!tokensList.isEmpty()) {
-            for (TokenInfo tokenInfo : tokensList) {
-                output.append(tokenInfo.toString()).append("\n\n");
-            }
-        } else {
-            output.append("Nenhum token foi encontrado.\n");
+        for (Token token : tokensList) {
+            String lexema = token.image;
+            int line = token.beginLine;
+            int column = token.beginColumn;
+            String category = getTokenCategory(token.kind);
+
+            output.append(String.format("Line: %d, Column: %d, Lexema: %s, Category: %s\n", line, column, lexema, category));
         }
 
-        if (errorInfo != null) {
-            output.append("\n").append(errorInfo.toString());
+        // If lexer is not null, fetch the error messages
+        if (lexer != null) {
+            String errorMessages = lexer.token_source.mensagem;
+            // will only run once and point out the errors
+            if (!errorMessages.isEmpty()) {
+                //output.append("\n").append(errorMessages);
+                System.out.println("a");
+            }
+        } else if (tokensList.isEmpty()) {
+            output.append("Nenhum token foi encontrado.\n");
         }
 
         return output.toString();
     }
 
-
-    private String getTokenCategory(int kind) {
-        // slk, intellij reformatou pra esse switch, olha que baita @anderson
-        return switch (kind) {
-            case (0) -> "EOF";
-            case (5) -> "Identificador";
-            case (6) -> "Palavra Reservada";
-            case (7) -> "Inteiro";
-            case (8) -> "Real";
-            case (10) -> "Operador Aritmético";
-            case (11) -> "Operador Relacional";
-            case (12) -> "Operador Logico";
-            case (13) -> "Comentario de Linha";
-            case (14) -> "Comentario de Bloco";
-            case (15) -> "Caracter Especial";
-            case (16) -> "String";
-            default -> "Category for " + kind;
-        };
+    public String getTokenCategory(int kind) {
+        System.out.println(kind);
+        switch (kind) {
+            case CompilerConstants.IDENTIFICADOR:
+                return "Identificador";
+            case CompilerConstants.RESULT:
+                return "Result";
+            case CompilerConstants.AVALIATE:
+                return "Avaliate";
+            case CompilerConstants.DO:
+                return "Do";
+            case CompilerConstants.THIS:
+                return "This";
+            case CompilerConstants.BODY:
+                return "Body";
+            case CompilerConstants.DESCRIPTION:
+                return "Description";
+            case CompilerConstants.DECLARATION:
+                return "Declaration";
+            case CompilerConstants.TYPE:
+                return "Type";
+            case CompilerConstants.IS:
+                return "Is";
+            case CompilerConstants.CONSTANT:
+                return "Constant";
+            case CompilerConstants.AND:
+                return "And";
+            case CompilerConstants.VARIABLE:
+                return "Variable";
+            case CompilerConstants.DESIGNATE:
+                return "Designate";
+            case CompilerConstants.AS:
+                return "As";
+            case CompilerConstants.READ:
+                return "Read";
+            case CompilerConstants.WRITE:
+                return "Write";
+            case CompilerConstants.ALL:
+                return "All";
+            case CompilerConstants.REPEAT:
+                return "Repeat";
+            case CompilerConstants.INTEGER_DEF:
+                return "Integer_Def";
+            case CompilerConstants.REAL_DEF:
+                return "Real_Def";
+            case CompilerConstants.LITERAL_DEF:
+                return "Literal_Def";
+            case CompilerConstants.LOGIC_DEF:
+                return "Logic_Def";
+            case CompilerConstants.INTEGER:
+                return "Integer";
+            case CompilerConstants.REAL:
+                return "Real";
+            case CompilerConstants.TRUE:
+                return "True";
+            case CompilerConstants.UNTRUE:
+                return "Untrue";
+            case CompilerConstants.LITERAL:
+                return "Literal";
+            case CompilerConstants.PLUS:
+                return "Plus";
+            case CompilerConstants.MINUS:
+                return "Minus";
+            case CompilerConstants.MULTIPLY:
+                return "Multiply";
+            case CompilerConstants.DIVIDE:
+                return "Divide";
+            case CompilerConstants.POWER:
+                return "Power";
+            case CompilerConstants.MODULO:
+                return "Modulo";
+            case CompilerConstants.DOUBLE_MODULO:
+                return "Double_Modulo";
+            case CompilerConstants.LESS_THAN:
+                return "Less_Than";
+            case CompilerConstants.LESS_THAN_EQUAL:
+                return "Less_Than_Equal";
+            case CompilerConstants.GREATER_THAN_EQUAL:
+                return "Greater_Than_Equal";
+            case CompilerConstants.GREATER_THAN:
+                return "Greater_Than";
+            case CompilerConstants.EQUAL:
+                return "Equal";
+            case CompilerConstants.NOT_EQUAL:
+                return "Not_Equal";
+            case CompilerConstants.AND_LOGIC:
+                return "And_Logic";
+            case CompilerConstants.OR_LOGIC:
+                return "Or_Logic";
+            case CompilerConstants.NOT_LOGIC:
+                return "Not_Logic";
+            case CompilerConstants.HASH:
+            case CompilerConstants.DOLLAR:
+            case CompilerConstants.OPEN_PAREN:
+            case CompilerConstants.CLOSE_PAREN:
+            case CompilerConstants.COMMA:
+            case CompilerConstants.DOT:
+            case CompilerConstants.COLON:
+            case CompilerConstants.SEMICOLON:
+            case CompilerConstants.S_LESS_THAN:
+            case CompilerConstants.S_GREATER_THAN:
+            case CompilerConstants.QUESTION_MARK:
+            case CompilerConstants.AT_SIGN:
+            case CompilerConstants.OPEN_BRACKET:
+            case CompilerConstants.CLOSE_BRACKET:
+            case CompilerConstants.BACKTICK:
+            case CompilerConstants.OPEN_BRACE:
+            case CompilerConstants.CLOSE_BRACE:
+            case CompilerConstants.TILDE:
+                return "Special_Symbol";
+            case CompilerConstants.EQUALS:
+                return "Equals";
+            case CompilerConstants.ERROR_IDENTIFICADOR:
+                return "Error_Identificador";
+            case CompilerConstants.ERROR_IDENTIFICADOR_START_DIGIT:
+                return "Error_Identificador_Start_Digit";
+            case CompilerConstants.ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES:
+                return "Error_Identificador_Multiple_Underscores";
+            case CompilerConstants.ERROR_IDENTIFICADOR_END_UNDERSCORE:
+                return "Error_Identificador_End_Underscore";
+            case CompilerConstants.ERROR_IDENTIFICADOR_START_LOWERCASE:
+                return "Error_Identificador_Start_Lowercase";
+            case CompilerConstants.ERROR_INTEGER:
+                return "Error_Integer";
+            case CompilerConstants.ERROR_REAL:
+                return "Error_Real";
+            case CompilerConstants.ERROR_LITERAL_START:
+                return "Error_Literal_Start";
+            case CompilerConstants.ERROR_LITERAL_END:
+                return "Error_Literal_End";
+            default:
+                return String.format("Unknown token '%d'", kind);
+        }
     }
 
 }

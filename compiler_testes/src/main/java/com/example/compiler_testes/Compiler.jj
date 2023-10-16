@@ -8,7 +8,6 @@ package com.example.compiler_testes;
 
 
 public class Compiler {
-
     public static void main(String[] args) {
         // Test the lexer here
 
@@ -17,11 +16,43 @@ public class Compiler {
 
 PARSER_END(Compiler)
 
+TOKEN_MGR_DECLS :
+{
+    String mensagem = "";
+    int countLexErrors = 0;
 
+
+    public String getMensagens() {
+        return mensagem;
+    }
+
+    public int foundLexErrors() {
+        return countLexErrors;
+    }
+
+    void CommentError()
+        {
+            System.err.println("Error: Multiline comment not closed.");
+        }
+}
 
 SKIP :
 {
-    " " | "\t" | "\n" | "\r" | <COMENTARIOBLOCO> | <COMENTARIOLINHA>
+    " " | "\t" | "\n" | "\r"
+    | "/*" : multilinecomment
+    | "//" : singlelinecomment
+}
+
+<singlelinecomment> SKIP :
+{
+    <["\n", "\r"]>: DEFAULT
+|    < ~[] >
+}
+
+<multilinecomment> SKIP :
+{
+    "*/": DEFAULT
+|   < ~[] >
 }
 
 // Palavras reservadas
@@ -119,11 +150,11 @@ TOKEN :
 }
 
 // Comentarios
-TOKEN :
-{
-    < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
-|   < COMENTARIOBLOCO: "/*" (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) "*/" >
-}
+//TOKEN :
+//{
+////    < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
+////|   < COMENTARIOBLOCO: "/*" (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) "*/" >
+//}
 
 // Auxiliares
 TOKEN :
@@ -141,9 +172,37 @@ TOKEN :
 }
 
 // Erros
-
+SPECIAL_TOKEN :
+{
+    < INVALID_LEXICAL : (~ ["a"-"z", "A"-"Z", "0"-"9"," ","\t","\n","\r","\f","\'", "\"","+", "-", "*", "/", "%","<", ">", "=", ".", ",", ";", "(", ")", "[", "]", "{", "}"])+>
+   {System.err.println("Line: " + input_stream.getEndLine() + " Column: " + input_stream.getEndColumn() + " Invalid string found: " + image);
+    countLexErrors++;
+    }
+|  <INVALID_CONST: "\"" (~ ["\n", "\r", "\""])* ["\n", "\r"]>
+    {System.err.println("Line: " + input_stream.getEndLine() + " Column: " + input_stream.getEndColumn() + " String constatnt has a \\n: " + image);
+     countLexErrors++;
+     }
+}
+    //{mensagem += "Erro! Caractere inválido. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 // Palavras reservadas
+
+// Valores
 TOKEN :
+{
+    < ERROR_INTEGER: <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ >
+    {mensagem += "Erro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_REAL:  <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ "." <INTEGER> >
+    {mensagem += "Erro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_LITERAL_START: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
+    {mensagem += "Erro! Literal sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_LITERAL_END: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
+    {mensagem += "Erro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+}
+
+SPECIAL_TOKEN :
 {
     < ERROR_IDENTIFICADOR: <MAIUSCULA> ((<DIGITO>)+ (("_") | (<LETRA>)+("_")?)+)* >
     {mensagem += "Erro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
@@ -159,35 +218,6 @@ TOKEN :
 
 |   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
     {mensagem += "Erro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-}
-
-// Valores
-TOKEN :
-{
-    < ERROR_INTEGER: <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ >
-    {mensagem += "Erro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_REAL:  <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ "." <INTEGER> >
-    {mensagem += "Erro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_LITERAL_START: ("\"" ( <ASCII_ASPAS> )* | ( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
-    {mensagem += "Erro! Literal sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_LITERAL_END: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
-    {mensagem += "Erro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-}
-
-// Comentarios
-TOKEN :
-{
-    < ERROR_COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* >
-    {mensagem += "Erro! Comentário de linha sem quebra de linha no final. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_COMENTARIOBLOCO_START: (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) "*/" >
-    {mensagem += "Erro! Comentário de bloco não iniciado. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_COMENTARIOBLOCO_END: "/*" (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) >
-    {mensagem += "Erro! Comentário de bloco não fechado. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
 
 //double programa():{}
@@ -216,80 +246,80 @@ TOKEN :
 //double saida():{}{""}
 //double write():{}{""}
 //double read():{}{""}
-
-void expressao():
-{}
-{
-    expressaoAritOuLogica() expressao_()
-}
-
-// the [] means that the token is optional, sooo, it's basically the OR Episolon
-void expressao_():{}
-{
-    [
-      <EQUAL> expressaoAritOuLogica()
-    | <NOT_EQUAL> expressaoAritOuLogica()
-    | <LESS_THAN> expressaoAritOuLogica()
-    | <GREATER_THAN>  expressaoAritOuLogica()
-    | <LESS_THAN_EQUAL> expressaoAritOuLogica()
-    | <GREATER_THAN_EQUAL> expressaoAritOuLogica()
-    ]
-}
-
-void expressaoAritOuLogica():{}
-{
-    termo2() menorPrioridade()
-}
-
-void menorPrioridade():{}
-{
-    [
-      <PLUS> termo2() menorPrioridade()
-    | <MINUS> termo2() menorPrioridade()
-    | <OR_LOGIC> termo2() menorPrioridade()
-    ]
-}
-
-
-void termo2():{}
-{
-    termo1() mediaPrioridade()
-}
-
-void mediaPrioridade():{}
-{
-      < MULTIPLY> termo1() mediaPrioridade()
-    | < DIVIDE> termo1() mediaPrioridade()
-    | < MODULO> termo1() mediaPrioridade()
-    | < AND > termo1() mediaPrioridade()
-    | < OR_LOGIC> termo1() mediaPrioridade()
-}
-
-void termo1():{}
-{
-    elemento() maiorPrioridade()
-}
-
-void maiorPrioridade(): {}
-{
-[
-    < POWER > elemento() maiorPrioridade()
-]
-}
-
-void elemento():{}
-{
-      < IDENTIFICADOR> indice()
-    | < INTEGER>
-    | < REAL >
-    | < LITERAL >
-    | < TRUE >
-    | < UNTRUE>
-    | <OPEN_PAREN> expressao() <CLOSE_PAREN>
-    | <NOT_LOGIC> <OPEN_PAREN> expressao() <CLOSE_PAREN>
-}
-
-void indice(): {}
-{
-    [ <OPEN_BRACE> expressao() <CLOSE_BRACE> ]
-}
+//
+//void expressao():
+//{}
+//{
+//    expressaoAritOuLogica() expressao_()
+//}
+//
+//// the [] means that the token is optional, sooo, it's basically the OR Episolon
+//void expressao_():{}
+//{
+//    [
+//      <EQUAL> expressaoAritOuLogica()
+//    | <NOT_EQUAL> expressaoAritOuLogica()
+//    | <LESS_THAN> expressaoAritOuLogica()
+//    | <GREATER_THAN>  expressaoAritOuLogica()
+//    | <LESS_THAN_EQUAL> expressaoAritOuLogica()
+//    | <GREATER_THAN_EQUAL> expressaoAritOuLogica()
+//    ]
+//}
+//
+//void expressaoAritOuLogica():{}
+//{
+//    termo2() menorPrioridade()
+//}
+//
+//void menorPrioridade():{}
+//{
+//    [
+//      <PLUS> termo2() menorPrioridade()
+//    | <MINUS> termo2() menorPrioridade()
+//    | <OR_LOGIC> termo2() menorPrioridade()
+//    ]
+//}
+//
+//
+//void termo2():{}
+//{
+//    termo1() mediaPrioridade()
+//}
+//
+//void mediaPrioridade():{}
+//{
+//      < MULTIPLY> termo1() mediaPrioridade()
+//    | < DIVIDE> termo1() mediaPrioridade()
+//    | < MODULO> termo1() mediaPrioridade()
+//    | < AND > termo1() mediaPrioridade()
+//    | < OR_LOGIC> termo1() mediaPrioridade()
+//}
+//
+//void termo1():{}
+//{
+//    elemento() maiorPrioridade()
+//}
+//
+//void maiorPrioridade(): {}
+//{
+//[
+//    < POWER > elemento() maiorPrioridade()
+//]
+//}
+//
+//void elemento():{}
+//{
+//      < IDENTIFICADOR> indice()
+//    | < INTEGER>
+//    | < REAL >
+//    | < LITERAL >
+//    | < TRUE >
+//    | < UNTRUE>
+//    | <OPEN_PAREN> expressao() <CLOSE_PAREN>
+//    | <NOT_LOGIC> <OPEN_PAREN> expressao() <CLOSE_PAREN>
+//}
+//
+//void indice(): {}
+//{
+//    [ <OPEN_BRACE> expressao() <CLOSE_BRACE> ]
+//}
