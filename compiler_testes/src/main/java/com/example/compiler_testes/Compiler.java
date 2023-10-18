@@ -15,8 +15,7 @@ public class Compiler implements CompilerConstants {
     jj_consume_token(IDENTIFICADOR);
     jj_consume_token(OPEN_BRACKET);
     jj_consume_token(CLOSE_BRACKET);
-    enumerado();
-    constAndVars();
+    combinedEnumAndConst();
     jj_consume_token(BODY);
     jj_consume_token(OPEN_BRACKET);
     listaComandos();
@@ -37,40 +36,50 @@ public class Compiler implements CompilerConstants {
     }
 }
 
-  final public void enumerado() throws ParseException {
+  final public void combinedEnumAndConst() throws ParseException {
+    jj_consume_token(DECLARATION);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case DECLARATION:{
-      jj_consume_token(DECLARATION);
-      jj_consume_token(TYPE);
-      jj_consume_token(OPEN_BRACKET);
-      listaIs();
-      jj_consume_token(CLOSE_BRACKET);
-      jj_consume_token(DOT);
+    case TYPE:{
+      enumeradoeouVars();
+      break;
+      }
+    case CONSTANT:{
+      constAndVarsOnly();
       break;
       }
     default:
       jj_la1[1] = jj_gen;
-      ;
+      jj_consume_token(-1);
+      throw new ParseException();
     }
 }
 
-  final public void constAndVars() throws ParseException {
+  final public void enumeradoeouVars() throws ParseException {
+    jj_consume_token(TYPE);
+    jj_consume_token(OPEN_BRACKET);
+    listaIs();
+    jj_consume_token(CLOSE_BRACKET);
+    jj_consume_token(DOT);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case DECLARATION:{
       jj_consume_token(DECLARATION);
-      jj_consume_token(CONSTANT);
-      jj_consume_token(AND);
-      jj_consume_token(VARIABLE);
-      jj_consume_token(OPEN_BRACKET);
-      cV();
-      jj_consume_token(CLOSE_BRACKET);
-      jj_consume_token(DOT);
+      constAndVarsOnly();
       break;
       }
     default:
       jj_la1[2] = jj_gen;
       ;
     }
+}
+
+  final public void constAndVarsOnly() throws ParseException {
+    jj_consume_token(CONSTANT);
+    jj_consume_token(AND);
+    jj_consume_token(VARIABLE);
+    jj_consume_token(OPEN_BRACKET);
+    cV();
+    jj_consume_token(CLOSE_BRACKET);
+    jj_consume_token(DOT);
 }
 
   final public void atribuicao() throws ParseException {
@@ -680,7 +689,7 @@ System.out.println("Erro na expressao aritmetica", e);
 	   jj_la1_init_2();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x20000,0x40000,0x40000,0x10008000,0x2d002000,0x2d002000,0xc0000000,0xc0000000,0xc0000000,0x0,0x0,0x800,0x200800,0x200800,0x800,0xa00000,0x2000000,0x0,0x0,0x0,0x0,0x400000,0x0,0x800,0x0,};
+	   jj_la1_0 = new int[] {0x20000,0x280000,0x40000,0x10008000,0x2d002000,0x2d002000,0xc0000000,0xc0000000,0xc0000000,0x0,0x0,0x800,0x200800,0x200800,0x800,0xa00000,0x2000000,0x0,0x0,0x0,0x0,0x400000,0x0,0x800,0x0,};
 	}
 	private static void jj_la1_init_1() {
 	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x3,0x1,0x8000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xfc000,0xfc000,0x200180,0x200180,0x201600,0x800,0x240007c,0x0,};

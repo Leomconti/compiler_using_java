@@ -216,7 +216,7 @@ SPECIAL_TOKEN :
 
 void programa():{}
 {
-    <DO> <THIS> <IDENTIFICADOR> <OPEN_BRACKET><CLOSE_BRACKET> enumerado() constAndVars() <BODY> <OPEN_BRACKET>listaComandos()<CLOSE_BRACKET> finalPrograma()
+    <DO> <THIS> <IDENTIFICADOR> <OPEN_BRACKET><CLOSE_BRACKET> combinedEnumAndConst() <BODY> <OPEN_BRACKET>listaComandos()<CLOSE_BRACKET> finalPrograma()
 }
 
 // todo: add comentario ao final, dps de description
@@ -225,15 +225,21 @@ void finalPrograma():{}
     (<DESCRIPTION>)?
 }
 
-void enumerado():{}
+void combinedEnumAndConst():{}
 {
-    (<DECLARATION> <TYPE> <OPEN_BRACKET> listaIs() <CLOSE_BRACKET> <DOT>)?
+    <DECLARATION> (enumeradoeouVars() | constAndVarsOnly())
 }
 
-void constAndVars():{}
+void enumeradoeouVars():{}
 {
-    (<DECLARATION> <CONSTANT> <AND> <VARIABLE> <OPEN_BRACKET> cV() <CLOSE_BRACKET> <DOT>)?
+    <TYPE> <OPEN_BRACKET> listaIs() <CLOSE_BRACKET> <DOT> (<DECLARATION> constAndVarsOnly())?
 }
+
+void constAndVarsOnly():{}
+{
+    <CONSTANT> <AND> <VARIABLE> <OPEN_BRACKET> cV() <CLOSE_BRACKET> <DOT>
+}
+
 
 void atribuicao():{}
 {
