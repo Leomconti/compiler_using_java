@@ -4,12 +4,13 @@ package com.example.compiler_testes;
 
 /** Token Manager. */
 public class CompilerTokenManager implements CompilerConstants {
-    String mensagem = "";
+    String erroLexico = "";
     int countLexErrors = 0;
+    String errorSintatico = "";
 
 
-    public String getMensagens() {
-        return mensagem;
+    public String getErroLexico() {
+        return erroLexico;
     }
 
     public int foundLexErrors() {
@@ -1496,39 +1497,39 @@ void SkipLexicalActions(Token matchedToken)
          break;
       case 86 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "\nErro! Limite de d\u00edgitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Limite de d\u00edgitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
          break;
       case 87 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "\nErro! Mais de 5 d\u00edgitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Mais de 5 d\u00edgitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
          break;
       case 88 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "\nErro! Literal sem aspas no in\u00edcio. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Literal sem aspas no in\u00edcio. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
          break;
       case 89 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
          break;
       case 90 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "\nErro! Identificador com muitos d\u00edgitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador com muitos d\u00edgitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
          break;
       case 91 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "\nErro! Identificador come\u00e7ando com d\u00edgito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador come\u00e7ando com d\u00edgito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
          break;
       case 92 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "\nErro! Identificador com m\u00faltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador com m\u00faltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
          break;
       case 93 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
          break;
       case 94 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     mensagem += "\nErro! Identificador come\u00e7ando com letra min\u00fascula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador come\u00e7ando com letra min\u00fascula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
          break;
       default :
          break;

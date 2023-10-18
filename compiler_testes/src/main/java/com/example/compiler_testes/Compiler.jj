@@ -18,12 +18,13 @@ PARSER_END(Compiler)
 
 TOKEN_MGR_DECLS :
 {
-    String mensagem = "";
+    String erroLexico = "";
     int countLexErrors = 0;
+    String errorSintatico = "";
 
 
-    public String getMensagens() {
-        return mensagem;
+    public String getErroLexico() {
+        return erroLexico;
     }
 
     public int foundLexErrors() {
@@ -149,13 +150,6 @@ TOKEN :
 |   < EQUALS: "=" >
 }
 
-// Comentarios
-//TOKEN :
-//{
-////    < COMENTARIOLINHA: "//" ( <DENTROSEMLINHA> )* ("\n")? >
-////|   < COMENTARIOBLOCO: "/*" (( <SEM_ESTRELA> | (("*")+ <SEM_BARRA>) )*) "*/" >
-//}
-
 // Auxiliares
 TOKEN :
 {
@@ -183,189 +177,205 @@ SPECIAL_TOKEN :
      countLexErrors++;
      }
 }
-    //{mensagem += "Erro! Caractere inválido. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    //{erroLexico += "Erro! Caractere inválido. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 // Palavras reservadas
 
 // Valores
 SPECIAL_TOKEN :
 {
     < ERROR_INTEGER: <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ >
-    {mensagem += "\nErro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_REAL:  <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ "." <INTEGER> >
-    {mensagem += "\nErro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_LITERAL_START: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
-    {mensagem += "\nErro! Literal sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Literal sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_LITERAL_END: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
-    {mensagem += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
 
 SPECIAL_TOKEN :
 {
     < ERROR_IDENTIFICADOR: <MAIUSCULA> ((<DIGITO>)+ (("_") | (<LETRA>)+("_")?)+)* >
-    {mensagem += "\nErro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_IDENTIFICADOR_START_DIGIT: <DIGITO> (<LETRA> | <DIGITO> | "_")+ >
-    {mensagem += "\nErro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> ((<LETRA> | <DIGITO>)* "__" (<LETRA> | <DIGITO> | "_")*)+ >
-    {mensagem += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_IDENTIFICADOR_END_UNDERSCORE: <MAIUSCULA> ((<LETRA> | <DIGITO>)+ "_")+ >
-    {mensagem += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
 |   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
-    {mensagem += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
 
-double programa():{}
+void programa():{}
 {
-    <DO> <THIS> <IDENTIFICADOR> <OPEN_BRACKET><CLOSE_BRACKET> enumerado() constAndVars() <BODY> [listaComandos()] finalPrograma()
+    <DO> <THIS> <IDENTIFICADOR> <OPEN_BRACKET><CLOSE_BRACKET> enumerado() constAndVars() <BODY> <OPEN_BRACKET>listaComandos()<CLOSE_BRACKET> finalPrograma()
 }
 
-double finalPrograma():{}
+// todo: add comentario ao final, dps de description
+void finalPrograma():{}
 {
-    (<DESCRIPTION> <COMENTARIO>)?
+    (<DESCRIPTION>)?
 }
 
-double enumerado():{}
+void enumerado():{}
 {
     (<DECLARATION> <TYPE> <OPEN_BRACKET> listaIs() <CLOSE_BRACKET> <DOT>)?
 }
 
-double atribuicao():{}
-{
-    <DESIGNATE> <THIS> listaIdent() <AS> expressao()
-}
-
-double saida():{}
-{
-    <WRITE>  <OPEN_BRACKET> listaIdentConst() <CLOSE_BRACKET> <DOT>
-}
-
-double write():{}
-{
-    <WRITE> <ALL> <THIS> | <WRITE> <THIS>
-}
-
-double entrada():{}
-{
-    <READ> <THIS> <OPEN_BRACKET> listaIdent() <CLOSE_BRACKET> <DOT>
-}
-
-double selecao():{}
-{
-    <AVALIATE> <THIS> expressao() <TRUE> <RESULT> <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET> <UNTRUE> <RESULT> <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET>
-}
-
-double comandos():{}
-{
-    atribuicao() | entrada() | saida() |selecao() | repeticao()
-}
-
-double listaComandos():{}
-{
-    comandos() comCont()
-}
-
-double comCont():{}
-{
-    (listaComandos())?
-}
-
-double constAndVars():{}
+void constAndVars():{}
 {
     (<DECLARATION> <CONSTANT> <AND> <VARIABLE> <OPEN_BRACKET> cV() <CLOSE_BRACKET> <DOT>)?
 }
 
-double asC():{}
+void atribuicao():{}
+{
+    <DESIGNATE> <THIS> listaIdent() <AS> expressao()
+}
+
+void saida():{}
+{
+    <WRITE> <OPEN_BRACKET> listaIdentConst() <CLOSE_BRACKET> <DOT>
+}
+
+void write():{}
+{
+    <WRITE> write_()
+}
+
+void write_():{}
+{
+    <ALL> <THIS> | <THIS>
+}
+
+void entrada():{}
+{
+    <READ> <THIS> <OPEN_BRACKET> listaIdent() <CLOSE_BRACKET> <DOT>
+}
+
+void selecao():{}
+{
+    <AVALIATE> <THIS> expressao() <TRUE> <RESULT> <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET> <UNTRUE> <RESULT> <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET>
+}
+
+void comandos():{}
+{
+    atribuicao() | entrada() | saida() |selecao() | repeticao()
+}
+
+void listaComandos():{}
+{
+    comandos() comCont()
+}
+
+void comCont():{}
+{
+    (listaComandos())?
+}
+
+void asC():{}
 {
     listaIdent() <IS> tipoC() <EQUALS> valor()
 }
 
-double asV():{}
+void asV():{}
 {
     listaIdent() <IS> tipoV()
 }
 
-double tipoC():{}
+void tipoC():{}
 {
     <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF> | <LOGIC_DEF>
 }
 
-double tipoV():{}
+void tipoV():{}
 {
     <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF> | <LOGIC_DEF>
 }
 
-double valor():{}
+void valor():{}
 {
-    <CONSTANT> <INTEGER_DEF> | <CONSTANT> <REAL_DEF> | <CONSTANT> <LITERAL_DEF>
+    <CONSTANT> valor_()
 }
 
-double listaIdentsC():{}
+void valor_():{}
+{
+    <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF>
+}
+
+void listaIdentsC():{}
 {
     <IDENTIFICADOR> identCont()
 }
 
-double identCont():{}
+void identCont():{}
 {
     (","listaIdentsC())?
 }
 
-double listaIdent():{}
+void listaIdent():{}
 {
     <IDENTIFICADOR> tId() contId()
 }
 
-double tId():{}
+void tId():{}
 {
     (<OPEN_BRACE> <CONSTANT> <INTEGER_DEF> <CLOSE_BRACE>)?
 }
 
-double contId():{}
+void contId():{}
 {
     (listaIdent())?
 }
 
-double listaIdentConst():{}
+void listaIdentConst():{}
 {
     listaIdentConstI() <DOT> iCCont()
 }
 
-double listaIdentConstI():{}
+void listaIdentConstI():{}
 {
     listaIdent() | <CONSTANT>
 }
 
-double iCCont():{}
+void iCCont():{}
 {
     (listaIdentConst())?
 }
 
-double listaIs():{}
+void listaIs():{}
 {
     <IDENTIFICADOR> <IS>  <OPEN_BRACE> listaIdent() <CLOSE_BRACE> isCont()
 }
 
-double isCont():{}
+void isCont():{}
 {
     (listaIs())?
 }
 
-double repeticao():{}
+void repeticao():{}
 {
     <REPEAT> <THIS> expressao() <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET>
 }
 
-double cV():{}
+void cV():{}
 {
-    <AS> <CONSTANT> asC() contCV() | <AS> <VARIABLE> asV()
+    <AS> cV_()
 }
 
-double contCV():{}
+void cV_(): {}
+{
+    <CONSTANT> asC() contCV() | <VARIABLE> asV()
+}
+
+void contCV():{}
 {
     (<AS> <VARIABLE> asV())?
 }
@@ -411,11 +421,15 @@ void termo2():{}
 
 void mediaPrioridade():{}
 {
+try{
       < MULTIPLY> termo1() mediaPrioridade()
     | < DIVIDE> termo1() mediaPrioridade()
     | < MODULO> termo1() mediaPrioridade()
     | < AND > termo1() mediaPrioridade()
     | < OR_LOGIC> termo1() mediaPrioridade()
+}catch(Exception e){
+    System.out.println("Erro na expressao aritmetica", e);
+}
 }
 
 void termo1():{}

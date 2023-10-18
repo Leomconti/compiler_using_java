@@ -113,7 +113,7 @@ public class CodeEditorController {
 
         // If lexer is not null, fetch the error messages
         if (lexer != null) {
-            String errorMessages = lexer.token_source.mensagem;
+            String errorMessages = lexer.token_source.getErroLexico();
             // will only run once and point out the errors
             if (!errorMessages.isEmpty()) {
                 output.append("\n").append(errorMessages);
