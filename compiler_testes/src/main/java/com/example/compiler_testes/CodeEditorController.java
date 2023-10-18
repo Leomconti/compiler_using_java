@@ -251,8 +251,8 @@ public class CodeEditorController {
                 return "Error_Integer";
             case CompilerConstants.ERROR_REAL:
                 return "Error_Real";
-            case CompilerConstants.ERROR_LITERAL_START:
-                return "Error_Literal_Start";
+//            case CompilerConstants.ERROR_LITERAL_START:
+//                return "Error_Literal_Start";
             case CompilerConstants.ERROR_LITERAL_END:
                 return "Error_Literal_End";
             default:

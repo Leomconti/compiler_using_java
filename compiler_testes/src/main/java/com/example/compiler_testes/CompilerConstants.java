@@ -165,19 +165,17 @@ public interface CompilerConstants {
   /** RegularExpression Id. */
   int ERROR_REAL = 87;
   /** RegularExpression Id. */
-  int ERROR_LITERAL_START = 88;
+  int ERROR_LITERAL_END = 88;
   /** RegularExpression Id. */
-  int ERROR_LITERAL_END = 89;
+  int ERROR_IDENTIFICADOR = 89;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR = 90;
+  int ERROR_IDENTIFICADOR_START_DIGIT = 90;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_DIGIT = 91;
+  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 91;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 92;
+  int ERROR_IDENTIFICADOR_END_UNDERSCORE = 92;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_END_UNDERSCORE = 93;
-  /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_LOWERCASE = 94;
+  int ERROR_IDENTIFICADOR_START_LOWERCASE = 93;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -276,7 +274,6 @@ public interface CompilerConstants {
     "<INVALID_CONST>",
     "<ERROR_INTEGER>",
     "<ERROR_REAL>",
-    "<ERROR_LITERAL_START>",
     "<ERROR_LITERAL_END>",
     "<ERROR_IDENTIFICADOR>",
     "<ERROR_IDENTIFICADOR_START_DIGIT>",
