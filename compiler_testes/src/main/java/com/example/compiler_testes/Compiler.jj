@@ -287,6 +287,8 @@ void asC():{}
     listaIdent() <IS> tipoC() <EQUALS> valor()
 }
 
+//teste
+
 void asV():{}
 {
     listaIdent() <IS> tipoV()
