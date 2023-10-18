@@ -237,24 +237,6 @@ public class CodeEditorController {
                 return "Special_Symbol";
             case CompilerConstants.EQUALS:
                 return "Equals";
-            case CompilerConstants.ERROR_IDENTIFICADOR:
-                return "Error_Identificador";
-            case CompilerConstants.ERROR_IDENTIFICADOR_START_DIGIT:
-                return "Error_Identificador_Start_Digit";
-            case CompilerConstants.ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES:
-                return "Error_Identificador_Multiple_Underscores";
-            case CompilerConstants.ERROR_IDENTIFICADOR_END_UNDERSCORE:
-                return "Error_Identificador_End_Underscore";
-            case CompilerConstants.ERROR_IDENTIFICADOR_START_LOWERCASE:
-                return "Error_Identificador_Start_Lowercase";
-            case CompilerConstants.ERROR_INTEGER:
-                return "Error_Integer";
-            case CompilerConstants.ERROR_REAL:
-                return "Error_Real";
-//            case CompilerConstants.ERROR_LITERAL_START:
-//                return "Error_Literal_Start";
-            case CompilerConstants.ERROR_LITERAL_END:
-                return "Error_Literal_End";
             default:
                 return String.format("Unknown token '%d'", kind);
         }

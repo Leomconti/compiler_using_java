@@ -165,6 +165,52 @@ TOKEN :
 |   < #SEM_BARRA: ["\u0000"-"\u002E"] | ["\u0030"-"\uFFFF"] >  // ascci sem a barra (para nao poder colocar estrela e barra e contar como inside do texto ali )
 }
 
+// Erros
+SPECIAL_TOKEN :
+{
+    < INVALID_LEXICAL : (~ ["a"-"z", "A"-"Z", "0"-"9"," ","\t","\n","\r","\f","\'", "\"","+", "-", "*", "/", "%","<", ">", "=", ".", ",", ";", "(", ")", "[", "]", "{", "}"])+>
+   {System.err.println("Line: " + input_stream.getEndLine() + " Column: " + input_stream.getEndColumn() + " Invalid string found: " + image);
+    countLexErrors++;
+    }
+|  <INVALID_CONST: "\"" (~ ["\n", "\r", "\""])* ["\n", "\r"]>
+    {System.err.println("Line: " + input_stream.getEndLine() + " Column: " + input_stream.getEndColumn() + " String constatnt has a \\n: " + image);
+     countLexErrors++;
+     }
+}
+    //{erroLexico += "Erro! Caractere inválido. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+// Palavras reservadas
+
+// Valores
+SPECIAL_TOKEN :
+{
+    < ERROR_INTEGER: <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ >
+    {erroLexico += "\nErro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_REAL:  <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ "." <INTEGER> >
+    {erroLexico += "\nErro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_LITERAL_END: "\"" ( <ASCII_ASPAS> )* | "\'" (<ASCII_APOSTROFO>)* >
+    {erroLexico += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+}
+
+SPECIAL_TOKEN :
+{
+    < ERROR_IDENTIFICADOR: <MAIUSCULA> ((<DIGITO>)+ (("_") | (<LETRA>)+("_")?)+)* >
+    {erroLexico += "\nErro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_IDENTIFICADOR_START_DIGIT: <DIGITO> (<LETRA> | <DIGITO> | "_")+ >
+    {erroLexico += "\nErro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> ((<LETRA> | <DIGITO>)* "__" (<LETRA> | <DIGITO> | "_")*)+ >
+    {erroLexico += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_IDENTIFICADOR_END_UNDERSCORE: <MAIUSCULA> ((<LETRA> | <DIGITO>)+ "_")+ >
+    {erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
+|   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
+    {erroLexico += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+}
+
 void programa():{}
 {
     <DO> <THIS> <IDENTIFICADOR> <OPEN_BRACKET><CLOSE_BRACKET> combinedEnumAndConst() <BODY> <OPEN_BRACKET>listaComandos()<CLOSE_BRACKET> finalPrograma()
@@ -411,53 +457,4 @@ void elemento():{}
 void indice(): {}
 {
     [ <OPEN_BRACE> expressao() <CLOSE_BRACE> ]
-}
-
-// Erros
-SPECIAL_TOKEN :
-{
-    < INVALID_LEXICAL : (~ ["a"-"z", "A"-"Z", "0"-"9"," ","\t","\n","\r","\f","\'", "\"","+", "-", "*", "/", "%","<", ">", "=", ".", ",", ";", "(", ")", "[", "]", "{", "}"])+>
-   {System.err.println("Line: " + input_stream.getEndLine() + " Column: " + input_stream.getEndColumn() + " Invalid string found: " + image);
-    countLexErrors++;
-    }
-|  <INVALID_CONST: "\"" (~ ["\n", "\r", "\""])* ["\n", "\r"]>
-    {System.err.println("Line: " + input_stream.getEndLine() + " Column: " + input_stream.getEndColumn() + " String constatnt has a \\n: " + image);
-     countLexErrors++;
-     }
-}
-    //{erroLexico += "Erro! Caractere inválido. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-// Palavras reservadas
-
-// Valores
-SPECIAL_TOKEN :
-{
-    < ERROR_INTEGER: <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ >
-    {erroLexico += "\nErro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_REAL:  <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ "." <INTEGER> >
-    {erroLexico += "\nErro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-//|   < ERROR_LITERAL_START: (( <ASCII_ASPAS> )* "\"" | ( <ASCII_APOSTROFO> )* "\'") >
-//    {erroLexico += "\nErro! Literal sem aspas no início. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_LITERAL_END: "\"" ( <ASCII_ASPAS> )* | "\'" (<ASCII_APOSTROFO>)* >
-    {erroLexico += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-}
-
-SPECIAL_TOKEN :
-{
-    < ERROR_IDENTIFICADOR: <MAIUSCULA> ((<DIGITO>)+ (("_") | (<LETRA>)+("_")?)+)* >
-    {erroLexico += "\nErro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_IDENTIFICADOR_START_DIGIT: <DIGITO> (<LETRA> | <DIGITO> | "_")+ >
-    {erroLexico += "\nErro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> ((<LETRA> | <DIGITO>)* "__" (<LETRA> | <DIGITO> | "_")*)+ >
-    {erroLexico += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_IDENTIFICADOR_END_UNDERSCORE: <MAIUSCULA> ((<LETRA> | <DIGITO>)+ "_")+ >
-    {erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
-|   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
-    {erroLexico += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
