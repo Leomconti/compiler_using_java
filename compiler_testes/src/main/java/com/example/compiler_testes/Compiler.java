@@ -548,45 +548,41 @@ public class Compiler implements CompilerConstants {
 }
 
   final public void mediaPrioridade() throws ParseException {
-    try {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case MULTIPLY:{
-        jj_consume_token(MULTIPLY);
-        termo1();
-        mediaPrioridade();
-        break;
-        }
-      case DIVIDE:{
-        jj_consume_token(DIVIDE);
-        termo1();
-        mediaPrioridade();
-        break;
-        }
-      case MODULO:{
-        jj_consume_token(MODULO);
-        termo1();
-        mediaPrioridade();
-        break;
-        }
-      case AND:{
-        jj_consume_token(AND);
-        termo1();
-        mediaPrioridade();
-        break;
-        }
-      case OR_LOGIC:{
-        jj_consume_token(OR_LOGIC);
-        termo1();
-        mediaPrioridade();
-        break;
-        }
-      default:
-        jj_la1[21] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case MULTIPLY:{
+      jj_consume_token(MULTIPLY);
+      termo1();
+      mediaPrioridade();
+      break;
       }
-    } catch (Exception e) {
-System.out.println("Erro na expressao aritmetica", e);
+    case DIVIDE:{
+      jj_consume_token(DIVIDE);
+      termo1();
+      mediaPrioridade();
+      break;
+      }
+    case MODULO:{
+      jj_consume_token(MODULO);
+      termo1();
+      mediaPrioridade();
+      break;
+      }
+    case AND:{
+      jj_consume_token(AND);
+      termo1();
+      mediaPrioridade();
+      break;
+      }
+    case OR_LOGIC:{
+      jj_consume_token(OR_LOGIC);
+      termo1();
+      mediaPrioridade();
+      break;
+      }
+    default:
+      jj_la1[21] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
     }
 }
 

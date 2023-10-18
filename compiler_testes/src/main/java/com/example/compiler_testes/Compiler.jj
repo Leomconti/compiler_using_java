@@ -427,15 +427,11 @@ void termo2():{}
 
 void mediaPrioridade():{}
 {
-try{
       < MULTIPLY> termo1() mediaPrioridade()
     | < DIVIDE> termo1() mediaPrioridade()
     | < MODULO> termo1() mediaPrioridade()
     | < AND > termo1() mediaPrioridade()
     | < OR_LOGIC> termo1() mediaPrioridade()
-}catch(Exception e){
-    System.out.println("Erro na expressao aritmetica", e);
-}
 }
 
 void termo1():{}
