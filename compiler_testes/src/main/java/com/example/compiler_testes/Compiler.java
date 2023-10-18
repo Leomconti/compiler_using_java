@@ -23,11 +23,11 @@ public class Compiler implements CompilerConstants {
     finalPrograma();
 }
 
-// todo: add comentario ao final, dps de description
   final public void finalPrograma() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case DESCRIPTION:{
       jj_consume_token(DESCRIPTION);
+      jj_consume_token(LITERAL);
       break;
       }
     default:

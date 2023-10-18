@@ -219,10 +219,9 @@ void programa():{}
     <DO> <THIS> <IDENTIFICADOR> <OPEN_BRACKET><CLOSE_BRACKET> combinedEnumAndConst() <BODY> <OPEN_BRACKET>listaComandos()<CLOSE_BRACKET> finalPrograma()
 }
 
-// todo: add comentario ao final, dps de description
 void finalPrograma():{}
 {
-    (<DESCRIPTION>)?
+    (<DESCRIPTION> <LITERAL>)?
 }
 
 void combinedEnumAndConst():{}
