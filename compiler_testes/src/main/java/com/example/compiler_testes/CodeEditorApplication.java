@@ -1,4 +1,5 @@
 package com.example.compiler_testes;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -63,7 +64,7 @@ public class CodeEditorApplication extends Application {
         codeArea.caretPositionProperty().addListener((obs, oldPos, newPos) -> {
             int pos = newPos;
             int line = codeArea.getCurrentParagraph();
-            int col = pos+1 - codeArea.getAbsolutePosition(line, 0);
+            int col = pos + 1 - codeArea.getAbsolutePosition(line, 0);
             updateFooter(line, col);
         });
 
@@ -307,7 +308,6 @@ public class CodeEditorApplication extends Application {
     }
 
 
-
     private void onSaveAsClicked() {
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showSaveDialog(null);
@@ -365,8 +365,7 @@ public class CodeEditorApplication extends Application {
         String result = "";
         try {
             result = controller.compileCode(code);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             result = e.getMessage();
         }
         messageArea.setText(result);
@@ -382,3 +381,5 @@ public class CodeEditorApplication extends Application {
     }
 
 }
+
+
