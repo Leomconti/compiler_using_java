@@ -235,7 +235,7 @@ SPECIAL_TOKEN :
 
 void programa(): {} {
     try {
-        <DO > < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > declaration_or_nothin() < BODY > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > finalPrograma()
+        <DO> < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > Declaration_Enumerado_E_ConstAndVars() < BODY > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > finalPrograma()
     } catch (ParseException e) {
         handleError(e, "programa");
     }
@@ -592,4 +592,127 @@ void elemento(): {} {
 
 void indice(): {} {
         [ < OPEN_BRACE > expressao() < CLOSE_BRACE > ]
+}
+
+/////////////////////////////
+
+
+void Declaration_Enumerado_E_ConstAndVars(): {} {
+    try {
+        <DECLARATION> (EnumeradoEouVars() | ConstAndVarsOnly())
+    } catch (ParseException e) {
+        handleError(e, "Declaration_Enumerado_E_ConstAndVars");
+    }
+}
+
+void EnumeradoEouVars(): {} {
+    try {
+        <TYPE> <OPEN_BRACKET> ListaDeIdentificadores() <CLOSE_BRACKET> <DOT> (<DECLARATION> ConstAndVarsOnly())?
+    } catch (ParseException e) {
+        handleError(e, "EnumeradoEouVars");
+    }
+}
+
+void ConstAndVarsOnly(): {} {
+    try {
+        <CONSTANT> <AND> <VARIABLE> <OPEN_BRACKET> ConstAndVarsOuVarsAndConstOuVarsOuConst() <CLOSE_BRACKET> <DOT>
+    } catch (ParseException e) {
+        handleError(e, "ConstAndVarsOnly");
+    }
+}
+
+void ConstAndVarsOuVarsAndConstOuVarsOuConst(): {} {
+    try {
+        (<AS> (ConstAndVars() | VarsAndConst()) | Vars() | Const())
+    } catch (ParseException e) {
+        handleError(e, "ConstAndVarsOuVarsAndConstOuVarsOuConst");
+    }
+}
+
+void Vars(): {} {
+    try {
+        <VARIABLE> ListaDeIdentificadores() <IS> TipoConstante() <EQUALS> Valor() <DOT> VarsAdicional()
+    } catch (ParseException e) {
+        handleError(e, "Vars");
+    }
+}
+
+void VarsAdicional(): {} {
+    try {
+        (Vars())?
+    } catch (ParseException e) {
+        handleError(e, "VarsAdicional");
+    }
+}
+
+void Const(): {} {
+    try {
+        <CONSTANT> ListaDeIdentificadores() <IS> TipoConstante() <DOT> ConstAdicional()
+    } catch (ParseException e) {
+        handleError(e, "Const");
+    }
+}
+
+void ConstAdicional(): {} {
+    try {
+        (Const())?
+    } catch (ParseException e) {
+        handleError(e, "ConstAdicional");
+    }
+}
+
+void ConstAndVars(): {} {
+    try {
+        Const() <AS> Vars() <DOT>
+    } catch (ParseException e) {
+        handleError(e, "ConstAndVars");
+    }
+}
+
+void VarsAndConst(): {} {
+    try {
+        Vars() <AS> Const() <DOT>
+    } catch (ParseException e) {
+        handleError(e, "VarsAndConst");
+    }
+}
+
+void TipoConstante(): {} {
+    try {
+        <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF> | <LOGIC_DEF>
+    } catch (ParseException e) {
+        handleError(e, "TipoConstante");
+    }
+}
+
+void TipoVariavel(): {} {
+    try {
+        <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF> | <LOGIC_DEF>
+    } catch (ParseException e) {
+        handleError(e, "TipoVariavel");
+    }
+}
+
+void Valor(): {} {
+    try {
+        <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF>
+    } catch (ParseException e) {
+        handleError(e, "Valor");
+    }
+}
+
+void ListaDeIdentificadores(): {} {
+    try {
+        <IDENTIFICADOR> ListaDeIdentificadoresAdicional()
+    } catch (ParseException e) {
+        handleError(e, "ListaDeIdentificadores");
+    }
+}
+
+void ListaDeIdentificadoresAdicional(): {} {
+    try {
+        (ListaDeIdentificadores())?
+    } catch (ParseException e) {
+        handleError(e, "ListaDeIdentificadoresAdicional");
+    }
 }
