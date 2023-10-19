@@ -226,430 +226,384 @@ SPECIAL_TOKEN :
     {erroLexico += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
 
-void programa():{}
-{
-try{
-    <DO> <THIS> <IDENTIFICADOR> <OPEN_BRACKET><CLOSE_BRACKET> combinedEnumAndConst() <BODY> <OPEN_BRACKET>listaComandos()<CLOSE_BRACKET> finalPrograma()
-    } catch (ParseException e) {
-        handleError(e);
-    }
-}
-
-void finalPrograma():{}
-{
-try{
-    (<DESCRIPTION> <LITERAL>)?
-    } catch (ParseException e) {
-        handleError(e);
-    }
-}
-
-void combinedEnumAndConst():{}
-{
+void programa(): {} {
     try {
-        <DECLARATION> (enumeradoeouVars() | constAndVarsOnly())
+        <DO > < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > combinedEnumAndConst() < BODY > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > finalPrograma()
     } catch (ParseException e) {
         handleError(e);
     }
 }
 
-void enumeradoeouVars():{}
-{
+void finalPrograma(): {} {
     try {
-        <TYPE> <OPEN_BRACKET> lista_de_identificadores() <CLOSE_BRACKET> <DOT> (<DECLARATION> constAndVarsOnly())?
+        ( < DESCRIPTION > < LITERAL > ) ?
     } catch (ParseException e) {
         handleError(e);
     }
 }
 
-void constAndVarsOnly():{}
-{
+void combinedEnumAndConst(): {} {
     try {
-        <CONSTANT> <AND> <VARIABLE> <OPEN_BRACKET> cV() <CLOSE_BRACKET> <DOT>
+        <DECLARATION > (enumeradoeouVars() | constAndVarsOnly())
     } catch (ParseException e) {
         handleError(e);
     }
 }
 
-
-void atribuicao():{}
-{
-try{
-    <DESIGNATE> <THIS> listaIdent() <AS> expressao()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void enumeradoeouVars(): {} {
+    try {
+        <TYPE > < OPEN_BRACKET > lista_de_identificadores() < CLOSE_BRACKET > < DOT > ( < DECLARATION > constAndVarsOnly()) ?
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void saida():{}
-{
-try{
-    <WRITE> <OPEN_BRACKET> listaIdentConst() <CLOSE_BRACKET> <DOT>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void constAndVarsOnly(): {} {
+    try {
+        <CONSTANT > < AND > < VARIABLE > < OPEN_BRACKET > cV() < CLOSE_BRACKET > < DOT >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void write():{}
-{
-try{
-    <WRITE> write_()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void atribuicao(): {} {
+    try {
+        <DESIGNATE > < THIS > listaIdent() < AS > expressao()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void write_():{}
-{
-try{
-    <ALL> <THIS> | <THIS>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void saida(): {} {
+    try {
+        <WRITE > < OPEN_BRACKET > listaIdentConst() < CLOSE_BRACKET > < DOT >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void entrada():{}
-{
-try{
-    <READ> <THIS> <OPEN_BRACKET> listaIdent() <CLOSE_BRACKET> <DOT>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void write(): {} {
+    try {
+        <WRITE > write_()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void selecao():{}
-{
-try{
-    <AVALIATE> <THIS> expressao() <TRUE> <RESULT> <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET> <UNTRUE> <RESULT> <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void write_(): {} {
+    try {
+        <ALL > < THIS > | < THIS >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void comando():{}
-{
-try{
-    atribuicao() | entrada() | saida() |selecao() | repeticao()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void entrada(): {} {
+    try {
+        <READ > < THIS > < OPEN_BRACKET > listaIdent() < CLOSE_BRACKET > < DOT >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void listaComandos():{}
-{
-try{
-    comando() comando_adicional()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void selecao(): {} {
+    try {
+        <AVALIATE > < THIS > expressao() < TRUE > < RESULT > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > < UNTRUE > < RESULT > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void comando_adicional():{}
-{
-try{
-    (listaComandos())?
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void comando(): {} {
+    try {
+        atribuicao() | entrada() | saida() | selecao() | repeticao()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void as_contant():{}
-{
-try{
-    listaIdent() <IS> tipo_constante() <EQUALS> valor()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void listaComandos(): {} {
+    try {
+        comando() comando_adicional()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void as_variavel():{}
-{
-try{
-    listaIdent() <IS> tipo_variavel()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void comando_adicional(): {} {
+    try {
+        (listaComandos()) ?
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void tipo_constante():{}
-{
-try{
-    <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF> | <LOGIC_DEF>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void as_contant(): {} {
+    try {
+        listaIdent() < IS > tipo_constante() < EQUALS > valor()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void tipo_variavel():{}
-{
-try{
-    <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF> | <LOGIC_DEF>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void as_variavel(): {} {
+    try {
+        listaIdent() < IS > tipo_variavel()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void valor():{}
-{
-try{
-    <CONSTANT> valor_()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void tipo_constante(): {} {
+    try {
+        <INTEGER_DEF > | < REAL_DEF > | < LITERAL_DEF > | < LOGIC_DEF >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void valor_():{}
-{
-try{
-    <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void tipo_variavel(): {} {
+    try {
+        <INTEGER_DEF > | < REAL_DEF > | < LITERAL_DEF > | < LOGIC_DEF >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void listaIdentsC():{}
-{
-try{
-    <IDENTIFICADOR> identCont()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void valor(): {} {
+    try {
+        <CONSTANT > valor_()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void identCont():{}
-{
-try{
-    (<COMMA>listaIdentsC())?
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void valor_(): {} {
+    try {
+        <INTEGER_DEF > | < REAL_DEF > | < LITERAL_DEF >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void listaIdent():{}
-{
-try{
-    <IDENTIFICADOR> tId() identificador_adicional()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void listaIdentsC(): {} {
+    try {
+        <IDENTIFICADOR > identCont()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void tId():{}
-{
-try{
-    (<OPEN_BRACE> <CONSTANT> <INTEGER_DEF> <CLOSE_BRACE>)?
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void identCont(): {} {
+    try {
+        ( < COMMA > listaIdentsC()) ?
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void identificador_adicional():{}
-{
-try{
-    (listaIdent())?
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void listaIdent(): {} {
+    try {
+        <
+        IDENTIFICADOR > tId() identificador_adicional()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void listaIdentConst():{}
-{
-try{
-    listaIdentConstI() <DOT> Identificador_constante_adicional()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void tId(): {} {
+    try {
+        ( < OPEN_BRACE > < CONSTANT > < INTEGER_DEF > < CLOSE_BRACE > ) ?
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void listaIdentConstI():{}
-{
-try{
-    listaIdent() | <CONSTANT>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void identificador_adicional(): {} {
+    try {
+        (listaIdent()) ?
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void Identificador_constante_adicional():{}
-{
-try{
-    (listaIdentConst())?
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void listaIdentConst(): {} {
+    try {
+        listaIdentConstI() < DOT > Identificador_constante_adicional()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void lista_de_identificadores():{}
-{
-try{
-    <IDENTIFICADOR> <IS>  <OPEN_BRACE> listaIdent() <CLOSE_BRACE> lista_de_Identificadores_adicional()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void listaIdentConstI(): {} {
+    try {
+        listaIdent() | < CONSTANT >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void lista_de_Identificadores_adicional():{}
-{
-try{
-    (lista_de_identificadores())?
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void Identificador_constante_adicional(): {} {
+    try {
+        (listaIdentConst()) ?
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void repeticao():{}
-{
-try{
-    <REPEAT> <THIS> expressao() <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void lista_de_identificadores(): {} {
+    try {
+        <
+        IDENTIFICADOR > < IS > < OPEN_BRACE > listaIdent() < CLOSE_BRACE > lista_de_Identificadores_adicional()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void cV():{}
-{
-try{
-    <AS> cV_()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void lista_de_Identificadores_adicional(): {} {
+    try {
+        (lista_de_identificadores()) ?
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void cV_(): {}
-{
-try{
-    <CONSTANT> as_contant() contCV() | <VARIABLE> as_variavel()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void repeticao(): {} {
+    try {
+        <
+        REPEAT > < THIS > expressao() < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET >
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void contCV():{}
-{
-try{
-    (<AS> <VARIABLE> as_variavel())?
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void cV(): {} {
+    try {
+        <
+        AS > cV_()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void expressao():
-{}
-{
-try{
-    expressaoAritOuLogica() expressao_()
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void cV_(): {} {
+    try {
+        <
+        CONSTANT > as_contant() contCV() | < VARIABLE > as_variavel()
+    } catch (ParseException e) {
+        handleError(e);
+    }
+}
+
+void contCV(): {} {
+    try {
+        ( < AS > < VARIABLE > as_variavel()) ?
+    } catch (ParseException e) {
+        handleError(e);
+    }
+}
+
+void expressao(): {} {
+    try {
+        expressaoAritOuLogica() expressao_()
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
 // the [] means that the token is optional, sooo, it's basically the OR Episolon
-void expressao_():{}
-{
-try{
-    [
-      <EQUAL> expressaoAritOuLogica()
-    | <NOT_EQUAL> expressaoAritOuLogica()
-    | <LESS_THAN> expressaoAritOuLogica()
-    | <GREATER_THAN>  expressaoAritOuLogica()
-    | <LESS_THAN_EQUAL> expressaoAritOuLogica()
-    | <GREATER_THAN_EQUAL> expressaoAritOuLogica()
-    ]
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void expressao_(): {} {
+    try {
+        [ <
+            EQUAL > expressaoAritOuLogica() |
+            < NOT_EQUAL > expressaoAritOuLogica() |
+            < LESS_THAN > expressaoAritOuLogica() |
+            < GREATER_THAN > expressaoAritOuLogica() |
+            < LESS_THAN_EQUAL > expressaoAritOuLogica() |
+            < GREATER_THAN_EQUAL > expressaoAritOuLogica()
+        ]
+    } catch (ParseException e) {
+        handleError(e);
+    }
 
 }
 
-void expressaoAritOuLogica():{}
-{
-try{
-    termo2() menorPrioridade()
-        } catch (ParseException e) {
-            handleError(e);
-        }
-}
-
-void menorPrioridade():{}
-{
-try{
-    [
-      <PLUS> termo2() menorPrioridade()
-    | <MINUS> termo2() menorPrioridade()
-    | <OR_LOGIC> termo2() menorPrioridade()
-    ]
-        } catch (ParseException e) {
-            handleError(e);
-        }
-}
-
-
-void termo2():{}
-{
-try{
-    termo1() mediaPrioridade()
-        } catch (ParseException e) {
-            handleError(e);
-        }
-}
-
-void mediaPrioridade():{}
-{
-try{
-      < MULTIPLY> termo1() mediaPrioridade()
-    | < DIVIDE> termo1() mediaPrioridade()
-    | < MODULO> termo1() mediaPrioridade()
-    | < AND > termo1() mediaPrioridade()
-    | < OR_LOGIC> termo1() mediaPrioridade()
-        } catch (ParseException e) {
-            handleError(e);
-        }
-}
-
-void termo1():{}
-{
-try{
-
-    elemento() maiorPrioridade()
-        } catch (ParseException e) {
-            handleError(e);
-        }
-}
-
-void maiorPrioridade(): {}
-{
-try{
-
-[
-    < POWER > elemento() maiorPrioridade()
-]
+void expressaoAritOuLogica(): {} {
+    try {
+        termo2() menorPrioridade()
     } catch (ParseException e) {
         handleError(e);
     }
 }
 
-void elemento():{}
-{
-try{
-
-      < IDENTIFICADOR> indice()
-    | < INTEGER>
-    | < REAL >
-    | < LITERAL >
-    | < TRUE >
-    | < UNTRUE>
-    | <OPEN_PAREN> expressao() <CLOSE_PAREN>
-    | <NOT_LOGIC> <OPEN_PAREN> expressao() <CLOSE_PAREN>
-        } catch (ParseException e) {
-            handleError(e);
-        }
+void menorPrioridade(): {} {
+    try {
+        [ <
+            PLUS > termo2() menorPrioridade() |
+            < MINUS > termo2() menorPrioridade() |
+            < OR_LOGIC > termo2() menorPrioridade()
+        ]
+    } catch (ParseException e) {
+        handleError(e);
+    }
 }
 
-void indice(): {}
-{
-try{
-    [ <OPEN_BRACE> expressao() <CLOSE_BRACE> ]
-} catch (ParseException e) {
-    handleError(e);
+void termo2(): {} {
+    try {
+        termo1() mediaPrioridade()
+    } catch (ParseException e) {
+        handleError(e);
+    }
+}
+
+void mediaPrioridade(): {} {
+    try {
+             < MULTIPLY> termo1() mediaPrioridade()
+           | < DIVIDE> termo1() mediaPrioridade()
+           | < MODULO> termo1() mediaPrioridade()
+           | < AND > termo1() mediaPrioridade()
+           | < OR_LOGIC> termo1() mediaPrioridade()
+    } catch (ParseException e) {
+        handleError(e);
+    }
+}
+
+void termo1(): {} {
+    try {
+
+        elemento() maiorPrioridade()
+    } catch (ParseException e) {
+        handleError(e);
+    }
+}
+
+void maiorPrioridade(): {} {
+    try {
+        [ <POWER > elemento() maiorPrioridade() ]
+    } catch (ParseException e) {
+        handleError(e);
+    }
+}
+
+void elemento(): {} {
+    try {
+          < IDENTIFICADOR> indice()
+        | < INTEGER>
+        | < REAL >
+        | < LITERAL >
+        | < TRUE >
+        | < UNTRUE>
+        | <OPEN_PAREN> expressao() <CLOSE_PAREN>
+        | <NOT_LOGIC> <OPEN_PAREN> expressao() <CLOSE_PAREN>
+    } catch (ParseException e) {
+        handleError(e);
+    }
+}
+
+void indice(): {} {
+    try {
+        [ < OPEN_BRACE > expressao() < CLOSE_BRACE > ]
+    } catch (ParseException e) {
+        handleError(e);
     }
 }
