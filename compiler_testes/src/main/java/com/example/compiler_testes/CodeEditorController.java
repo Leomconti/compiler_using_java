@@ -88,19 +88,17 @@ public class CodeEditorController {
                     token = lexer.getNextToken();
                 } catch (TokenMgrError e) {
                     System.out.println(e.getMessage());
-                    // Add error message directly to the output or store for later
-                    // For example, you could append e.getMessage() to output or store it in a list
-                    continue;  // Continue to process the remaining tokens
+                    continue;
                 }
-
-                if (token.kind == Compiler.EOF) break;
-
-                tokensList.add(token);  // Store the Token object directly
+                if (token.kind == Compiler.EOF) break;  // END OF FILE
+                tokensList.add(token);  // Guarda os tokens que esta lendo em uma lista
             }
+
         } catch (Exception e) {
             return "Erro durante a compilação: " + e.getMessage();
         }
 
+        // JA LEU TUDO DE LEXEMA. Agora vamos ler os tokens, mostrar as informacoes e erros.
         StringBuilder output = new StringBuilder();
 
         for (Token token : tokensList) {
@@ -108,21 +106,23 @@ public class CodeEditorController {
             int line = token.beginLine;
             int column = token.beginColumn;
             String category = getTokenCategory(token.kind);
-
             output.append(String.format("Line: %d, Column: %d, Lexema: %s, Category: %s\n", line, column, lexema, category));
         }
 
         // If lexer is not null, fetch the error messages
         if (lexer != null) {
-            String errorMessages = lexer.token_source.getErroLexico();
-            // will only run once and point out the errors
-            if (!errorMessages.isEmpty()) {
-                output.append("\n").append(errorMessages);
+            if (lexer.token_source.foundLexErrors() == 0) {
+                output.append("SEM ERROS LEXICOS\n");
+            } else {
+                String errorMessages = lexer.token_source.getErroLexico();
+                // will only run once and point out the errors
+                if (!errorMessages.isEmpty()) {
+                    output.append("\n").append(errorMessages);
+                }
             }
         } else if (tokensList.isEmpty()) {
             output.append("Nenhum token foi encontrado.\n");
         }
-
         return output.toString();
     }
 

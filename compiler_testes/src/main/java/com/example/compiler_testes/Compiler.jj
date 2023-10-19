@@ -93,10 +93,10 @@ TOKEN :
 // indentificador valores
 TOKEN :
 {
-    < DIGITOS: <DIGITO> (<DIGITO>)? >
-|   < FIM: <_LETRA> | <LETRA> | "_" >
-|   < _DIGITO: "_" <DIGITOS> >
-|   < _LETRA: "_" (<LETRA>)+  >
+    < #DIGITOS: <DIGITO> (<DIGITO>)? >
+|   < #FIM: <_LETRA> | <LETRA> | "_" >
+|   < #_DIGITO: "_" <DIGITOS> >
+|   < #_LETRA: "_" (<LETRA>)+  >
 }
 
 
