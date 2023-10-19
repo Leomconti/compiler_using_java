@@ -15,6 +15,16 @@ public class Compiler {
             System.err.println("Rule: " + rule);
             System.err.println("Syntax Error: Line " + e.currentToken.next.beginLine + ", Column " + e.currentToken.next.beginColumn);
             System.err.println("Encountered: " + e.currentToken.next.image);
+
+            if (e.expectedTokenSequences != null) {
+                System.err.println("Expected: ");
+                for (int[] expectedTokenSequence : e.expectedTokenSequences) {
+                    for (int i = 0; i < expectedTokenSequence.length; i++) {
+                        System.err.print(tokenImage[expectedTokenSequence[i]] + " ");
+                    }
+                    System.err.println("\n");
+                }
+            }
         }
 }
 
@@ -225,7 +235,7 @@ SPECIAL_TOKEN :
 
 void programa(): {} {
     try {
-        <DO > < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > combinedEnumAndConst() < BODY > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > finalPrograma()
+        <DO > < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > declaration_or_nothin() < BODY > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > finalPrograma()
     } catch (ParseException e) {
         handleError(e, "programa");
     }
@@ -240,9 +250,17 @@ void finalPrograma(): {} {
     }
 }
 
+void declaration_or_nothin():{}{
+    try{
+       [ <DECLARATION> combinedEnumAndConst()]
+    }catch (ParseException e){
+        handleError(e, "declaration_or_nothin");
+    }
+}
+
 void combinedEnumAndConst(): {} {
     try {
-        <DECLARATION > (enumeradoeouVars() | constAndVarsOnly())
+        (enumeradoeouVars() | constAndVarsOnly())?
     } catch (ParseException e) {
         handleError(e, "combinedEnumAndConst");
     }
@@ -377,11 +395,7 @@ void valor(): {} {
 }
 
 void valor_(): {} {
-    try {
-        <INTEGER_DEF > | < REAL_DEF > | < LITERAL_DEF >
-    } catch (ParseException e) {
-        handleError(e, "valor_");
-    }
+    <INTEGER_DEF > | < REAL_DEF > | < LITERAL_DEF >
 }
 
 void listaIdentsC(): {} {
@@ -485,8 +499,7 @@ void cV(): {} {
 
 void cV_(): {} {
     try {
-        <
-        CONSTANT > as_contant() contCV() | < VARIABLE > as_variavel()
+        <CONSTANT > as_contant() contCV() | < VARIABLE > as_variavel()
     } catch (ParseException e) {
         handleError(e, "cV_");
     }
@@ -534,52 +547,32 @@ void expressaoAritOuLogica(): {} {
 }
 
 void menorPrioridade(): {} {
-    try {
         [ <
             PLUS > termo2() menorPrioridade() |
             < MINUS > termo2() menorPrioridade() |
             < OR_LOGIC > termo2() menorPrioridade()
         ]
-    } catch (ParseException e) {
-        handleError(e, "menorPrioridade");
-    }
 }
 
 void termo2(): {} {
-    try {
         termo1() mediaPrioridade()
-    } catch (ParseException e) {
-        handleError(e, "termo2");
-    }
 }
 
 void mediaPrioridade(): {} {
-    try {
              < MULTIPLY> termo1() mediaPrioridade()
            | < DIVIDE> termo1() mediaPrioridade()
            | < MODULO> termo1() mediaPrioridade()
            | < AND > termo1() mediaPrioridade()
            | < OR_LOGIC> termo1() mediaPrioridade()
-    } catch (ParseException e) {
-        handleError(e, "mediaPrioridade");
-    }
+
 }
 
 void termo1(): {} {
-    try {
-
         elemento() maiorPrioridade()
-    } catch (ParseException e) {
-        handleError(e, "termo1");
-    }
 }
 
 void maiorPrioridade(): {} {
-    try {
         [ <POWER > elemento() maiorPrioridade() ]
-    } catch (ParseException e) {
-        handleError(e, "maiorPrioridade");
-    }
 }
 
 void elemento(): {} {
@@ -598,9 +591,5 @@ void elemento(): {} {
 }
 
 void indice(): {} {
-    try {
         [ < OPEN_BRACE > expressao() < CLOSE_BRACE > ]
-    } catch (ParseException e) {
-        handleError(e, "indice");
-    }
 }
