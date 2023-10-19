@@ -82,6 +82,7 @@ public class CodeEditorController {
             lexer = new Compiler(new java.io.StringReader(code));
             Token token;
 
+
             while (true) {
                 try {
                     token = lexer.getNextToken();

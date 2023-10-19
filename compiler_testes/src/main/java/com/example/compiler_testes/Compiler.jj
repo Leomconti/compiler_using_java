@@ -214,6 +214,9 @@ SPECIAL_TOKEN :
 |   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> ((<LETRA> | <DIGITO>)* "__" (<LETRA> | <DIGITO> | "_")*)+ >
     {erroLexico += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
+|   < ERROR_IDENTIFICADOR_END_UNDERSCORE: <MAIUSCULA> ((<LETRA> | <DIGITO>)+ "_")+ >
+    {erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+
 |   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
     {erroLexico += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
@@ -331,7 +334,7 @@ void identCont():{}
 
 void listaIdent():{}
 {
-    <IDENTIFICADOR> tId() contId()
+    <IDENTIFICADOR> tId() identificador_adicional()
 }
 
 void tId():{}
@@ -339,14 +342,14 @@ void tId():{}
     (<OPEN_BRACE> <CONSTANT> <INTEGER_DEF> <CLOSE_BRACE>)?
 }
 
-void contId():{}
+void identificador_adicional():{}
 {
     (listaIdent())?
 }
 
 void listaIdentConst():{}
 {
-    listaIdentConstI() <DOT> iCCont()
+    listaIdentConstI() <DOT> Identificador_constante_adicional()
 }
 
 void listaIdentConstI():{}
@@ -354,17 +357,17 @@ void listaIdentConstI():{}
     listaIdent() | <CONSTANT>
 }
 
-void iCCont():{}
+void Identificador_constante_adicional():{}
 {
     (listaIdentConst())?
 }
 
 void lista_de_identificadores():{}
 {
-    <IDENTIFICADOR> <IS>  <OPEN_BRACE> listaIdent() <CLOSE_BRACE> isCont()
+    <IDENTIFICADOR> <IS>  <OPEN_BRACE> listaIdent() <CLOSE_BRACE> lista_de_Identificadores_adicional()
 }
 
-void isCont():{}
+void lista_de_Identificadores_adicional():{}
 {
     (lista_de_identificadores())?
 }
@@ -406,6 +409,7 @@ void expressao_():{}
     | <LESS_THAN_EQUAL> expressaoAritOuLogica()
     | <GREATER_THAN_EQUAL> expressaoAritOuLogica()
     ]
+
 }
 
 void expressaoAritOuLogica():{}
