@@ -57,125 +57,133 @@ public interface CompilerConstants {
   /** RegularExpression Id. */
   int LOGIC_DEF = 33;
   /** RegularExpression Id. */
-  int INTEGER = 34;
+  int DIGITOS = 34;
   /** RegularExpression Id. */
-  int REAL = 35;
+  int FIM = 35;
   /** RegularExpression Id. */
-  int TRUE = 36;
+  int _DIGITO = 36;
   /** RegularExpression Id. */
-  int UNTRUE = 37;
+  int _LETRA = 37;
   /** RegularExpression Id. */
-  int LITERAL = 38;
+  int INTEGER = 38;
   /** RegularExpression Id. */
-  int PLUS = 39;
+  int REAL = 39;
   /** RegularExpression Id. */
-  int MINUS = 40;
+  int TRUE = 40;
   /** RegularExpression Id. */
-  int MULTIPLY = 41;
+  int UNTRUE = 41;
   /** RegularExpression Id. */
-  int DIVIDE = 42;
+  int LITERAL = 42;
   /** RegularExpression Id. */
-  int POWER = 43;
+  int PLUS = 43;
   /** RegularExpression Id. */
-  int MODULO = 44;
+  int MINUS = 44;
   /** RegularExpression Id. */
-  int DOUBLE_MODULO = 45;
+  int MULTIPLY = 45;
   /** RegularExpression Id. */
-  int LESS_THAN = 46;
+  int DIVIDE = 46;
   /** RegularExpression Id. */
-  int LESS_THAN_EQUAL = 47;
+  int POWER = 47;
   /** RegularExpression Id. */
-  int GREATER_THAN_EQUAL = 48;
+  int MODULO = 48;
   /** RegularExpression Id. */
-  int GREATER_THAN = 49;
+  int DOUBLE_MODULO = 49;
   /** RegularExpression Id. */
-  int EQUAL = 50;
+  int LESS_THAN = 50;
   /** RegularExpression Id. */
-  int NOT_EQUAL = 51;
+  int LESS_THAN_EQUAL = 51;
   /** RegularExpression Id. */
-  int AND_LOGIC = 52;
+  int GREATER_THAN_EQUAL = 52;
   /** RegularExpression Id. */
-  int OR_LOGIC = 53;
+  int GREATER_THAN = 53;
   /** RegularExpression Id. */
-  int NOT_LOGIC = 54;
+  int EQUAL = 54;
   /** RegularExpression Id. */
-  int HASH = 55;
+  int NOT_EQUAL = 55;
   /** RegularExpression Id. */
-  int DOLLAR = 56;
+  int AND_LOGIC = 56;
   /** RegularExpression Id. */
-  int OPEN_PAREN = 57;
+  int OR_LOGIC = 57;
   /** RegularExpression Id. */
-  int CLOSE_PAREN = 58;
+  int NOT_LOGIC = 58;
   /** RegularExpression Id. */
-  int COMMA = 59;
+  int HASH = 59;
   /** RegularExpression Id. */
-  int DOT = 60;
+  int DOLLAR = 60;
   /** RegularExpression Id. */
-  int COLON = 61;
+  int OPEN_PAREN = 61;
   /** RegularExpression Id. */
-  int SEMICOLON = 62;
+  int CLOSE_PAREN = 62;
   /** RegularExpression Id. */
-  int S_LESS_THAN = 63;
+  int COMMA = 63;
   /** RegularExpression Id. */
-  int S_GREATER_THAN = 64;
+  int DOT = 64;
   /** RegularExpression Id. */
-  int QUESTION_MARK = 65;
+  int COLON = 65;
   /** RegularExpression Id. */
-  int AT_SIGN = 66;
+  int SEMICOLON = 66;
   /** RegularExpression Id. */
-  int OPEN_BRACKET = 67;
+  int S_LESS_THAN = 67;
   /** RegularExpression Id. */
-  int CLOSE_BRACKET = 68;
+  int S_GREATER_THAN = 68;
   /** RegularExpression Id. */
-  int BACKTICK = 69;
+  int QUESTION_MARK = 69;
   /** RegularExpression Id. */
-  int OPEN_BRACE = 70;
+  int AT_SIGN = 70;
   /** RegularExpression Id. */
-  int CLOSE_BRACE = 71;
+  int OPEN_BRACKET = 71;
   /** RegularExpression Id. */
-  int TILDE = 72;
+  int CLOSE_BRACKET = 72;
   /** RegularExpression Id. */
-  int EQUALS = 73;
+  int BACKTICK = 73;
   /** RegularExpression Id. */
-  int MAIUSCULA = 74;
+  int OPEN_BRACE = 74;
   /** RegularExpression Id. */
-  int MINUSCULA = 75;
+  int CLOSE_BRACE = 75;
   /** RegularExpression Id. */
-  int DIGITO = 76;
+  int TILDE = 76;
   /** RegularExpression Id. */
-  int LETRA = 77;
+  int EQUALS = 77;
   /** RegularExpression Id. */
-  int ASCII = 78;
+  int MAIUSCULA = 78;
   /** RegularExpression Id. */
-  int ASCII_ASPAS = 79;
+  int MINUSCULA = 79;
   /** RegularExpression Id. */
-  int ASCII_APOSTROFO = 80;
+  int DIGITO = 80;
   /** RegularExpression Id. */
-  int DENTROSEMLINHA = 81;
+  int LETRA = 81;
   /** RegularExpression Id. */
-  int SEM_ESTRELA = 82;
+  int ASCII = 82;
   /** RegularExpression Id. */
-  int SEM_BARRA = 83;
+  int ASCII_ASPAS = 83;
   /** RegularExpression Id. */
-  int INVALID_LEXICAL = 84;
+  int ASCII_APOSTROFO = 84;
   /** RegularExpression Id. */
-  int INVALID_CONST = 85;
+  int DENTROSEMLINHA = 85;
   /** RegularExpression Id. */
-  int ERROR_INTEGER = 86;
+  int SEM_ESTRELA = 86;
   /** RegularExpression Id. */
-  int ERROR_REAL = 87;
+  int SEM_BARRA = 87;
   /** RegularExpression Id. */
-  int ERROR_LITERAL_END = 88;
+  int INVALID_LEXICAL = 88;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR = 89;
+  int INVALID_CONST = 89;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_DIGIT = 90;
+  int ERROR_INTEGER = 90;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 91;
+  int ERROR_REAL = 91;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_END_UNDERSCORE = 92;
+  int ERROR_LITERAL_END = 92;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_LOWERCASE = 93;
+  int ERROR_IDENTIFICADOR = 93;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR_START_DIGIT = 94;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 95;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR_END_UNDERSCORE = 96;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR_START_LOWERCASE = 97;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -220,6 +228,10 @@ public interface CompilerConstants {
     "\"real\"",
     "\"literal\"",
     "\"logic\"",
+    "<DIGITOS>",
+    "<FIM>",
+    "<_DIGITO>",
+    "<_LETRA>",
     "<INTEGER>",
     "<REAL>",
     "\"true\"",

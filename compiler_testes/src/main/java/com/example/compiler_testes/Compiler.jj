@@ -60,7 +60,7 @@ SKIP :
 TOKEN :
 
 {
-    < IDENTIFICADOR: <MAIUSCULA> ((<DIGITO> | (<DIGITO> <DIGITO>))? (("_") | (<LETRA>)+("_")?)+)* >
+    < IDENTIFICADOR: <MAIUSCULA> (<DIGITOS> <FIM>)? ((<_DIGITO> | <LETRA> (<DIGITOS>)? | <_LETRA> (<DIGITOS>)?)* <FIM>)? >
 |   < RESULT: "result" >
 |   < AVALIATE: "avaliate" >
 |   < DO: "do" >
@@ -84,6 +84,16 @@ TOKEN :
 |   < LITERAL_DEF: "literal" >
 |   < LOGIC_DEF: "logic" >
 }
+
+// indentificador valores
+TOKEN :
+{
+    < DIGITOS: <DIGITO> (<DIGITO>)? >
+|   < FIM: <_LETRA> | <LETRA> | "_" >
+|   < _DIGITO: "_" <DIGITOS> >
+|   < _LETRA: "_" (<LETRA>)+  >
+}
+
 
 // Valores
 TOKEN :
@@ -204,9 +214,6 @@ SPECIAL_TOKEN :
 |   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> ((<LETRA> | <DIGITO>)* "__" (<LETRA> | <DIGITO> | "_")*)+ >
     {erroLexico += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 
-|   < ERROR_IDENTIFICADOR_END_UNDERSCORE: <MAIUSCULA> ((<LETRA> | <DIGITO>)+ "_")+ >
-    {erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
-
 |   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
     {erroLexico += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
 }
@@ -228,7 +235,7 @@ void combinedEnumAndConst():{}
 
 void enumeradoeouVars():{}
 {
-    <TYPE> <OPEN_BRACKET> listaIs() <CLOSE_BRACKET> <DOT> (<DECLARATION> constAndVarsOnly())?
+    <TYPE> <OPEN_BRACKET> lista_de_identificadores() <CLOSE_BRACKET> <DOT> (<DECLARATION> constAndVarsOnly())?
 }
 
 void constAndVarsOnly():{}
@@ -267,39 +274,37 @@ void selecao():{}
     <AVALIATE> <THIS> expressao() <TRUE> <RESULT> <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET> <UNTRUE> <RESULT> <OPEN_BRACKET> listaComandos() <CLOSE_BRACKET>
 }
 
-void comandos():{}
+void comando():{}
 {
     atribuicao() | entrada() | saida() |selecao() | repeticao()
 }
 
 void listaComandos():{}
 {
-    comandos() comCont()
+    comando() comando_adicional()
 }
 
-void comCont():{}
+void comando_adicional():{}
 {
     (listaComandos())?
 }
 
-void asC():{}
+void as_contant():{}
 {
-    listaIdent() <IS> tipoC() <EQUALS> valor()
+    listaIdent() <IS> tipo_constante() <EQUALS> valor()
 }
 
-//teste
-
-void asV():{}
+void as_variavel():{}
 {
-    listaIdent() <IS> tipoV()
+    listaIdent() <IS> tipo_variavel()
 }
 
-void tipoC():{}
+void tipo_constante():{}
 {
     <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF> | <LOGIC_DEF>
 }
 
-void tipoV():{}
+void tipo_variavel():{}
 {
     <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF> | <LOGIC_DEF>
 }
@@ -321,7 +326,7 @@ void listaIdentsC():{}
 
 void identCont():{}
 {
-    (","listaIdentsC())?
+    (<COMMA>listaIdentsC())?
 }
 
 void listaIdent():{}
@@ -354,14 +359,14 @@ void iCCont():{}
     (listaIdentConst())?
 }
 
-void listaIs():{}
+void lista_de_identificadores():{}
 {
     <IDENTIFICADOR> <IS>  <OPEN_BRACE> listaIdent() <CLOSE_BRACE> isCont()
 }
 
 void isCont():{}
 {
-    (listaIs())?
+    (lista_de_identificadores())?
 }
 
 void repeticao():{}
@@ -376,12 +381,12 @@ void cV():{}
 
 void cV_(): {}
 {
-    <CONSTANT> asC() contCV() | <VARIABLE> asV()
+    <CONSTANT> as_contant() contCV() | <VARIABLE> as_variavel()
 }
 
 void contCV():{}
 {
-    (<AS> <VARIABLE> asV())?
+    (<AS> <VARIABLE> as_variavel())?
 }
 
 void expressao():
