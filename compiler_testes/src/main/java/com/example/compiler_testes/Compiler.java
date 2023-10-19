@@ -5,11 +5,10 @@ package com.example.compiler_testes;
 
 public class Compiler implements CompilerConstants {
     public static void main(String[] args) {
-        // Test the lexer here
-
     }
 
-    public void handleError(ParseException e) {
+    public void handleError(ParseException e, String rule) {
+            System.err.println("Rule: " + rule);
             System.err.println("Syntax Error: Line " + e.currentToken.next.beginLine + ", Column " + e.currentToken.next.beginColumn);
             System.err.println("Encountered: " + e.currentToken.next.image);
         }
@@ -28,7 +27,7 @@ public class Compiler implements CompilerConstants {
       jj_consume_token(CLOSE_BRACKET);
       finalPrograma();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "programa");
     }
 }
 
@@ -45,7 +44,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "finalPrograma");
     }
 }
 
@@ -67,7 +66,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "combinedEnumAndConst");
     }
 }
 
@@ -89,7 +88,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "enumeradoeouVars");
     }
 }
 
@@ -103,7 +102,7 @@ handleError(e);
       jj_consume_token(CLOSE_BRACKET);
       jj_consume_token(DOT);
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "constAndVarsOnly");
     }
 }
 
@@ -115,7 +114,7 @@ handleError(e);
       jj_consume_token(AS);
       expressao();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "atribuicao");
     }
 }
 
@@ -127,7 +126,7 @@ handleError(e);
       jj_consume_token(CLOSE_BRACKET);
       jj_consume_token(DOT);
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "saida");
     }
 }
 
@@ -136,7 +135,7 @@ handleError(e);
       jj_consume_token(WRITE);
       write_();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "write");
     }
 }
 
@@ -158,7 +157,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "write_");
     }
 }
 
@@ -171,7 +170,7 @@ handleError(e);
       jj_consume_token(CLOSE_BRACKET);
       jj_consume_token(DOT);
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "entrada");
     }
 }
 
@@ -191,7 +190,7 @@ handleError(e);
       listaComandos();
       jj_consume_token(CLOSE_BRACKET);
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "selecao");
     }
 }
 
@@ -224,7 +223,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "comando");
     }
 }
 
@@ -233,7 +232,7 @@ handleError(e);
       comando();
       comando_adicional();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "listaComandos");
     }
 }
 
@@ -253,7 +252,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "comando_adicional");
     }
 }
 
@@ -265,7 +264,7 @@ handleError(e);
       jj_consume_token(EQUALS);
       valor();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "as_contant");
     }
 }
 
@@ -275,7 +274,7 @@ handleError(e);
       jj_consume_token(IS);
       tipo_variavel();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "as_variavel");
     }
 }
 
@@ -304,7 +303,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "tipo_constante");
     }
 }
 
@@ -333,7 +332,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "tipo_variavel");
     }
 }
 
@@ -342,7 +341,7 @@ handleError(e);
       jj_consume_token(CONSTANT);
       valor_();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "valor");
     }
 }
 
@@ -367,7 +366,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "valor_");
     }
 }
 
@@ -376,7 +375,7 @@ handleError(e);
       jj_consume_token(IDENTIFICADOR);
       identCont();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "listaIdentsC");
     }
 }
 
@@ -393,7 +392,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "identCont");
     }
 }
 
@@ -403,7 +402,7 @@ handleError(e);
       tId();
       identificador_adicional();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "listaIdent");
     }
 }
 
@@ -422,7 +421,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "tId");
     }
 }
 
@@ -438,7 +437,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "identificador_adicional");
     }
 }
 
@@ -448,7 +447,7 @@ handleError(e);
       jj_consume_token(DOT);
       Identificador_constante_adicional();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "listaIdentConst");
     }
 }
 
@@ -469,7 +468,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "listaIdentConstI");
     }
 }
 
@@ -486,7 +485,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "Identificador_constante_adicional");
     }
 }
 
@@ -499,7 +498,7 @@ handleError(e);
       jj_consume_token(CLOSE_BRACE);
       lista_de_Identificadores_adicional();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "lista_de_identificadores");
     }
 }
 
@@ -515,7 +514,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "lista_de_Identificadores_adicional");
     }
 }
 
@@ -528,7 +527,7 @@ handleError(e);
       listaComandos();
       jj_consume_token(CLOSE_BRACKET);
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "repeticao");
     }
 }
 
@@ -537,7 +536,7 @@ handleError(e);
       jj_consume_token(AS);
       cV_();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "cV");
     }
 }
 
@@ -561,7 +560,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "cV_");
     }
 }
 
@@ -579,7 +578,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "contCV");
     }
 }
 
@@ -588,7 +587,7 @@ handleError(e);
       expressaoAritOuLogica();
       expressao_();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "expressao");
     }
 }
 
@@ -645,7 +644,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "expressao_");
     }
 }
 
@@ -654,7 +653,7 @@ handleError(e);
       termo2();
       menorPrioridade();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "expressaoAritOuLogica");
     }
 }
 
@@ -695,7 +694,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "menorPrioridade");
     }
 }
 
@@ -704,7 +703,7 @@ handleError(e);
       termo1();
       mediaPrioridade();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "termo2");
     }
 }
 
@@ -747,7 +746,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "mediaPrioridade");
     }
 }
 
@@ -756,7 +755,7 @@ handleError(e);
       elemento();
       maiorPrioridade();
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "termo1");
     }
 }
 
@@ -774,7 +773,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "maiorPrioridade");
     }
 }
 
@@ -825,7 +824,7 @@ handleError(e);
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "elemento");
     }
 }
 
@@ -843,7 +842,7 @@ handleError(e);
         ;
       }
     } catch (ParseException e) {
-handleError(e);
+handleError(e, "indice");
     }
 }
 

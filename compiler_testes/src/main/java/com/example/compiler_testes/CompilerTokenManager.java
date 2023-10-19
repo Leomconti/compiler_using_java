@@ -7,8 +7,6 @@ public class CompilerTokenManager implements CompilerConstants {
     String erroLexico = "";
     int countLexErrors = 0;
     String errorSintatico = "";
-
-
     public String getErroLexico() {
         return erroLexico;
     }

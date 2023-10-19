@@ -77,15 +77,15 @@ public class CodeEditorController {
     public String compileCode(String code) {
         List<Token> tokensList = new ArrayList<>();
 
-        Compiler lexer = null;
+        Compiler compiler = null;
         try {
-            lexer = new Compiler(new java.io.StringReader(code));
+            compiler = new Compiler(new java.io.StringReader(code));
             Token token;
 
 
             while (true) {
                 try {
-                    token = lexer.getNextToken();
+                    token = compiler.getNextToken();
                 } catch (TokenMgrError e) {
                     System.out.println(e.getMessage());
                     continue;
@@ -110,11 +110,19 @@ public class CodeEditorController {
         }
 
         // If lexer is not null, fetch the error messages
-        if (lexer != null) {
-            if (lexer.token_source.foundLexErrors() == 0) {
+        if (compiler != null) {
+            if (compiler.token_source.foundLexErrors() == 0) {
                 output.append("SEM ERROS LEXICOS\n");
+                try {
+                    compiler = new Compiler(new java.io.StringReader(code));
+                    compiler.programa();
+                } catch (ParseException e) {
+                    // Handle unhandled syntax errors
+                    System.out.println("Syntax Error: " + e.getMessage());
+                    return "Syntax Error during the compilation: " + e.getMessage();
+                }
             } else {
-                String errorMessages = lexer.token_source.getErroLexico();
+                String errorMessages = compiler.token_source.getErroLexico();
                 // will only run once and point out the errors
                 if (!errorMessages.isEmpty()) {
                     output.append("\n").append(errorMessages);
