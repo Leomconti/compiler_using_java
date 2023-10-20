@@ -350,7 +350,7 @@ void tId(): {} {
 
 void identificador_adicional(): {} {
     try {
-        (listaIdent()) ?
+        (<COMMA> listaIdent()) ?
     } catch (ParseException e) {
         handleError(e, "identificador_adicional");
     }
@@ -490,9 +490,13 @@ void Declaration_Enumerado_E_ConstAndVars(): {} {
     }
 }
 
+void declEnumerado(): {}{
+    <IDENTIFICADOR> <IS> <OPEN_BRACE> ListaDeIdentificadores() <CLOSE_BRACE> <DOT>
+}
+
 void EnumeradoEouVars(): {} {
     try {
-        <TYPE> <OPEN_BRACKET> ListaDeIdentificadores() <CLOSE_BRACKET> <DOT> (<DECLARATION> ConstAndVarsOnly())?
+        <TYPE> <OPEN_BRACKET> declEnumerado() <CLOSE_BRACKET> (<DECLARATION> ConstAndVarsOnly())?
     } catch (ParseException e) {
         handleError(e, "EnumeradoEouVars");
     }
@@ -576,8 +580,9 @@ void ListaDeIdentificadores(): {} {
 
 void ListaDeIdentificadoresAdicional(): {} {
     try {
-        (ListaDeIdentificadores())?
+        (<COMMA> ListaDeIdentificadores())?
     } catch (ParseException e) {
         handleError(e, "ListaDeIdentificadoresAdicional");
     }
 }
+
