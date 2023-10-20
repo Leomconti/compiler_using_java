@@ -180,8 +180,12 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         if (expected.contains("\",\",\"]\"")) {
             errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");
             addError(errorMsg.toString());
-        }else{
-            handleError(e, "programa");
+        }else if(expected.contains("[")){
+            errorMsg.append("\nMsg: Inicie a lista com [").append("\n");
+            addError(errorMsg.toString());
+        }
+        else{
+            handleError(e, "saida");
         }
     }
 }
@@ -249,7 +253,19 @@ handleError(e, "ListaDeIdentificadoresAdicional");
       jj_consume_token(WRITE);
       Write_();
     } catch (ParseException e) {
-handleError(e, "write");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+                StringBuilder errorMsg = new StringBuilder();
+                errorMsg.append("Erro na Regra: ").append("saida").append("\n");
+                errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+                errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+                errorMsg.append("Esperava: ").append(expected);
+
+                if (expected.contains("\",\",\"]\"")) {
+                    errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");
+                    addError(errorMsg.toString());
+                }else{
+                    handleError(e, "programa");
+                }
     }
 }
 
