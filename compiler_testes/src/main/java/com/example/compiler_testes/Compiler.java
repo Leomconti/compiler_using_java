@@ -14,12 +14,12 @@ public class Compiler implements CompilerConstants {
     public void handleError(ParseException e, String rule) {
         StringBuilder errorMsg = new StringBuilder();
 
-        errorMsg.append("Rule: ").append(rule).append("\n");
-        errorMsg.append("Syntax Error: Line ").append(e.currentToken.next.beginLine).append(", Column ").append(e.currentToken.next.beginColumn).append("\n");
-        errorMsg.append("Encountered: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Erro na Regra: ").append(rule).append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
 
         if (e.expectedTokenSequences != null) {
-            errorMsg.append("Expected: ");
+            errorMsg.append("Experado: ");
             for (int[] expectedTokenSequence : e.expectedTokenSequences) {
                 for (int i = 0; i < expectedTokenSequence.length; i++) {
                     errorMsg.append(tokenImage[expectedTokenSequence[i]]).append(" ");
@@ -243,69 +243,57 @@ handleError(e, "TrueResult");
 }
 
   final public void TrueUntrueResult() throws ParseException {
-    try {
-      trueResult();
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case UNTRUE:{
-        UntrueResult();
-        break;
-        }
-      default:
-        jj_la1[6] = jj_gen;
-        ;
+    trueResult();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case UNTRUE:{
+      UntrueResult();
+      break;
       }
-    } catch (ParseException e) {
-handleError(e, "TrueResult");
+    default:
+      jj_la1[6] = jj_gen;
+      ;
     }
 }
 
   final public void UntrueTrueResult() throws ParseException {
-    try {
-      UntrueResult();
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case TRUE:{
-        trueResult();
-        break;
-        }
-      default:
-        jj_la1[7] = jj_gen;
-        ;
+    UntrueResult();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case TRUE:{
+      trueResult();
+      break;
       }
-    } catch (ParseException e) {
-handleError(e, "UntrueTrueResult");
+    default:
+      jj_la1[7] = jj_gen;
+      ;
     }
 }
 
   final public void Comando() throws ParseException {
-    try {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case DESIGNATE:{
-        Atribuicao();
-        break;
-        }
-      case READ:{
-        Entrada();
-        break;
-        }
-      case WRITE:{
-        Saida();
-        break;
-        }
-      case AVALIATE:{
-        Selecao();
-        break;
-        }
-      case REPEAT:{
-        Repeticao();
-        break;
-        }
-      default:
-        jj_la1[8] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case DESIGNATE:{
+      Atribuicao();
+      break;
       }
-    } catch (ParseException e) {
-handleError(e, "comando");
+    case READ:{
+      Entrada();
+      break;
+      }
+    case WRITE:{
+      Saida();
+      break;
+      }
+    case AVALIATE:{
+      Selecao();
+      break;
+      }
+    case REPEAT:{
+      Repeticao();
+      break;
+      }
+    default:
+      jj_la1[8] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
     }
 }
 

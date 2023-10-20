@@ -103,7 +103,7 @@ public class CodeEditorController {
 
         // check for errors in lexer
         if (lexer.token_source.foundLexErrors() != 0) {
-            output.append("Erros Lexicos encontrados: ").append(lexer.token_source.foundLexErrors());
+            output.append("-> Erros Lexicos encontrados: ").append(lexer.token_source.foundLexErrors());
             String errorMessages = lexer.token_source.getErroLexico();
             if (!errorMessages.isEmpty()) {
                 output.append("\n").append(errorMessages);
@@ -113,7 +113,7 @@ public class CodeEditorController {
         }
 
         // STARTS PARSER
-        output.append("Sem erros Lexicos, prosseguindo para o Parser...\n");
+        output.append("-> Sem erros Lexicos, prosseguindo para o Parser...\n\n");
         parser = new Compiler(new java.io.StringReader(code));
         try {
             parser.programa();
@@ -129,7 +129,7 @@ public class CodeEditorController {
 
         // checar se tem erros no parser
         if (qtdParserErrors != 0) {
-            output.append("Erros Sintaticos encontrados: ").append(qtdParserErrors).append("\n");
+            output.append("-> Erros Sintaticos encontrados: ").append(qtdParserErrors).append("\n\n");
             for (String error : parserErrors) {
                 output.append(error).append("\n");
             }
