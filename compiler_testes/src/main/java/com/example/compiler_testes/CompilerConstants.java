@@ -11,51 +11,51 @@ public interface CompilerConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int IDENTIFICADOR = 11;
+  int RESULT = 11;
   /** RegularExpression Id. */
-  int RESULT = 12;
+  int AVALIATE = 12;
   /** RegularExpression Id. */
-  int AVALIATE = 13;
+  int DO = 13;
   /** RegularExpression Id. */
-  int DO = 14;
+  int THIS = 14;
   /** RegularExpression Id. */
-  int THIS = 15;
+  int BODY = 15;
   /** RegularExpression Id. */
-  int BODY = 16;
+  int DESCRIPTION = 16;
   /** RegularExpression Id. */
-  int DESCRIPTION = 17;
+  int DECLARATION = 17;
   /** RegularExpression Id. */
-  int DECLARATION = 18;
+  int TYPE = 18;
   /** RegularExpression Id. */
-  int TYPE = 19;
+  int IS = 19;
   /** RegularExpression Id. */
-  int IS = 20;
+  int CONSTANT = 20;
   /** RegularExpression Id. */
-  int CONSTANT = 21;
+  int AND = 21;
   /** RegularExpression Id. */
-  int AND = 22;
+  int VARIABLE = 22;
   /** RegularExpression Id. */
-  int VARIABLE = 23;
+  int DESIGNATE = 23;
   /** RegularExpression Id. */
-  int DESIGNATE = 24;
+  int AS = 24;
   /** RegularExpression Id. */
-  int AS = 25;
+  int READ = 25;
   /** RegularExpression Id. */
-  int READ = 26;
+  int WRITE = 26;
   /** RegularExpression Id. */
-  int WRITE = 27;
+  int ALL = 27;
   /** RegularExpression Id. */
-  int ALL = 28;
+  int REPEAT = 28;
   /** RegularExpression Id. */
-  int REPEAT = 29;
+  int INTEGER_DEF = 29;
   /** RegularExpression Id. */
-  int INTEGER_DEF = 30;
+  int REAL_DEF = 30;
   /** RegularExpression Id. */
-  int REAL_DEF = 31;
+  int LITERAL_DEF = 31;
   /** RegularExpression Id. */
-  int LITERAL_DEF = 32;
+  int LOGIC_DEF = 32;
   /** RegularExpression Id. */
-  int LOGIC_DEF = 33;
+  int IDENTIFICADOR = 33;
   /** RegularExpression Id. */
   int DIGITOS = 34;
   /** RegularExpression Id. */
@@ -209,7 +209,6 @@ public interface CompilerConstants {
     "<token of kind 8>",
     "\"*/\"",
     "<token of kind 10>",
-    "<IDENTIFICADOR>",
     "\"result\"",
     "\"avaliate\"",
     "\"do\"",
@@ -232,6 +231,7 @@ public interface CompilerConstants {
     "\"real\"",
     "\"literal\"",
     "\"logic\"",
+    "<IDENTIFICADOR>",
     "<DIGITOS>",
     "<FIM>",
     "<_DIGITO>",

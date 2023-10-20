@@ -112,9 +112,9 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         }else if (expected.contains("this") || expected.contains("do")){
             errorMsg.append("\nMsg: Programa deve comecar com do this").append("\n");
             addError(errorMsg.toString());
-        }
-        else{
-            handleError(e, "programa");
+        }else if (expected.contains("[") || expected.contains("]")){
+             errorMsg.append("\nMsg: Inicio do programa faltando [  ]").append("\n");
+             addError(errorMsg.toString());
         }
     }
 }
@@ -132,7 +132,17 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         ;
       }
     } catch (ParseException e) {
-handleError(e, "FinalPrograma");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("Final Programa").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("<LITERAL>")) {
+            errorMsg.append("\nMsg: Faltando comentario literal ao fim").append("\n");
+            addError(errorMsg.toString());
+        }
     }
 }
 
@@ -147,7 +157,23 @@ int line = getToken(1).beginLine;
             int column = getToken(1).beginColumn;
             addOk("Linha " + line + " Coluna " + column + " - " +  "Atribuicao");
     } catch (ParseException e) {
-handleError(e, "atribuicao");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("Erro na Regra: ").append("atribuicao").append("\n");
+            errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+            errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+            errorMsg.append("Esperava: ").append(expected);
+
+            if (expected.contains("this")) {
+                errorMsg.append("\nMsg: Atribuicao faltando: this").append("\n");
+                addError(errorMsg.toString());
+            }else if (expected.contains("<IDENTIFICADOR>")){
+                errorMsg.append("\nMsg: Faltando variavel para atribuir").append("\n");
+                addError(errorMsg.toString());
+            }
+            else{
+                handleError(e, "atribuicao");
+            }
     }
 }
 
@@ -196,12 +222,17 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
         errorMsg.append("Esperava: ").append(expected);
 
-        if (expected.contains("\",\",\"]\"")) {  // QUANDO O EXPECTED FOR ISSO
+        if (expected.contains("\",\",\"")) {  // QUANDO O EXPECTED FOR ISSO
             errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");  // DA ESSA MENSAGEM
             addError(errorMsg.toString());
         } else if (expected.contains("[")){
             errorMsg.append("\nMsg: Saida deve iniciar a lista com [").append("\n");
-        } else{  // TRATAMENTO PADRAO
+        } else if (expected.contains("]")){
+              errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
+                       addError(errorMsg.toString());
+
+          }
+                  else{  // TRATAMENTO PADRAO
             handleError(e, "saida");
         }
     }
@@ -272,7 +303,7 @@ handleError(e, "ListaDeIdentificadoresAdicional");
     } catch (ParseException e) {
 String expected = formatExpectedTokens(e.expectedTokenSequences);
                 StringBuilder errorMsg = new StringBuilder();
-                errorMsg.append("Erro na Regra: ").append("Saida").append("\n");
+                errorMsg.append("Erro na Regra: ").append("write").append("\n");
                 errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
                 errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
                 errorMsg.append("Esperava: ").append(expected);
@@ -335,7 +366,20 @@ int line = getToken(1).beginLine;
             int column = getToken(1).beginColumn;
             addOk("Linha " + line + " Coluna " + column + " - " +  "Selecao");
     } catch (ParseException e) {
-handleError(e, "selecao");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("Selecao").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("this")) {
+            errorMsg.append("\nMsg: Faltando 'this' para avaliar a expressao").append("\n");
+            addError(errorMsg.toString());
+        }
+        else{
+            handleError(e, "selecao");
+        }
     }
 }
 
@@ -357,7 +401,11 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         if (expected.contains("result")) {
             errorMsg.append("\nMsg: Condicao deve conter a forma: logico result").append("\n");
             addError(errorMsg.toString());
-        }
+        }else if (expected.contains("]")){
+                     errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
+                              addError(errorMsg.toString());
+
+                 }
         else{
             handleError(e, "true result");
         }
@@ -382,8 +430,12 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         if (expected.contains("result")) {
             errorMsg.append("\nMsg: Condicao deve conter a forma: logico result").append("\n");
             addError(errorMsg.toString());
-        }else{
-            handleError(e, "true result");
+        }else if (expected.contains("]")){
+            errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
+            addError(errorMsg.toString());
+        }
+        else{
+            handleError(e, "Untrue result");
         }
     }
 }
@@ -444,13 +496,9 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
 }
 
   final public void ListaComandos() throws ParseException {
-    try {
-      Comando();
-      jj_consume_token(DOT);
-      ComandoAdicional();
-    } catch (ParseException e) {
-handleError(e, "listaComandos");
-    }
+    Comando();
+    jj_consume_token(DOT);
+    ComandoAdicional();
 }
 
   final public void ComandoAdicional() throws ParseException {
@@ -481,7 +529,23 @@ int line = getToken(1).beginLine;
             int column = getToken(1).beginColumn;
             addOk("Linha " + line + " Coluna " + column + " - " +  "Repeticao");
     } catch (ParseException e) {
-handleError(e, "repeticao");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("Repeticao").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("this")) {
+            errorMsg.append("\nMsg: Repeticao deve comecar com repeat 'this'").append("\n");
+            addError(errorMsg.toString());
+        }else if (expected.contains("]")){
+            errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
+            addError(errorMsg.toString());
+        }
+        else{
+            handleError(e, "Repeticao");
+        }
     }
 }
 
@@ -730,10 +794,10 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         errorMsg.append("Esperava: ").append(expected);
 
         if (expected.contains("<IDENTIFICADOR> <INTEGER>")) {
-            errorMsg.append("\nMsg: Deve conter um elemento").append("\n");
+            errorMsg.append("\nMsg: Faltando elemento na expressao").append("\n");
             addError(errorMsg.toString());
         }else{
-            handleError(e, "programa");
+            handleError(e, "elemento");
         }
     }
 }
@@ -786,7 +850,23 @@ handleError(e, "DeclarationOrNothing");
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e, "Declaration_Enumerado_E_ConstAndVars");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("Declaration Enumerado e Const e Vars").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("is")) {
+            errorMsg.append("\nMsg: Faltando 'is' na declaracao").append("\n");
+            addError(errorMsg.toString());
+        } else if (expected.contains(",")){
+            errorMsg.append("\nMsg: Faltando ',' na lista").append("\n");
+            addError(errorMsg.toString());
+        }
+        else{
+            handleError(e, "Declaration Enumerado e Const e Vars");
+        }
     }
 }
 
@@ -800,23 +880,19 @@ handleError(e, "Declaration_Enumerado_E_ConstAndVars");
 }
 
   final public void EnumeradoEouVars() throws ParseException {
-    try {
-      jj_consume_token(TYPE);
-      jj_consume_token(OPEN_BRACKET);
-      declEnumerado();
-      jj_consume_token(CLOSE_BRACKET);
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case DECLARATION:{
-        jj_consume_token(DECLARATION);
-        ConstAndVarsOnly();
-        break;
-        }
-      default:
-        jj_la1[21] = jj_gen;
-        ;
+    jj_consume_token(TYPE);
+    jj_consume_token(OPEN_BRACKET);
+    declEnumerado();
+    jj_consume_token(CLOSE_BRACKET);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case DECLARATION:{
+      jj_consume_token(DECLARATION);
+      ConstAndVarsOnly();
+      break;
       }
-    } catch (ParseException e) {
-handleError(e, "EnumeradoEouVars");
+    default:
+      jj_la1[21] = jj_gen;
+      ;
     }
 }
 
@@ -1046,10 +1122,10 @@ handleError(e, "ListaDeIdentificadoresAdicional");
 	   jj_la1_init_3();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x20000,0x800,0x0,0x0,0x10008000,0x0,0x0,0x0,0x2d002000,0x2d002000,0x0,0x0,0x0,0x0,0x400000,0x400000,0x0,0x800,0x0,0x40000,0x280000,0x40000,0xa00000,0x800,0x800,0x2000000,0x2000000,0xc0000000,0xc0000000,0x0,};
+	   jj_la1_0 = new int[] {0x10000,0x0,0x0,0x0,0x8004000,0x0,0x0,0x0,0x16801000,0x16801000,0x0,0x0,0x0,0x0,0x200000,0x200000,0x0,0x0,0x0,0x20000,0x140000,0x20000,0x500000,0x0,0x0,0x1000000,0x1000000,0xe0000000,0xe0000000,0x0,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x4c0,0x4c0,0x80000000,0x0,0x300,0x200,0x100,0x0,0x0,0xfc0000,0xfc0000,0x2001800,0x2001800,0x36000,0x36000,0x8000,0x240007c0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x3,0x80000000,};
+	   jj_la1_1 = new int[] {0x0,0x4c2,0x4c0,0x80000000,0x0,0x300,0x200,0x100,0x0,0x0,0xfc0000,0xfc0000,0x2001800,0x2001800,0x36000,0x36000,0x8000,0x240007c2,0x0,0x0,0x0,0x0,0x0,0x2,0x2,0x0,0x0,0x0,0x1,0x80000000,};
 	}
 	private static void jj_la1_init_2() {
 	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x400,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
