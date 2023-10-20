@@ -73,16 +73,17 @@ public class Compiler implements CompilerConstants {
       FinalPrograma();
     } catch (ParseException e) {
 String expected = formatExpectedTokens(e.expectedTokenSequences);
-        if (!expected.contains("avaliate")) {
-            handleError(e, "programa");
-        }else{
         StringBuilder errorMsg = new StringBuilder();
         errorMsg.append("Erro na Regra: ").append("programa").append("\n");
         errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
         errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
         errorMsg.append("Esperava: ").append(expected);
-        errorMsg.append("Msg: Body deve conter somente comandos validos").append("\n");
-        addError(errorMsg.toString());
+
+        if (expected.contains("avaliate")) {
+            errorMsg.append("Msg: Body deve conter somente comandos validos").append("\n");
+            addError(errorMsg.toString());
+        }else{
+            handleError(e, "programa");
         }
     }
 }
