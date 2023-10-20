@@ -24,6 +24,7 @@ public class Compiler implements CompilerConstants {
         output.append("Encountered: ").append(found).append("\n");
         output.append("Expected: ").append(expected).append("\n");
         output.append("Message: ").append(msg).append("\n");
+        System.err.println(output.toString());
         return output.toString();
     }
 
