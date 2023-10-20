@@ -235,7 +235,7 @@ SPECIAL_TOKEN :
 
 void programa(): {} {
     try {
-        <DO> < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > Declaration_Enumerado_E_ConstAndVars() < BODY > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > finalPrograma()
+        <DO> < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > declaration_or_nothing() < BODY > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > finalPrograma()
     } catch (ParseException e) {
         handleError(e, "programa");
     }
@@ -247,38 +247,6 @@ void finalPrograma(): {} {
         ( < DESCRIPTION > < LITERAL > ) ?
     } catch (ParseException e) {
         handleError(e, "finalPrograma");
-    }
-}
-
-void declaration_or_nothin():{}{
-    try{
-       [ <DECLARATION> combinedEnumAndConst()]
-    }catch (ParseException e){
-        handleError(e, "declaration_or_nothin");
-    }
-}
-
-void combinedEnumAndConst(): {} {
-    try {
-        (enumeradoeouVars() | constAndVarsOnly())?
-    } catch (ParseException e) {
-        handleError(e, "combinedEnumAndConst");
-    }
-}
-
-void enumeradoeouVars(): {} {
-    try {
-        <TYPE > < OPEN_BRACKET > lista_de_identificadores() < CLOSE_BRACKET > < DOT > ( < DECLARATION > constAndVarsOnly()) ?
-    } catch (ParseException e) {
-        handleError(e, "enumeradoeouVars");
-    }
-}
-
-void constAndVarsOnly(): {} {
-    try {
-        <CONSTANT > < AND > < VARIABLE > < OPEN_BRACKET > cV() < CLOSE_BRACKET > < DOT >
-    } catch (ParseException e) {
-        handleError(e, "constAndVarsOnly");
     }
 }
 
@@ -354,65 +322,6 @@ void comando_adicional(): {} {
     }
 }
 
-void as_contant(): {} {
-    try {
-        listaIdent() < IS > tipo_constante() < EQUALS > valor()
-    } catch (ParseException e) {
-        handleError(e, "as_contant");
-    }
-}
-
-void as_variavel(): {} {
-    try {
-        listaIdent() < IS > tipo_variavel()
-    } catch (ParseException e) {
-        handleError(e, "as_variavel");
-    }
-}
-
-void tipo_constante(): {} {
-    try {
-        <INTEGER_DEF > | < REAL_DEF > | < LITERAL_DEF > | < LOGIC_DEF >
-    } catch (ParseException e) {
-        handleError(e, "tipo_constante");
-    }
-}
-
-void tipo_variavel(): {} {
-    try {
-        <INTEGER_DEF > | < REAL_DEF > | < LITERAL_DEF > | < LOGIC_DEF >
-    } catch (ParseException e) {
-        handleError(e, "tipo_variavel");
-    }
-}
-
-void valor(): {} {
-    try {
-        <CONSTANT > valor_()
-    } catch (ParseException e) {
-        handleError(e, "valor");
-    }
-}
-
-void valor_(): {} {
-    <INTEGER_DEF > | < REAL_DEF > | < LITERAL_DEF >
-}
-
-void listaIdentsC(): {} {
-    try {
-        <IDENTIFICADOR > identCont()
-    } catch (ParseException e) {
-        handleError(e, "listaIdentsC");
-    }
-}
-
-void identCont(): {} {
-    try {
-        ( < COMMA > listaIdentsC()) ?
-    } catch (ParseException e) {
-        handleError(e, "identCont");
-    }
-}
 
 void listaIdent(): {} {
     try {
@@ -462,22 +371,6 @@ void Identificador_constante_adicional(): {} {
     }
 }
 
-void lista_de_identificadores(): {} {
-    try {
-        <
-        IDENTIFICADOR > < IS > < OPEN_BRACE > listaIdent() < CLOSE_BRACE > lista_de_Identificadores_adicional()
-    } catch (ParseException e) {
-        handleError(e, "lista_de_identificadores");
-    }
-}
-
-void lista_de_Identificadores_adicional(): {} {
-    try {
-        (lista_de_identificadores()) ?
-    } catch (ParseException e) {
-        handleError(e, "lista_de_Identificadores_adicional");
-    }
-}
 
 void repeticao(): {} {
     try {
@@ -485,31 +378,6 @@ void repeticao(): {} {
         REPEAT > < THIS > expressao() < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET >
     } catch (ParseException e) {
         handleError(e, "repeticao");
-    }
-}
-
-void cV(): {} {
-    try {
-        <
-        AS > cV_()
-    } catch (ParseException e) {
-        handleError(e, "cV");
-    }
-}
-
-void cV_(): {} {
-    try {
-        <CONSTANT > as_contant() contCV() | < VARIABLE > as_variavel()
-    } catch (ParseException e) {
-        handleError(e, "cV_");
-    }
-}
-
-void contCV(): {} {
-    try {
-        ( < AS > < VARIABLE > as_variavel()) ?
-    } catch (ParseException e) {
-        handleError(e, "contCV");
     }
 }
 
@@ -596,10 +464,18 @@ void indice(): {} {
 
 /////////////////////////////
 
+void declaration_or_nothing():{}{
+    try{
+       (<DECLARATION> Declaration_Enumerado_E_ConstAndVars())?
+    }catch (ParseException e){
+        handleError(e, "declaration_or_nothin");
+    }
+}
+
 
 void Declaration_Enumerado_E_ConstAndVars(): {} {
     try {
-        <DECLARATION> (EnumeradoEouVars() | ConstAndVarsOnly())
+        EnumeradoEouVars() | ConstAndVarsOnly()
     } catch (ParseException e) {
         handleError(e, "Declaration_Enumerado_E_ConstAndVars");
     }
@@ -615,7 +491,7 @@ void EnumeradoEouVars(): {} {
 
 void ConstAndVarsOnly(): {} {
     try {
-        <CONSTANT> <AND> <VARIABLE> <OPEN_BRACKET> ConstAndVarsOuVarsAndConstOuVarsOuConst() <CLOSE_BRACKET> <DOT>
+        <CONSTANT> <AND> <VARIABLE> <OPEN_BRACKET> ConstAndVarsOuVarsAndConstOuVarsOuConst() <CLOSE_BRACKET>
     } catch (ParseException e) {
         handleError(e, "ConstAndVarsOnly");
     }
@@ -630,11 +506,7 @@ void ConstAndVarsOuVarsAndConstOuVarsOuConst(): {} {
 }
 
 void Vars(): {} {
-    try {
-        <VARIABLE> ListaDeIdentificadores() <IS> TipoConstante() <EQUALS> Valor() <DOT> VarsAdicional()
-    } catch (ParseException e) {
-        handleError(e, "Vars");
-    }
+    <VARIABLE> ListaDeIdentificadores() <IS> TipoVariavel()  <DOT> VarsAdicional()
 }
 
 void VarsAdicional(): {} {
@@ -646,11 +518,7 @@ void VarsAdicional(): {} {
 }
 
 void Const(): {} {
-    try {
-        <CONSTANT> ListaDeIdentificadores() <IS> TipoConstante() <DOT> ConstAdicional()
-    } catch (ParseException e) {
-        handleError(e, "Const");
-    }
+    <CONSTANT> ListaDeIdentificadores() <IS> TipoConstante() <EQUALS> Valor() <DOT> ConstAdicional()
 }
 
 void ConstAdicional(): {} {
@@ -663,7 +531,7 @@ void ConstAdicional(): {} {
 
 void ConstAndVars(): {} {
     try {
-        Const() <AS> Vars() <DOT>
+        Const() <AS> Vars()  // removi o <DOT> aqui
     } catch (ParseException e) {
         handleError(e, "ConstAndVars");
     }
@@ -671,7 +539,7 @@ void ConstAndVars(): {} {
 
 void VarsAndConst(): {} {
     try {
-        Vars() <AS> Const() <DOT>
+        Vars() <AS> Const()
     } catch (ParseException e) {
         handleError(e, "VarsAndConst");
     }
@@ -695,7 +563,7 @@ void TipoVariavel(): {} {
 
 void Valor(): {} {
     try {
-        <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF>
+        <INTEGER> | <REAL> | <LITERAL> | <TRUE> | <UNTRUE>
     } catch (ParseException e) {
         handleError(e, "Valor");
     }
