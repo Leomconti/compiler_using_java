@@ -107,7 +107,11 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         if (expected.contains("avaliate")) {
             errorMsg.append("\nMsg: Body deve conter somente comandos validos").append("\n");
             addError(errorMsg.toString());
-        }else{
+        }else if (expected.contains("this") || expected.contains("do")){
+            errorMsg.append("\nMsg: Programa deve comecar com do this").append("\n");
+            addError(errorMsg.toString());
+        }
+        else{
             handleError(e, "programa");
         }
     }
@@ -177,14 +181,12 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
         errorMsg.append("Esperava: ").append(expected);
 
-        if (expected.contains("\",\",\"]\"")) {
-            errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");
+        if (expected.contains("\",\",\"]\"")) {  // QUANDO O EXPECTED FOR ISSO
+            errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");  // DA ESSA MENSAGEM
             addError(errorMsg.toString());
-        }else if(expected.contains("[")){
-            errorMsg.append("\nMsg: Inicie a lista com [").append("\n");
-            addError(errorMsg.toString());
-        }
-        else{
+        } else if (expected.contains("[")){
+            errorsMsg.append("\nMsg: Saida deve iniciar a lista com [").append("\n");
+        }else{  // TRATAMENTO PADRAO
             handleError(e, "saida");
         }
     }
@@ -263,7 +265,11 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
                 if (expected.contains("\",\",\"]\"")) {
                     errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");
                     addError(errorMsg.toString());
-                }else{
+                }else if(expected.contains("[")){
+                             errorMsg.append("\nMsg: Inicie a lista com [").append("\n");
+                             addError(errorMsg.toString());
+                 }
+                else{
                     handleError(e, "write");
                 }
     }
