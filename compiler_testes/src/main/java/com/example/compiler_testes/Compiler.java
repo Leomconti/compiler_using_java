@@ -560,77 +560,86 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
 }
 
   final public void Expressao() throws ParseException {
-    ExpressaoAritOuLogica();
-    Expressao_();
+    try {
+      ExpressaoAritOuLogica();
+      Expressao_();
 int line = getToken(1).beginLine;
             int column = getToken(1).beginColumn;
             addOk("Linha " + line + " Coluna " + column + " - " +  "Expressao");
+    } catch (ParseException e) {
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("Expressao").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if(expected.contains("<IDENTIFICADOR>")){
+            errorMsg.append("\nMsg: Faltando elemento na expressao a ser avaliada").append("\n");
+            addError(errorMsg.toString());
+         }
+        else{
+            handleError(e, "Expressao");
+        }
+    }
 }
 
 // the [] means that the token is optional, sooo, it's basically the OR Episolon
   final public void Expressao_() throws ParseException {
-    try {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case LESS_THAN:
+    case LESS_THAN_EQUAL:
+    case GREATER_THAN_EQUAL:
+    case GREATER_THAN:
+    case EQUAL:
+    case NOT_EQUAL:{
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case LESS_THAN:
-      case LESS_THAN_EQUAL:
-      case GREATER_THAN_EQUAL:
-      case GREATER_THAN:
-      case EQUAL:
-      case NOT_EQUAL:{
-        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case EQUAL:{
-          jj_consume_token(EQUAL);
-          ExpressaoAritOuLogica();
-          break;
-          }
-        case NOT_EQUAL:{
-          jj_consume_token(NOT_EQUAL);
-          ExpressaoAritOuLogica();
-          break;
-          }
-        case LESS_THAN:{
-          jj_consume_token(LESS_THAN);
-          ExpressaoAritOuLogica();
-          break;
-          }
-        case GREATER_THAN:{
-          jj_consume_token(GREATER_THAN);
-          ExpressaoAritOuLogica();
-          break;
-          }
-        case LESS_THAN_EQUAL:{
-          jj_consume_token(LESS_THAN_EQUAL);
-          ExpressaoAritOuLogica();
-          break;
-          }
-        case GREATER_THAN_EQUAL:{
-          jj_consume_token(GREATER_THAN_EQUAL);
-          ExpressaoAritOuLogica();
-          break;
-          }
-        default:
-          jj_la1[10] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
+      case EQUAL:{
+        jj_consume_token(EQUAL);
+        ExpressaoAritOuLogica();
+        break;
         }
+      case NOT_EQUAL:{
+        jj_consume_token(NOT_EQUAL);
+        ExpressaoAritOuLogica();
+        break;
+        }
+      case LESS_THAN:{
+        jj_consume_token(LESS_THAN);
+        ExpressaoAritOuLogica();
+        break;
+        }
+      case GREATER_THAN:{
+        jj_consume_token(GREATER_THAN);
+        ExpressaoAritOuLogica();
+        break;
+        }
+      case LESS_THAN_EQUAL:{
+        jj_consume_token(LESS_THAN_EQUAL);
+        ExpressaoAritOuLogica();
+        break;
+        }
+      case GREATER_THAN_EQUAL:{
+        jj_consume_token(GREATER_THAN_EQUAL);
+        ExpressaoAritOuLogica();
         break;
         }
       default:
-        jj_la1[11] = jj_gen;
-        ;
+        jj_la1[10] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
       }
-    } catch (ParseException e) {
-handleError(e, "expressao_");
+      break;
+      }
+    default:
+      jj_la1[11] = jj_gen;
+      ;
     }
 }
 
   final public void ExpressaoAritOuLogica() throws ParseException {
-    try {
-      Termo2();
-      MenorPrioridade();
-    } catch (ParseException e) {
-handleError(e, "ExpressaoAritOuLogica");
-    }
+    Termo2();
+    MenorPrioridade();
 }
 
   final public void MenorPrioridade() throws ParseException {
