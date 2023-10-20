@@ -447,8 +447,7 @@ void Expressao(): {} {
 // the [] means that the token is optional, sooo, it's basically the OR Episolon
 void Expressao_(): {} {
     try {
-        [ <
-            EQUAL > ExpressaoAritOuLogica() |
+        [ <EQUAL > ExpressaoAritOuLogica() |
             < NOT_EQUAL > ExpressaoAritOuLogica() |
             < LESS_THAN > ExpressaoAritOuLogica() |
             < GREATER_THAN > ExpressaoAritOuLogica() |
@@ -481,11 +480,12 @@ void Termo2(): {} {
 }
 
 void MediaPrioridade(): {} {
-             < MULTIPLY> Termo1() MediaPrioridade()
+         [   < MULTIPLY> Termo1() MediaPrioridade()
            | < DIVIDE> Termo1() MediaPrioridade()
            | < MODULO> Termo1() MediaPrioridade()
            | < AND > Termo1() MediaPrioridade()
-           | < OR_LOGIC> Termo1() MediaPrioridade()
+           | < DOUBLE_MODULO> Termo1() MediaPrioridade()
+        ]
 }
 
 void Termo1(): {} {
@@ -512,7 +512,7 @@ void Elemento(): {} {
 }
 
 void Indice(): {} {
-        [ < OPEN_BRACE > Expressao() < CLOSE_BRACE > ]
+        (< OPEN_BRACE > <INTEGER> < CLOSE_BRACE >)?
 }
 
 void DeclarationOrNothing():{}{
