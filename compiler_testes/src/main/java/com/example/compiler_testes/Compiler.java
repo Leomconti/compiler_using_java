@@ -16,6 +16,7 @@ public class Compiler implements CompilerConstants {
     public void handleError(ParseException e, String rule) {
         StringBuilder errorMsg = new StringBuilder();
         List<String> expectedTokensList = new ArrayList<>();
+        boolean eof = false;
 
         if (e.currentToken.next.image.equals(".")) {
                 String expected = formatExpectedTokens(e.expectedTokenSequences);
@@ -50,6 +51,7 @@ public class Compiler implements CompilerConstants {
 
         System.err.println(errorMsg.toString());
         errors.add(errorMsg.toString());
+        return;
     }
 
     public List<String> getErrors() {
@@ -160,7 +162,20 @@ int line = getToken(1).beginLine;
             int column = getToken(1).beginColumn;
             addOk("Linha " + line + " Coluna " + column + " - " +  "Entrada");
     } catch (ParseException e) {
-handleError(e, "entrada");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("programa").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("this") || expected.contains("do")){
+            errorMsg.append("\nMsg: Entrada deve comecar com: read this").append("\n");
+            addError(errorMsg.toString());
+        }
+        else{
+            handleError(e, "entrada");
+        }
     }
 }
 
@@ -185,7 +200,7 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
             errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");  // DA ESSA MENSAGEM
             addError(errorMsg.toString());
         } else if (expected.contains("[")){
-            errorsMsg.append("\nMsg: Saida deve iniciar a lista com [").append("\n");
+            errorMsg.append("\nMsg: Saida deve iniciar a lista com [").append("\n");
         } else{  // TRATAMENTO PADRAO
             handleError(e, "saida");
         }
@@ -257,7 +272,7 @@ handleError(e, "ListaDeIdentificadoresAdicional");
     } catch (ParseException e) {
 String expected = formatExpectedTokens(e.expectedTokenSequences);
                 StringBuilder errorMsg = new StringBuilder();
-                errorMsg.append("Erro na Regra: ").append("saida").append("\n");
+                errorMsg.append("Erro na Regra: ").append("Saida").append("\n");
                 errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
                 errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
                 errorMsg.append("Esperava: ").append(expected);
@@ -332,7 +347,20 @@ handleError(e, "selecao");
       ListaComandos();
       jj_consume_token(CLOSE_BRACKET);
     } catch (ParseException e) {
-handleError(e, "TrueResult");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("True Result").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("result")) {
+            errorMsg.append("\nMsg: Condicao deve conter a forma: logico result").append("\n");
+            addError(errorMsg.toString());
+        }
+        else{
+            handleError(e, "true result");
+        }
     }
 }
 
@@ -344,7 +372,19 @@ handleError(e, "TrueResult");
       ListaComandos();
       jj_consume_token(CLOSE_BRACKET);
     } catch (ParseException e) {
-handleError(e, "TrueResult");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("Untrue Result").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("result")) {
+            errorMsg.append("\nMsg: Condicao deve conter a forma: logico result").append("\n");
+            addError(errorMsg.toString());
+        }else{
+            handleError(e, "true result");
+        }
     }
 }
 
@@ -1192,35 +1232,4 @@ handleError(e, "ListaDeIdentificadoresAdicional");
   final public void disable_tracing() {
   }
 
-//
-//    public void consumeUntil(RecoverySet g, ParseException e, String met) throws  ParseException {
-//        Token tok;
-//        StringBuilder errorMsg = new StringBuilder();
-//        // tirar os debug recovery tdc
-//        if (g == null){
-//            throw e;
-//        }
-//        tok = getToken(1); // pega token corrente
-//        while (!eof){  // se nao chegou ao fim do arquivo
-//            if (g.contains(tok.kind)) { // achou um token no conjunto
-//                break;
-//            }
-//            getNextToken();  // pega o prox token
-//            tok = getToken(1);
-//            if (tok.kind == EOF && !g.contains(EOF)){  // fim da entrada
-//                eof = true;
-//            }
-//        }
-//
-//            System.out.println(e.getMessage());
-//            errorMsg.append("Erro na Regra: ").append(met).append("\n");
-//            errorMsg.append("Linha ").append(tok.beginLine).append(", Coluna ").append(tok.beginColumn).append("\n");
-//            errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
-////            errorMsg.append("Encontrou: ").append(e.image).append("\n");
-//            errorMsg.append("Esperava: ").append(e.expectedTokenSequences.toString()).append("\n");
-//            errorMsg.append("Esperava: ").append(g.toString()).append("\n");
-//            addError(errorMsg.toString());
-//            contParseError++;
-//            if (eof) throw new ParseException("EOF encontrado prematuramente");
-//        }
 }
