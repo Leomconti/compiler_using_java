@@ -1361,34 +1361,35 @@ void SkipLexicalActions(Token matchedToken)
       case 90 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
      erroLexico += "\nErro! Limite de d\u00edgitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+    countLexErrors++;
          break;
       case 91 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     erroLexico += "\nErro! Mais de 5 d\u00edgitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Mais de 5 d\u00edgitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
          break;
       case 92 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     erroLexico += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
          break;
       case 93 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     erroLexico += "\nErro! Identificador com muitos d\u00edgitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador com muitos d\u00edgitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
          break;
       case 94 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     erroLexico += "\nErro! Identificador come\u00e7ando com d\u00edgito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador come\u00e7ando com d\u00edgito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
          break;
       case 95 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     erroLexico += "\nErro! Identificador com m\u00faltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador com m\u00faltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
          break;
       case 96 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
          break;
       case 97 :
          image.append(input_stream.GetSuffix(jjimageLen + (lengthOfMatch = jjmatchedPos + 1)));
-     erroLexico += "\nErro! Identificador come\u00e7ando com letra min\u00fascula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+     erroLexico += "\nErro! Identificador come\u00e7ando com letra min\u00fascula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
          break;
       default :
          break;

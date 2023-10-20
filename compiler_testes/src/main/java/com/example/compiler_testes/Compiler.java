@@ -631,35 +631,20 @@ handleError(e, "ConstAndVarsOnly");
 
   final public void ConstAndVarsOuVarsAndConstOuVarsOuConst() throws ParseException {
     try {
+      jj_consume_token(AS);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case AS:{
-        jj_consume_token(AS);
-        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case CONSTANT:{
-          ConstAndVars();
-          break;
-          }
-        case VARIABLE:{
-          VarsAndConst();
-          break;
-          }
-        default:
-          jj_la1[19] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
+      case CONSTANT:{
+        jj_consume_token(CONSTANT);
+        ConstAndVars();
         break;
         }
       case VARIABLE:{
-        Vars();
-        break;
-        }
-      case CONSTANT:{
-        Const();
+        jj_consume_token(VARIABLE);
+        VarsAndConst();
         break;
         }
       default:
-        jj_la1[20] = jj_gen;
+        jj_la1[19] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -669,7 +654,6 @@ handleError(e, "ConstAndVarsOuVarsAndConstOuVarsOuConst");
 }
 
   final public void Vars() throws ParseException {
-    jj_consume_token(VARIABLE);
     ListaDeIdentificadores();
     jj_consume_token(IS);
     TipoVariavel();
@@ -680,12 +664,12 @@ handleError(e, "ConstAndVarsOuVarsAndConstOuVarsOuConst");
   final public void VarsAdicional() throws ParseException {
     try {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case VARIABLE:{
+      case IDENTIFICADOR:{
         Vars();
         break;
         }
       default:
-        jj_la1[21] = jj_gen;
+        jj_la1[20] = jj_gen;
         ;
       }
     } catch (ParseException e) {
@@ -694,12 +678,9 @@ handleError(e, "VarsAdicional");
 }
 
   final public void Const() throws ParseException {
-    jj_consume_token(CONSTANT);
     ListaDeIdentificadores();
     jj_consume_token(IS);
-    TipoConstante();
-    jj_consume_token(EQUALS);
-    Valor();
+    ConstanteMatchValor();
     jj_consume_token(DOT);
     ConstAdicional();
 }
@@ -707,12 +688,12 @@ handleError(e, "VarsAdicional");
   final public void ConstAdicional() throws ParseException {
     try {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case CONSTANT:{
+      case IDENTIFICADOR:{
         Const();
         break;
         }
       default:
-        jj_la1[22] = jj_gen;
+        jj_la1[21] = jj_gen;
         ;
       }
     } catch (ParseException e) {
@@ -723,8 +704,17 @@ handleError(e, "ConstAdicional");
   final public void ConstAndVars() throws ParseException {
     try {
       Const();
-      jj_consume_token(AS);
-      Vars();
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case AS:{
+        jj_consume_token(AS);
+        jj_consume_token(VARIABLE);
+        Vars();
+        break;
+        }
+      default:
+        jj_la1[22] = jj_gen;
+        ;
+      }
     } catch (ParseException e) {
 handleError(e, "ConstAndVars");
     }
@@ -733,34 +723,45 @@ handleError(e, "ConstAndVars");
   final public void VarsAndConst() throws ParseException {
     try {
       Vars();
-      jj_consume_token(AS);
-      Const();
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case AS:{
+        jj_consume_token(AS);
+        jj_consume_token(CONSTANT);
+        Const();
+        break;
+        }
+      default:
+        jj_la1[23] = jj_gen;
+        ;
+      }
     } catch (ParseException e) {
 handleError(e, "VarsAndConst");
     }
 }
 
-  final public void TipoConstante() throws ParseException {
+  final public void ConstanteMatchValor() throws ParseException {
     try {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case INTEGER_DEF:{
         jj_consume_token(INTEGER_DEF);
+        jj_consume_token(EQUALS);
+        jj_consume_token(INTEGER);
         break;
         }
       case REAL_DEF:{
         jj_consume_token(REAL_DEF);
+        jj_consume_token(EQUALS);
+        jj_consume_token(REAL);
         break;
         }
       case LITERAL_DEF:{
         jj_consume_token(LITERAL_DEF);
-        break;
-        }
-      case LOGIC_DEF:{
-        jj_consume_token(LOGIC_DEF);
+        jj_consume_token(EQUALS);
+        jj_consume_token(LITERAL);
         break;
         }
       default:
-        jj_la1[23] = jj_gen;
+        jj_la1[24] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -789,7 +790,7 @@ handleError(e, "TipoConstante");
         break;
         }
       default:
-        jj_la1[24] = jj_gen;
+        jj_la1[25] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -798,46 +799,9 @@ handleError(e, "TipoVariavel");
     }
 }
 
-  final public void Valor() throws ParseException {
-    try {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case INTEGER:{
-        jj_consume_token(INTEGER);
-        break;
-        }
-      case REAL:{
-        jj_consume_token(REAL);
-        break;
-        }
-      case LITERAL:{
-        jj_consume_token(LITERAL);
-        break;
-        }
-      case TRUE:{
-        jj_consume_token(TRUE);
-        break;
-        }
-      case UNTRUE:{
-        jj_consume_token(UNTRUE);
-        break;
-        }
-      default:
-        jj_la1[25] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    } catch (ParseException e) {
-handleError(e, "Valor");
-    }
-}
-
   final public void ListaDeIdentificadores() throws ParseException {
-    try {
-      jj_consume_token(IDENTIFICADOR);
-      ListaDeIdentificadoresAdicional();
-    } catch (ParseException e) {
-handleError(e, "ListaDeIdentificadores");
-    }
+    jj_consume_token(IDENTIFICADOR);
+    ListaDeIdentificadoresAdicional();
 }
 
   final public void ListaDeIdentificadoresAdicional() throws ParseException {
@@ -877,10 +841,10 @@ handleError(e, "ListaDeIdentificadoresAdicional");
 	   jj_la1_init_3();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x20000,0x10008000,0x2d002000,0x2d002000,0x0,0x800,0x200800,0x200800,0x0,0x0,0x0,0x0,0x400000,0x0,0x800,0x0,0x40000,0x280000,0x40000,0xa00000,0x2a00000,0x800000,0x200000,0xc0000000,0xc0000000,0x0,0x800,};
+	   jj_la1_0 = new int[] {0x20000,0x10008000,0x2d002000,0x2d002000,0x0,0x800,0x200800,0x200800,0x0,0x0,0x0,0x0,0x400000,0x0,0x800,0x0,0x40000,0x280000,0x40000,0xa00000,0x800,0x800,0x2000000,0x2000000,0xc0000000,0xc0000000,0x800,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xfc0000,0xfc0000,0x2001800,0x2001800,0x2016000,0x8000,0x240007c0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x3,0x7c0,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xfc0000,0xfc0000,0x2001800,0x2001800,0x2016000,0x8000,0x240007c0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x3,0x0,};
 	}
 	private static void jj_la1_init_2() {
 	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x400,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x400,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};

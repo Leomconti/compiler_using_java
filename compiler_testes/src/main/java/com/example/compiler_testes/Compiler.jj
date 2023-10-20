@@ -206,31 +206,40 @@ SPECIAL_TOKEN :
 SPECIAL_TOKEN :
 {
     < ERROR_INTEGER: <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ >
-    {erroLexico += "\nErro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Limite de dígitos para uma constante inteira = 3. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;
+    countLexErrors++;
+    }
 
 |   < ERROR_REAL:  <DIGITO> <DIGITO> <DIGITO> <DIGITO> <DIGITO> (<DIGITO>)+ "." <INTEGER> >
-    {erroLexico += "\nErro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Mais de 5 dígitos antes do ponto. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
+}
 
 |   < ERROR_LITERAL_END: "\"" ( <ASCII_ASPAS> )* | "\'" (<ASCII_APOSTROFO>)* >
-    {erroLexico += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Literal sem aspas de fechamento. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
+}
 }
 
 SPECIAL_TOKEN :
 {
     < ERROR_IDENTIFICADOR: <MAIUSCULA> ((<DIGITO>)+ (("_") | (<LETRA>)+("_")?)+)* >
-    {erroLexico += "\nErro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
+}
 
 |   < ERROR_IDENTIFICADOR_START_DIGIT: <DIGITO> (<LETRA> | <DIGITO> | "_")+ >
-    {erroLexico += "\nErro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
+}
 
 |   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> ((<LETRA> | <DIGITO>)* "__" (<LETRA> | <DIGITO> | "_")*)+ >
-    {erroLexico += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
+}
 
 |   < ERROR_IDENTIFICADOR_END_UNDERSCORE: <MAIUSCULA> ((<LETRA> | <DIGITO>)+ "_")+ >
-    {erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
+}
 
 |   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
-    {erroLexico += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;}
+    {erroLexico += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
+}
 }
 
 void programa(): {} {
@@ -499,14 +508,14 @@ void ConstAndVarsOnly(): {} {
 
 void ConstAndVarsOuVarsAndConstOuVarsOuConst(): {} {
     try {
-        (<AS> (ConstAndVars() | VarsAndConst()) | Vars() | Const())
+        (<AS> (<CONSTANT> ConstAndVars() | <VARIABLE> VarsAndConst()) )
     } catch (ParseException e) {
         handleError(e, "ConstAndVarsOuVarsAndConstOuVarsOuConst");
     }
 }
 
 void Vars(): {} {
-    <VARIABLE> ListaDeIdentificadores() <IS> TipoVariavel()  <DOT> VarsAdicional()
+    ListaDeIdentificadores() <IS> TipoVariavel()  <DOT> VarsAdicional()
 }
 
 void VarsAdicional(): {} {
@@ -518,7 +527,7 @@ void VarsAdicional(): {} {
 }
 
 void Const(): {} {
-    <CONSTANT> ListaDeIdentificadores() <IS> TipoConstante() <EQUALS> Valor() <DOT> ConstAdicional()
+     ListaDeIdentificadores() <IS> ConstanteMatchValor() <DOT> ConstAdicional()
 }
 
 void ConstAdicional(): {} {
@@ -531,7 +540,7 @@ void ConstAdicional(): {} {
 
 void ConstAndVars(): {} {
     try {
-        Const() <AS> Vars()  // removi o <DOT> aqui
+        Const() (<AS> <VARIABLE> Vars())?
     } catch (ParseException e) {
         handleError(e, "ConstAndVars");
     }
@@ -539,15 +548,15 @@ void ConstAndVars(): {} {
 
 void VarsAndConst(): {} {
     try {
-        Vars() <AS> Const()
+        Vars() (<AS> <CONSTANT> Const())?
     } catch (ParseException e) {
         handleError(e, "VarsAndConst");
     }
 }
 
-void TipoConstante(): {} {
+void ConstanteMatchValor(): {} {
     try {
-        <INTEGER_DEF> | <REAL_DEF> | <LITERAL_DEF> | <LOGIC_DEF>
+        <INTEGER_DEF> <EQUALS> <INTEGER> | <REAL_DEF> <EQUALS> <REAL> | <LITERAL_DEF> <EQUALS> <LITERAL>
     } catch (ParseException e) {
         handleError(e, "TipoConstante");
     }
@@ -561,20 +570,8 @@ void TipoVariavel(): {} {
     }
 }
 
-void Valor(): {} {
-    try {
-        <INTEGER> | <REAL> | <LITERAL> | <TRUE> | <UNTRUE>
-    } catch (ParseException e) {
-        handleError(e, "Valor");
-    }
-}
-
 void ListaDeIdentificadores(): {} {
-    try {
-        <IDENTIFICADOR> ListaDeIdentificadoresAdicional()
-    } catch (ParseException e) {
-        handleError(e, "ListaDeIdentificadores");
-    }
+<IDENTIFICADOR> ListaDeIdentificadoresAdicional()
 }
 
 void ListaDeIdentificadoresAdicional(): {} {
