@@ -76,60 +76,78 @@ public class CodeEditorController {
 
     public String compileCode(String code) {
         List<Token> tokensList = new ArrayList<>();
+        StringBuilder output = new StringBuilder();
+        Compiler lexer;
+        Compiler parser;
 
-        Compiler compiler = null;
         try {
-            compiler = new Compiler(new java.io.StringReader(code));
+            lexer = new Compiler(new java.io.StringReader(code));
             Token token;
-
 
             while (true) {
                 try {
-                    token = compiler.getNextToken();
+                    token = lexer.getNextToken();
                 } catch (TokenMgrError e) {
-                    System.out.println(e.getMessage());
+                    output.append("Erro lexico: ").append(e.getMessage());
                     continue;
                 }
                 if (token.kind == Compiler.EOF) break;  // END OF FILE
                 tokensList.add(token);  // Guarda os tokens que esta lendo em uma lista
             }
-
         } catch (Exception e) {
-            return "Erro durante a compilação: " + e.getMessage();
+            output.append("Erro durante a compilação: ").append(e.getMessage());
+            return output.toString();
+        }
+        // Comentar abaixo para nao mostrar output dos tokens
+        //  output.append(formatTokenOutput(tokensList));
+
+        // check for errors in lexer
+        if (lexer.token_source.foundLexErrors() != 0) {
+            output.append("Erros Lexicos encontrados: ").append(lexer.token_source.foundLexErrors());
+            String errorMessages = lexer.token_source.getErroLexico();
+            if (!errorMessages.isEmpty()) {
+                output.append("\n").append(errorMessages);
+            }
+            // if there are errors don't continue to parser
+            return output.toString();
         }
 
-        // JA LEU TUDO DE LEXEMA. Agora vamos ler os tokens, mostrar as informacoes e erros.
-        StringBuilder output = new StringBuilder();
+        // STARTS PARSER
+        output.append("Sem erros Lexicos, prosseguindo para o Parser...\n");
+        parser = new Compiler(new java.io.StringReader(code));
+        try {
+            parser.programa();
+        } catch (ParseException e) {
+            // Pegar erros peculiares
+            output.append("Erro sintatico: ").append(e.getMessage());
+        }
+//        int qtdSinErrors = parser.token_source.foundSinErrors();
+//        String sintaticErrors = parser.token_source.getErroSintatico();
+        int qtdSinErrors = 0;
+        String sintaticErrors = "";
 
+        // checar se tem erros no parser
+        if (qtdSinErrors != 0) {
+            output.append("Erros Sintaticos encontrados: ").append(qtdSinErrors).append("\n");
+            if (!sintaticErrors.isEmpty()) {
+                output.append("\n").append(sintaticErrors);
+            }
+            // if there are errors don't continue to parser
+            return output.toString();
+        }
+        // M3
+        output.append("Sem erros Sintaticos, ate a M3...\n");
+        return output.toString();
+    }
+
+    public String formatTokenOutput(List<Token> tokensList) {
+        StringBuilder output = new StringBuilder();
         for (Token token : tokensList) {
             String lexema = token.image;
             int line = token.beginLine;
             int column = token.beginColumn;
             String category = getTokenCategory(token.kind);
             output.append(String.format("Line: %d, Column: %d, Lexema: %s, Category: %s\n", line, column, lexema, category));
-        }
-
-        // If lexer is not null, fetch the error messages
-        if (compiler != null) {
-            if (compiler.token_source.foundLexErrors() == 0) {
-                output.append("SEM ERROS LEXICOS\n");
-                try {
-                    compiler = new Compiler(new java.io.StringReader(code));
-                    compiler.programa();
-                } catch (ParseException e) {
-                    // Handle unhandled syntax errors
-                    System.out.println("Syntax Error: " + e.getMessage());
-                    return "Syntax Error during the compilation: " + e.getMessage();
-                }
-            } else {
-                String errorMessages = compiler.token_source.getErroLexico();
-                // will only run once and point out the errors
-                if (!errorMessages.isEmpty()) {
-                    output.append("\n").append(errorMessages);
-                }
-            }
-        } else if (tokensList.isEmpty()) {
-            output.append("Nenhum token foi encontrado.\n");
         }
         return output.toString();
     }

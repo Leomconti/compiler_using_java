@@ -11,30 +11,35 @@ public class Compiler {
     public static void main(String[] args) {
     }
 
-    public void handleError(ParseException e, String rule) {
-            System.err.println("Rule: " + rule);
-            System.err.println("Syntax Error: Line " + e.currentToken.next.beginLine + ", Column " + e.currentToken.next.beginColumn);
-            System.err.println("Encountered: " + e.currentToken.next.image);
 
-            if (e.expectedTokenSequences != null) {
-                System.err.println("Expected: ");
-                for (int[] expectedTokenSequence : e.expectedTokenSequences) {
-                    for (int i = 0; i < expectedTokenSequence.length; i++) {
-                        System.err.print(tokenImage[expectedTokenSequence[i]] + " ");
-                    }
-                    System.err.println("\n");
-                }
-            }
+    public void handleError(ParseException e, String rule) {
+        int line = e.currentToken.next.beginLine;
+        int column = e.currentToken.next.beginColumn;
+        String found = e.currentToken.next.image;
+
+        String formattedError = formatPrint(rule, line, column, found, "Expected_Token", "Syntax Error");
+
         }
+
+    public String formatPrint(String rule, int line, int column, String found, String expected, String msg){
+        StringBuilder output = new StringBuilder();
+        output.append("Rule: ").append(rule).append("\n");
+        output.append("Syntax Error: Line ").append(line).append(", Column ").append(column).append("\n");
+        output.append("Encountered: ").append(found).append("\n");
+        output.append("Expected: ").append(expected).append("\n");
+        output.append("Message: ").append(msg).append("\n");
+        return output.toString();
+    }
 }
 
 PARSER_END(Compiler)
 
+// Aqui eh lexico
 TOKEN_MGR_DECLS :
 {
     String erroLexico = "";
     int countLexErrors = 0;
-    String errorSintatico = "";
+
     public String getErroLexico() {
         return erroLexico;
     }
@@ -179,12 +184,8 @@ TOKEN :
 |   < #MINUSCULA: ["a"-"z"] >
 |   < #DIGITO: ["0"-"9"] >
 |   < #LETRA: <MAIUSCULA> | <MINUSCULA> >
-|   < #ASCII: ["\u0000" - "\u007F"] >
 |   < #ASCII_ASPAS: ["\u0000" - "\u0021"] | ["\u0023" - "\u007F"] >
 |   < #ASCII_APOSTROFO: ["\u0000" - "\u0026"] | ["\u0028" - "\u007F"] >
-|   < #DENTROSEMLINHA: ["\u0000" - "\u0009", "\u000B" - "\u007F"] >  // tabela ascii sem o \n (quebra de linha, vulgo final)
-|   < #SEM_ESTRELA: ["\u0000"-"\u0029"] | ["\u002B"-"\uFFFF"] >  // ascii sem estrela
-|   < #SEM_BARRA: ["\u0000"-"\u002E"] | ["\u0030"-"\uFFFF"] >  // ascci sem a barra (para nao poder colocar estrela e barra e contar como inside do texto ali )
 }
 
 // Erros
@@ -244,46 +245,69 @@ SPECIAL_TOKEN :
 
 void programa(): {} {
     try {
-        <DO> < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > declaration_or_nothing() < BODY > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > finalPrograma()
+        <DO> < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > DeclarationOrNothing() < BODY > < OPEN_BRACKET > ListaComandos() < CLOSE_BRACKET > FinalPrograma()
     } catch (ParseException e) {
         handleError(e, "programa");
     }
-
 }
 
-void finalPrograma(): {} {
+void FinalPrograma(): {} {
     try {
         ( < DESCRIPTION > < LITERAL > ) ?
     } catch (ParseException e) {
-        handleError(e, "finalPrograma");
+        handleError(e, "FinalPrograma");
     }
 }
 
-void atribuicao(): {} {
+void Atribuicao(): {}{
     try {
-        <DESIGNATE > < THIS > listaIdent() < AS > expressao()
+        <DESIGNATE > < THIS > ListaDeIdentificadores() < AS > Expressao()
     } catch (ParseException e) {
         handleError(e, "atribuicao");
     }
 }
 
-void saida(): {} {
+void Entrada(): {} {
     try {
-        <WRITE > < OPEN_BRACKET > listaIdentConst() < CLOSE_BRACKET > < DOT >
+        <READ > < THIS > < OPEN_BRACKET > ListaDeIdentificadores() < CLOSE_BRACKET >
+    } catch (ParseException e) {
+        handleError(e, "entrada");
+    }
+}
+
+void Saida(): {} {
+    try {
+        Write() < OPEN_BRACKET > listaIdentificadorConstante() < CLOSE_BRACKET >
     } catch (ParseException e) {
         handleError(e, "saida");
     }
 }
 
-void write(): {} {
+void listaIdentificadorConstante(): {} {
+ (<IDENTIFICADOR> |  ConstantValue()) adicionalIdentificadorConstante()
+}
+
+void ConstantValue():{}{
+    <INTEGER> | <REAL> | <LITERAL>
+}
+
+void adicionalIdentificadorConstante(): {} {
     try {
-        <WRITE > write_()
+        (<COMMA> listaIdentificadorConstante())?
+    } catch (ParseException e) {
+        handleError(e, "ListaDeIdentificadoresAdicional");
+    }
+}
+
+void Write(): {} {
+    try {
+        <WRITE > Write_()
     } catch (ParseException e) {
         handleError(e, "write");
     }
 }
 
-void write_(): {} {
+void Write_(): {} {
     try {
         <ALL > < THIS > | < THIS >
     } catch (ParseException e) {
@@ -291,123 +315,99 @@ void write_(): {} {
     }
 }
 
-void entrada(): {} {
-    try {
-        <READ > < THIS > < OPEN_BRACKET > listaIdent() < CLOSE_BRACKET > < DOT >
-    } catch (ParseException e) {
-        handleError(e, "entrada");
-    }
-}
 
-void selecao(): {} {
+void Selecao(): {} {
     try {
-        <AVALIATE > < THIS > expressao() < TRUE > < RESULT > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET > < UNTRUE > < RESULT > < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET >
+        <AVALIATE > < THIS > Expressao() (TrueUntrueResult() | UntrueTrueResult())
     } catch (ParseException e) {
         handleError(e, "selecao");
     }
 }
 
-void comando(): {} {
+void trueResult(): {} {
     try {
-        atribuicao() | entrada() | saida() | selecao() | repeticao()
+        < TRUE > < RESULT > < OPEN_BRACKET > ListaComandos() < CLOSE_BRACKET >
+    }catch (ParseException e) {
+        handleError(e, "TrueResult");
+    }
+}
+
+void UntrueResult(): {} {
+   try {
+        < UNTRUE > < RESULT > < OPEN_BRACKET > ListaComandos() < CLOSE_BRACKET >
+   }catch (ParseException e) {
+       handleError(e, "TrueResult");
+   }
+}
+
+void TrueUntrueResult(): {} {
+    try {
+        trueResult() (UntrueResult())?
+    }catch (ParseException e) {
+        handleError(e, "TrueResult");
+    }
+}
+
+void UntrueTrueResult(): {} {
+    try {
+        UntrueResult() (trueResult())?
+    }catch (ParseException e) {
+        handleError(e, "UntrueTrueResult");
+    }
+}
+
+void Comando(): {} {
+    try {
+        Atribuicao() | Entrada() | Saida() | Selecao() | Repeticao()
     } catch (ParseException e) {
         handleError(e, "comando");
     }
 }
 
-void listaComandos(): {} {
+void ListaComandos(): {} {
     try {
-        comando() comando_adicional()
+        Comando() < DOT > ComandoAdicional()
     } catch (ParseException e) {
         handleError(e, "listaComandos");
     }
 }
 
-void comando_adicional(): {} {
+void ComandoAdicional(): {} {
     try {
-        (listaComandos()) ?
+        (ListaComandos()) ?
     } catch (ParseException e) {
-        handleError(e, "comando_adicional");
+        handleError(e, "ComandoAdicional");
     }
 }
 
 
-void listaIdent(): {} {
-    try {
-        <IDENTIFICADOR > tId() identificador_adicional()
-    } catch (ParseException e) {
-        handleError(e, "listaIdent");
-    }
-}
-
-void tId(): {} {
-    try {
-        ( < OPEN_BRACE > < CONSTANT > < INTEGER_DEF > < CLOSE_BRACE > ) ?
-    } catch (ParseException e) {
-        handleError(e, "tId");
-    }
-}
-
-void identificador_adicional(): {} {
-    try {
-        (<COMMA> listaIdent()) ?
-    } catch (ParseException e) {
-        handleError(e, "identificador_adicional");
-    }
-}
-
-void listaIdentConst(): {} {
-    try {
-        listaIdentConstI() < DOT > Identificador_constante_adicional()
-    } catch (ParseException e) {
-        handleError(e, "listaIdentConst");
-    }
-}
-
-void listaIdentConstI(): {} {
-    try {
-        listaIdent() | < CONSTANT >
-    } catch (ParseException e) {
-        handleError(e, "listaIdentConstI");
-    }
-}
-
-void Identificador_constante_adicional(): {} {
-    try {
-        (listaIdentConst()) ?
-    } catch (ParseException e) {
-        handleError(e, "Identificador_constante_adicional");
-    }
-}
-
-
-void repeticao(): {} {
+void Repeticao(): {} {
     try {
         <
-        REPEAT > < THIS > expressao() < OPEN_BRACKET > listaComandos() < CLOSE_BRACKET >
+        REPEAT > < THIS > Expressao() < OPEN_BRACKET > ListaComandos() < CLOSE_BRACKET >
     } catch (ParseException e) {
         handleError(e, "repeticao");
     }
 }
 
-void expressao(): {} {
+void Expressao(): {} {
     try {
-        expressaoAritOuLogica() expressao_()
+        ExpressaoAritOuLogica() Expressao_()
     } catch (ParseException e) {
         handleError(e, "expressao");
     }
 }
 
 // the [] means that the token is optional, sooo, it's basically the OR Episolon
-void expressao_(): {} {
+void Expressao_(): {} {
     try {
         [ <
-            EQUAL > expressaoAritOuLogica() |
-            < NOT_EQUAL > expressaoAritOuLogica() |
-            < LESS_THAN > expressaoAritOuLogica() |
-            < GREATER_THAN > expressaoAritOuLogica() |
-            < LESS_THAN_EQUAL > expressaoAritOuLogica() |
-            < GREATER_THAN_EQUAL > expressaoAritOuLogica()
+            EQUAL > ExpressaoAritOuLogica() |
+            < NOT_EQUAL > ExpressaoAritOuLogica() |
+            < LESS_THAN > ExpressaoAritOuLogica() |
+            < GREATER_THAN > ExpressaoAritOuLogica() |
+            < LESS_THAN_EQUAL > ExpressaoAritOuLogica() |
+            < GREATER_THAN_EQUAL > ExpressaoAritOuLogica()
         ]
     } catch (ParseException e) {
         handleError(e, "expressao_");
@@ -415,69 +415,66 @@ void expressao_(): {} {
 
 }
 
-void expressaoAritOuLogica(): {} {
+void ExpressaoAritOuLogica(): {} {
     try {
-        termo2() menorPrioridade()
+        Termo2() MenorPrioridade()
     } catch (ParseException e) {
-        handleError(e, "expressaoAritOuLogica");
+        handleError(e, "ExpressaoAritOuLogica");
     }
 }
 
-void menorPrioridade(): {} {
+void MenorPrioridade(): {} {
         [ <
-            PLUS > termo2() menorPrioridade() |
-            < MINUS > termo2() menorPrioridade() |
-            < OR_LOGIC > termo2() menorPrioridade()
+            PLUS > Termo2() MenorPrioridade() |
+            < MINUS > Termo2() MenorPrioridade() |
+            < OR_LOGIC > Termo2() MenorPrioridade()
         ]
 }
 
-void termo2(): {} {
-        termo1() mediaPrioridade()
+void Termo2(): {} {
+        Termo1() MediaPrioridade()
 }
 
-void mediaPrioridade(): {} {
-             < MULTIPLY> termo1() mediaPrioridade()
-           | < DIVIDE> termo1() mediaPrioridade()
-           | < MODULO> termo1() mediaPrioridade()
-           | < AND > termo1() mediaPrioridade()
-           | < OR_LOGIC> termo1() mediaPrioridade()
-
+void MediaPrioridade(): {} {
+             < MULTIPLY> Termo1() MediaPrioridade()
+           | < DIVIDE> Termo1() MediaPrioridade()
+           | < MODULO> Termo1() MediaPrioridade()
+           | < AND > Termo1() MediaPrioridade()
+           | < OR_LOGIC> Termo1() MediaPrioridade()
 }
 
-void termo1(): {} {
-        elemento() maiorPrioridade()
+void Termo1(): {} {
+        Elemento() MaiorPrioridade()
 }
 
-void maiorPrioridade(): {} {
-        [ <POWER > elemento() maiorPrioridade() ]
+void MaiorPrioridade(): {} {
+        [ <POWER > Elemento() MaiorPrioridade() ]
 }
 
-void elemento(): {} {
+void Elemento(): {} {
     try {
-          < IDENTIFICADOR> indice()
+          < IDENTIFICADOR> Indice()
         | < INTEGER>
         | < REAL >
         | < LITERAL >
         | < TRUE >
         | < UNTRUE>
-        | <OPEN_PAREN> expressao() <CLOSE_PAREN>
-        | <NOT_LOGIC> <OPEN_PAREN> expressao() <CLOSE_PAREN>
+        | <OPEN_PAREN> Expressao() <CLOSE_PAREN>
+        | <NOT_LOGIC> <OPEN_PAREN> Expressao() <CLOSE_PAREN>
     } catch (ParseException e) {
-        handleError(e, "elemento");
+        handleError(e, "Elemento");
     }
 }
 
-void indice(): {} {
-        [ < OPEN_BRACE > expressao() < CLOSE_BRACE > ]
+void Indice(): {} {
+        [ < OPEN_BRACE > Expressao() < CLOSE_BRACE > ]
 }
 
-/////////////////////////////
-
-void declaration_or_nothing():{}{
+void DeclarationOrNothing():{}{
     try{
        (<DECLARATION> Declaration_Enumerado_E_ConstAndVars())?
     }catch (ParseException e){
-        handleError(e, "declaration_or_nothin");
+        handleError(e, "DeclarationOrNothing");
     }
 }
 
@@ -575,7 +572,7 @@ void TipoVariavel(): {} {
 }
 
 void ListaDeIdentificadores(): {} {
-<IDENTIFICADOR> ListaDeIdentificadoresAdicional()
+ <IDENTIFICADOR> ListaDeIdentificadoresAdicional()
 }
 
 void ListaDeIdentificadoresAdicional(): {} {

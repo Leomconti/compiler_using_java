@@ -153,37 +153,29 @@ public interface CompilerConstants {
   /** RegularExpression Id. */
   int LETRA = 81;
   /** RegularExpression Id. */
-  int ASCII = 82;
+  int ASCII_ASPAS = 82;
   /** RegularExpression Id. */
-  int ASCII_ASPAS = 83;
+  int ASCII_APOSTROFO = 83;
   /** RegularExpression Id. */
-  int ASCII_APOSTROFO = 84;
+  int INVALID_LEXICAL = 84;
   /** RegularExpression Id. */
-  int DENTROSEMLINHA = 85;
+  int INVALID_CONST = 85;
   /** RegularExpression Id. */
-  int SEM_ESTRELA = 86;
+  int ERROR_INTEGER = 86;
   /** RegularExpression Id. */
-  int SEM_BARRA = 87;
+  int ERROR_REAL = 87;
   /** RegularExpression Id. */
-  int INVALID_LEXICAL = 88;
+  int ERROR_LITERAL_END = 88;
   /** RegularExpression Id. */
-  int INVALID_CONST = 89;
+  int ERROR_IDENTIFICADOR = 89;
   /** RegularExpression Id. */
-  int ERROR_INTEGER = 90;
+  int ERROR_IDENTIFICADOR_START_DIGIT = 90;
   /** RegularExpression Id. */
-  int ERROR_REAL = 91;
+  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 91;
   /** RegularExpression Id. */
-  int ERROR_LITERAL_END = 92;
+  int ERROR_IDENTIFICADOR_END_UNDERSCORE = 92;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR = 93;
-  /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_DIGIT = 94;
-  /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 95;
-  /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_END_UNDERSCORE = 96;
-  /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_LOWERCASE = 97;
+  int ERROR_IDENTIFICADOR_START_LOWERCASE = 93;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -276,12 +268,8 @@ public interface CompilerConstants {
     "<MINUSCULA>",
     "<DIGITO>",
     "<LETRA>",
-    "<ASCII>",
     "<ASCII_ASPAS>",
     "<ASCII_APOSTROFO>",
-    "<DENTROSEMLINHA>",
-    "<SEM_ESTRELA>",
-    "<SEM_BARRA>",
     "<INVALID_LEXICAL>",
     "<INVALID_CONST>",
     "<ERROR_INTEGER>",
