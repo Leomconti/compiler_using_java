@@ -92,7 +92,7 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         errorMsg.append("Esperava: ").append(expected);
 
         if (expected.contains("avaliate")) {
-            errorMsg.append("Msg: Body deve conter somente comandos validos").append("\n");
+            errorMsg.append("\nMsg: Body deve conter somente comandos validos").append("\n");
             addError(errorMsg.toString());
         }else{
             handleError(e, "programa");
@@ -635,7 +635,19 @@ handleError(e, "ExpressaoAritOuLogica");
         throw new ParseException();
       }
     } catch (ParseException e) {
-handleError(e, "Elemento");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("elemento").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("<IDENTIFICADOR> <INTEGER>")) {
+            errorMsg.append("\nMsg: Deve conter um elemento").append("\n");
+            addError(errorMsg.toString());
+        }else{
+            handleError(e, "programa");
+        }
     }
 }
 
