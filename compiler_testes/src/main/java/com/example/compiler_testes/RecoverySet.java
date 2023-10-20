@@ -37,7 +37,8 @@ public class RecoverySet extends HashSet {
 
         while (it.hasNext()) {
             k = ((Integer) it.next()).intValue();
-            s += Compiler.im(k) + " ";
+//            s += Compiler.im(k) + " ";
+//            comentar pq dai tiramos img do compiler
         }
         return s;
 
