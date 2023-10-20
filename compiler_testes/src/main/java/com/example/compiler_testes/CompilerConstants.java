@@ -167,15 +167,27 @@ public interface CompilerConstants {
   /** RegularExpression Id. */
   int ERROR_LITERAL_END = 88;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR = 89;
+  int ERROR_DIGITOS = 89;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_DIGIT = 90;
+  int ERROR__FIM = 90;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 91;
+  int ERROR_FIM_DIGITO = 91;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_END_UNDERSCORE = 92;
+  int ERROR__DIGITO = 92;
   /** RegularExpression Id. */
-  int ERROR_IDENTIFICADOR_START_LOWERCASE = 93;
+  int ERROR__LETRA = 93;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR = 94;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR_START_DIGIT = 95;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES = 96;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR_START_LOWERCASE = 97;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR_END_DIGIT = 98;
+  /** RegularExpression Id. */
+  int ERROR_IDENTIFICADOR_START_UNDERSCORE = 99;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -275,11 +287,17 @@ public interface CompilerConstants {
     "<ERROR_INTEGER>",
     "<ERROR_REAL>",
     "<ERROR_LITERAL_END>",
+    "<ERROR_DIGITOS>",
+    "\"__\"",
+    "<ERROR_FIM_DIGITO>",
+    "<ERROR__DIGITO>",
+    "<ERROR__LETRA>",
     "<ERROR_IDENTIFICADOR>",
     "<ERROR_IDENTIFICADOR_START_DIGIT>",
     "<ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES>",
-    "<ERROR_IDENTIFICADOR_END_UNDERSCORE>",
     "<ERROR_IDENTIFICADOR_START_LOWERCASE>",
+    "<ERROR_IDENTIFICADOR_END_DIGIT>",
+    "<ERROR_IDENTIFICADOR_START_UNDERSCORE>",
   };
 
 }

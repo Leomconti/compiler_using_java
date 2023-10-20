@@ -4,6 +4,7 @@ package com.example.compiler_testes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 public class Compiler implements CompilerConstants {
     private List<String> errors = new ArrayList<String>();
@@ -13,26 +14,48 @@ public class Compiler implements CompilerConstants {
 
     public void handleError(ParseException e, String rule) {
         StringBuilder errorMsg = new StringBuilder();
+        List<String> expectedTokensList = new ArrayList<>();
 
         errorMsg.append("Erro na Regra: ").append(rule).append("\n");
         errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
         errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
 
         if (e.expectedTokenSequences != null) {
-            errorMsg.append("Experado: ");
             for (int[] expectedTokenSequence : e.expectedTokenSequences) {
                 for (int i = 0; i < expectedTokenSequence.length; i++) {
-                    errorMsg.append(tokenImage[expectedTokenSequence[i]]).append(" ");
+                    expectedTokensList.add(tokenImage[expectedTokenSequence[i]]);
                 }
             }
+
+            errorMsg.append("Expected: ").append("\n");
+            for (String token : expectedTokensList) {
+                errorMsg.append(token).append(" ");
+            }
+            errorMsg.append("\n");
         }
-        errorMsg.append("\n");
+
         System.err.println(errorMsg.toString());
         errors.add(errorMsg.toString());
     }
 
     public List<String> getErrors() {
         return errors;
+    }
+
+    public void addError(String error) {
+        errors.add(error);
+    }
+
+    public String formatExpectedTokens(int[][] expectedTokenSequences) {
+        StringBuilder expectedTokens = new StringBuilder();
+        if (expectedTokenSequences != null) {
+            for (int[] expectedTokenSequence : expectedTokenSequences) {
+                for (int i = 0; i < expectedTokenSequence.length; i++) {
+                    expectedTokens.append(tokenImage[expectedTokenSequence[i]]).append(" ");
+                }
+            }
+        }
+        return expectedTokens.toString();
     }
 
   final public void programa() throws ParseException {
@@ -49,7 +72,18 @@ public class Compiler implements CompilerConstants {
       jj_consume_token(CLOSE_BRACKET);
       FinalPrograma();
     } catch (ParseException e) {
-handleError(e, "programa");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        if (!expected.contains("avaliate")) {
+            handleError(e, "programa");
+        }else{
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("programa").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+        errorMsg.append("Msg: Body deve conter somente comandos validos").append("\n");
+        addError(errorMsg.toString());
+        }
     }
 }
 
@@ -866,10 +900,12 @@ handleError(e, "ListaDeIdentificadoresAdicional");
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
+  static private int[] jj_la1_3;
   static {
 	   jj_la1_init_0();
 	   jj_la1_init_1();
 	   jj_la1_init_2();
+	   jj_la1_init_3();
 	}
 	private static void jj_la1_init_0() {
 	   jj_la1_0 = new int[] {0x20000,0x800,0x0,0x0,0x10008000,0x0,0x0,0x0,0x2d002000,0x2d002000,0x0,0x0,0x0,0x0,0x400000,0x0,0x800,0x0,0x40000,0x280000,0x40000,0xa00000,0x800,0x800,0x2000000,0x2000000,0xc0000000,0xc0000000,0x0,};
@@ -879,6 +915,9 @@ handleError(e, "ListaDeIdentificadoresAdicional");
 	}
 	private static void jj_la1_init_2() {
 	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x400,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+	}
+	private static void jj_la1_init_3() {
+	   jj_la1_3 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
 	}
 
   /** Constructor with InputStream. */
@@ -1003,7 +1042,7 @@ handleError(e, "ListaDeIdentificadoresAdicional");
   /** Generate ParseException. */
   public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[94];
+	 boolean[] la1tokens = new boolean[100];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
@@ -1020,10 +1059,13 @@ handleError(e, "ListaDeIdentificadoresAdicional");
 		   if ((jj_la1_2[i] & (1<<j)) != 0) {
 			 la1tokens[64+j] = true;
 		   }
+		   if ((jj_la1_3[i] & (1<<j)) != 0) {
+			 la1tokens[96+j] = true;
+		   }
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 94; i++) {
+	 for (int i = 0; i < 100; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;

@@ -8,6 +8,7 @@ package com.example.compiler_testes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 public class Compiler {
     private List<String> errors = new ArrayList<String>();
@@ -17,20 +18,26 @@ public class Compiler {
 
     public void handleError(ParseException e, String rule) {
         StringBuilder errorMsg = new StringBuilder();
+        List<String> expectedTokensList = new ArrayList<>();
 
         errorMsg.append("Erro na Regra: ").append(rule).append("\n");
         errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
         errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
 
         if (e.expectedTokenSequences != null) {
-            errorMsg.append("Experado: ");
             for (int[] expectedTokenSequence : e.expectedTokenSequences) {
                 for (int i = 0; i < expectedTokenSequence.length; i++) {
-                    errorMsg.append(tokenImage[expectedTokenSequence[i]]).append(" ");
+                    expectedTokensList.add(tokenImage[expectedTokenSequence[i]]);
                 }
             }
+
+            errorMsg.append("Expected: ").append("\n");
+            for (String token : expectedTokensList) {
+                errorMsg.append(token).append(" ");
+            }
+            errorMsg.append("\n");
         }
-        errorMsg.append("\n");
+
         System.err.println(errorMsg.toString());
         errors.add(errorMsg.toString());
     }
@@ -38,6 +45,23 @@ public class Compiler {
     public List<String> getErrors() {
         return errors;
     }
+
+    public void addError(String error) {
+        errors.add(error);
+    }
+
+    public String formatExpectedTokens(int[][] expectedTokenSequences) {
+        StringBuilder expectedTokens = new StringBuilder();
+        if (expectedTokenSequences != null) {
+            for (int[] expectedTokenSequence : expectedTokenSequences) {
+                for (int i = 0; i < expectedTokenSequence.length; i++) {
+                    expectedTokens.append(tokenImage[expectedTokenSequence[i]]).append(" ");
+                }
+            }
+        }
+        return expectedTokens.toString();
+    }
+
 }
 
 PARSER_END(Compiler)
@@ -228,34 +252,58 @@ SPECIAL_TOKEN :
 }
 }
 
+TOKEN :
+{
+    < #ERROR_DIGITOS: <DIGITO> (<DIGITO>)+ >
+|   < #ERROR__FIM: "__">
+|   < #ERROR_FIM_DIGITO:  <DIGITO> >
+|   < #ERROR__DIGITO: "__" <DIGITOS> >
+|   < #ERROR__LETRA: "__" (<LETRA>)+  >
+
+}
+
 SPECIAL_TOKEN :
 {
-    < ERROR_IDENTIFICADOR: <MAIUSCULA> ((<DIGITO>)+ (("_") | (<LETRA>)+("_")?)+)* >
+    < ERROR_IDENTIFICADOR: <MAIUSCULA> (<ERROR_DIGITOS> <FIM>)? (("_" <ERROR_DIGITOS> | <LETRA> (<ERROR_DIGITOS>)? | <_LETRA> (<ERROR_DIGITOS>)?)* <FIM>)? >
     {erroLexico += "\nErro! Identificador com muitos dígitos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
 }
 
-|   < ERROR_IDENTIFICADOR_START_DIGIT: <DIGITO> (<LETRA> | <DIGITO> | "_")+ >
+|   < ERROR_IDENTIFICADOR_START_DIGIT: <DIGITO> (<DIGITOS> <FIM>)? ((<_DIGITO> | <LETRA> (<DIGITOS>)? | <_LETRA> (<DIGITOS>)?)* <FIM>)? >
     {erroLexico += "\nErro! Identificador começando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
 }
 
-|   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> ((<LETRA> | <DIGITO>)* "__" (<LETRA> | <DIGITO> | "_")*)+ >
+|   < ERROR_IDENTIFICADOR_MULTIPLE_UNDERSCORES: <MAIUSCULA> (<DIGITOS> <ERROR__FIM> )? ((<ERROR__DIGITO> | <LETRA> (<DIGITOS>)? | <ERROR__LETRA> (<DIGITOS>)?)* <ERROR__FIM> )? >
     {erroLexico += "\nErro! Identificador com múltiplos underscores consecutivos. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
 }
 
-|   < ERROR_IDENTIFICADOR_END_UNDERSCORE: <MAIUSCULA> ((<LETRA> | <DIGITO>)+ "_")+ >
-    {erroLexico += "\nErro! Identificador terminando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
-}
-
-|   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> ((<LETRA> | <DIGITO> | "_")+)* >
+|   < ERROR_IDENTIFICADOR_START_LOWERCASE: <MINUSCULA> (<DIGITOS> <FIM>)? ((<_DIGITO> | <LETRA> (<DIGITOS>)? | <_LETRA> (<DIGITOS>)?)* <FIM>)? >
     {erroLexico += "\nErro! Identificador começando com letra minúscula. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
 }
+
+|   < ERROR_IDENTIFICADOR_END_DIGIT: <MAIUSCULA> (<DIGITOS> <ERROR_FIM_DIGITO> )? ((<_DIGITO> | <LETRA> (<DIGITOS>)? | <_LETRA> (<DIGITOS>)?)* <ERROR_FIM_DIGITO>)? >
+        {erroLexico += "\nErro! Identificador terminando com dígito. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
+    }
+|   < ERROR_IDENTIFICADOR_START_UNDERSCORE: "_" (<DIGITOS> <FIM>)? ((<_DIGITO> | <LETRA> (<DIGITOS>)? | <_LETRA> (<DIGITOS>)?)* <FIM>)? >
+        {erroLexico += "\nErro! Identificador começando com underscore. Lexema: " + matchedToken.image + ", linha " + matchedToken.beginLine + ", coluna " + matchedToken.beginColumn;    countLexErrors++;
+    }
 }
 
 void programa(): {} {
     try {
         <DO> < THIS > < IDENTIFICADOR > < OPEN_BRACKET > < CLOSE_BRACKET > DeclarationOrNothing() < BODY > < OPEN_BRACKET > ListaComandos() < CLOSE_BRACKET > FinalPrograma()
     } catch (ParseException e) {
-        handleError(e, "programa");
+        String expected = formatExpectedTokens(e.expectedTokenSequences);
+        if (!expected.contains("avaliate")) {
+            handleError(e, "programa");
+        }else{
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("programa").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+        errorMsg.append("Msg: Body deve conter somente comandos validos").append("\n");
+        addError(errorMsg.toString());
+        }
     }
 }
 
