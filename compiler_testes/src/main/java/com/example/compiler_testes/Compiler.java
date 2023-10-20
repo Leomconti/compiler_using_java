@@ -185,7 +185,7 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
             errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");  // DA ESSA MENSAGEM
             addError(errorMsg.toString());
         } else if (expected.contains("[")){
-            errorsMsg.append("\nMsg: Saida deve iniciar a lista com [").append("\n");
+            errorMsg.append("\nMsg: Saida deve iniciar a lista com [").append("\n");
         } else{  // TRATAMENTO PADRAO
             handleError(e, "saida");
         }
