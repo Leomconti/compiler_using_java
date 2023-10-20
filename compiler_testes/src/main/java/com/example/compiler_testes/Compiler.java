@@ -264,7 +264,7 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
                     errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");
                     addError(errorMsg.toString());
                 }else{
-                    handleError(e, "programa");
+                    handleError(e, "write");
                 }
     }
 }
