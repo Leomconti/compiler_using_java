@@ -755,49 +755,65 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
 }
 
   final public void Elemento() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case IDENTIFICADOR:{
-      jj_consume_token(IDENTIFICADOR);
-      Indice();
-      break;
+    try {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case IDENTIFICADOR:{
+        jj_consume_token(IDENTIFICADOR);
+        Indice();
+        break;
+        }
+      case INTEGER:{
+        jj_consume_token(INTEGER);
+        break;
+        }
+      case REAL:{
+        jj_consume_token(REAL);
+        break;
+        }
+      case LITERAL:{
+        jj_consume_token(LITERAL);
+        break;
+        }
+      case TRUE:{
+        jj_consume_token(TRUE);
+        break;
+        }
+      case UNTRUE:{
+        jj_consume_token(UNTRUE);
+        break;
+        }
+      case OPEN_PAREN:{
+        jj_consume_token(OPEN_PAREN);
+        Expressao();
+        jj_consume_token(CLOSE_PAREN);
+        break;
+        }
+      case NOT_LOGIC:{
+        jj_consume_token(NOT_LOGIC);
+        jj_consume_token(OPEN_PAREN);
+        Expressao();
+        jj_consume_token(CLOSE_PAREN);
+        break;
+        }
+      default:
+        jj_la1[17] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
       }
-    case INTEGER:{
-      jj_consume_token(INTEGER);
-      break;
-      }
-    case REAL:{
-      jj_consume_token(REAL);
-      break;
-      }
-    case LITERAL:{
-      jj_consume_token(LITERAL);
-      break;
-      }
-    case TRUE:{
-      jj_consume_token(TRUE);
-      break;
-      }
-    case UNTRUE:{
-      jj_consume_token(UNTRUE);
-      break;
-      }
-    case OPEN_PAREN:{
-      jj_consume_token(OPEN_PAREN);
-      Expressao();
-      jj_consume_token(CLOSE_PAREN);
-      break;
-      }
-    case NOT_LOGIC:{
-      jj_consume_token(NOT_LOGIC);
-      jj_consume_token(OPEN_PAREN);
-      Expressao();
-      jj_consume_token(CLOSE_PAREN);
-      break;
-      }
-    default:
-      jj_la1[17] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
+    } catch (ParseException e) {
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("elemento").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("<IDENTIFICADOR> <INTEGER>")) {
+            errorMsg.append("\nMsg: Faltando elemento na expressao").append("\n");
+            addError(errorMsg.toString());
+        }else{
+            handleError(e, "elemento");
+        }
     }
 }
 
@@ -816,19 +832,15 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
 }
 
   final public void DeclarationOrNothing() throws ParseException {
-    try {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case DECLARATION:{
-        jj_consume_token(DECLARATION);
-        Declaration_Enumerado_E_ConstAndVars();
-        break;
-        }
-      default:
-        jj_la1[19] = jj_gen;
-        ;
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case DECLARATION:{
+      jj_consume_token(DECLARATION);
+      Declaration_Enumerado_E_ConstAndVars();
+      break;
       }
-    } catch (ParseException e) {
-handleError(e, "DeclarationOrNothing");
+    default:
+      jj_la1[19] = jj_gen;
+      ;
     }
 }
 
