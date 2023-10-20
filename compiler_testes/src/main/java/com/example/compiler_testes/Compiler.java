@@ -9,35 +9,21 @@ public class Compiler implements CompilerConstants {
     public static void main(String[] args) {
     }
 
-
-
-public class Compiler {
-
     public void handleError(ParseException e, String rule) {
-        int line = e.currentToken.next.beginLine;
-        int column = e.currentToken.next.beginColumn;
-        String found = e.currentToken.next.image;
+            System.err.println("Rule: " + rule);
+            System.err.println("Syntax Error: Line " + e.currentToken.next.beginLine + ", Column " + e.currentToken.next.beginColumn);
+            System.err.println("Encountered: " + e.currentToken.next.image);
 
-        List<String> expectedTokensList = new ArrayList<>();
-        for (Token t : e.expectedTokenSequence) { // Assuming e.expectedTokenSequence is the field or method that returns expected tokens
-            expectedTokensList.add(t.image); // Assuming that 'image' is the field for the token string
+            if (e.expectedTokenSequences != null) {
+                System.err.println("Expected: ");
+                for (int[] expectedTokenSequence : e.expectedTokenSequences) {
+                    for (int i = 0; i < expectedTokenSequence.length; i++) {
+                        System.err.print(tokenImage[expectedTokenSequence[i]] + " ");
+                    }
+                    System.err.println("\n");
+                }
+            }
         }
-        String expectedTokensString = String.join(", ", expectedTokensList);
-
-        String formattedError = formatPrint(rule, line, column, found, expectedTokensString, "Syntax Error");
-    }
-
-    public String formatPrint(String rule, int line, int column, String found, String expected, String msg){
-        StringBuilder output = new StringBuilder();
-        output.append("Rule: ").append(rule).append("\n");
-        output.append("Syntax Error: Line ").append(line).append(", Column ").append(column).append("\n");
-        output.append("Encountered: ").append(found).append("\n");
-        output.append("Expected: ").append(expected).append("\n"); // Now this will have all expected tokens
-        output.append("Message: ").append(msg).append("\n");
-        System.err.println(output.toString());
-        return output.toString();
-    }
-}
 
   final public void programa() throws ParseException {
     try {
