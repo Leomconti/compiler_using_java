@@ -123,14 +123,15 @@ public class CodeEditorController {
         }
 //        int qtdSinErrors = parser.token_source.foundSinErrors();
 //        String sintaticErrors = parser.token_source.getErroSintatico();
-        int qtdSinErrors = 0;
-        String sintaticErrors = "";
+        List<String> parserErrors = parser.getErrors();
+        int qtdParserErrors = parserErrors.size();
+
 
         // checar se tem erros no parser
-        if (qtdSinErrors != 0) {
-            output.append("Erros Sintaticos encontrados: ").append(qtdSinErrors).append("\n");
-            if (!sintaticErrors.isEmpty()) {
-                output.append("\n").append(sintaticErrors);
+        if (qtdParserErrors != 0) {
+            output.append("Erros Sintaticos encontrados: ").append(qtdParserErrors).append("\n");
+            for (String error : parserErrors) {
+                output.append(error).append("\n");
             }
             // if there are errors don't continue to parser
             return output.toString();

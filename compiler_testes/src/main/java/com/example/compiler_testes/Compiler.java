@@ -6,24 +6,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Compiler implements CompilerConstants {
+    private List<String> errors = new ArrayList<String>();
+
     public static void main(String[] args) {
     }
 
     public void handleError(ParseException e, String rule) {
-            System.err.println("Rule: " + rule);
-            System.err.println("Syntax Error: Line " + e.currentToken.next.beginLine + ", Column " + e.currentToken.next.beginColumn);
-            System.err.println("Encountered: " + e.currentToken.next.image);
+        StringBuilder errorMsg = new StringBuilder();
 
-            if (e.expectedTokenSequences != null) {
-                System.err.println("Expected: ");
-                for (int[] expectedTokenSequence : e.expectedTokenSequences) {
-                    for (int i = 0; i < expectedTokenSequence.length; i++) {
-                        System.err.print(tokenImage[expectedTokenSequence[i]] + " ");
-                    }
-                    System.err.println("\n");
+        errorMsg.append("Rule: ").append(rule).append("\n");
+        errorMsg.append("Syntax Error: Line ").append(e.currentToken.next.beginLine).append(", Column ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encountered: ").append(e.currentToken.next.image).append("\n");
+
+        if (e.expectedTokenSequences != null) {
+            errorMsg.append("Expected: ");
+            for (int[] expectedTokenSequence : e.expectedTokenSequences) {
+                for (int i = 0; i < expectedTokenSequence.length; i++) {
+                    errorMsg.append(tokenImage[expectedTokenSequence[i]]).append(" ");
                 }
             }
         }
+        errorMsg.append("\n");
+        System.err.println(errorMsg.toString());
+        errors.add(errorMsg.toString());
+    }
+
+    public List<String> getErrors() {
+        return errors;
+    }
 
   final public void programa() throws ParseException {
     try {
