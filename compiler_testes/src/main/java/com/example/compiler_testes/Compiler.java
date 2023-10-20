@@ -1170,4 +1170,35 @@ handleError(e, "ListaDeIdentificadoresAdicional");
   final public void disable_tracing() {
   }
 
+//
+//    public void consumeUntil(RecoverySet g, ParseException e, String met) throws  ParseException {
+//        Token tok;
+//        StringBuilder errorMsg = new StringBuilder();
+//        // tirar os debug recovery tdc
+//        if (g == null){
+//            throw e;
+//        }
+//        tok = getToken(1); // pega token corrente
+//        while (!eof){  // se nao chegou ao fim do arquivo
+//            if (g.contains(tok.kind)) { // achou um token no conjunto
+//                break;
+//            }
+//            getNextToken();  // pega o prox token
+//            tok = getToken(1);
+//            if (tok.kind == EOF && !g.contains(EOF)){  // fim da entrada
+//                eof = true;
+//            }
+//        }
+//
+//            System.out.println(e.getMessage());
+//            errorMsg.append("Erro na Regra: ").append(met).append("\n");
+//            errorMsg.append("Linha ").append(tok.beginLine).append(", Coluna ").append(tok.beginColumn).append("\n");
+//            errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+////            errorMsg.append("Encontrou: ").append(e.image).append("\n");
+//            errorMsg.append("Esperava: ").append(e.expectedTokenSequences.toString()).append("\n");
+//            errorMsg.append("Esperava: ").append(g.toString()).append("\n");
+//            addError(errorMsg.toString());
+//            contParseError++;
+//            if (eof) throw new ParseException("EOF encontrado prematuramente");
+//        }
 }
