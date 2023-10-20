@@ -186,7 +186,7 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
             addError(errorMsg.toString());
         } else if (expected.contains("[")){
             errorsMsg.append("\nMsg: Saida deve iniciar a lista com [").append("\n");
-        }else{  // TRATAMENTO PADRAO
+        } else{  // TRATAMENTO PADRAO
             handleError(e, "saida");
         }
     }
