@@ -695,7 +695,7 @@ void MaiorPrioridade(): {} {
 }
 
 void Elemento(): {} {
-//    try {
+    try {
           < IDENTIFICADOR> Indice()
         | < INTEGER>
         | < REAL >
@@ -704,21 +704,21 @@ void Elemento(): {} {
         | < UNTRUE>
         | <OPEN_PAREN> Expressao() <CLOSE_PAREN>
         | <NOT_LOGIC> <OPEN_PAREN> Expressao() <CLOSE_PAREN>
-//    } catch (ParseException e) {
-//        String expected = formatExpectedTokens(e.expectedTokenSequences);
-//        StringBuilder errorMsg = new StringBuilder();
-//        errorMsg.append("Erro na Regra: ").append("elemento").append("\n");
-//        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
-//        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
-//        errorMsg.append("Esperava: ").append(expected);
-//
-//        if (expected.contains("<IDENTIFICADOR> <INTEGER>")) {
-//            errorMsg.append("\nMsg: Faltando elemento na expressao").append("\n");
-//            addError(errorMsg.toString());
-//        }else{
-//            handleError(e, "elemento");
-//        }
-//    }
+    } catch (ParseException e) {
+        String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("elemento").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("<IDENTIFICADOR> <INTEGER>")) {
+            errorMsg.append("\nMsg: Faltando elemento na expressao").append("\n");
+            addError(errorMsg.toString());
+        }else{
+            handleError(e, "elemento");
+        }
+    }
 }
 
 void Indice(): {} {
@@ -726,11 +726,7 @@ void Indice(): {} {
 }
 
 void DeclarationOrNothing():{}{
-    try{
        (<DECLARATION> Declaration_Enumerado_E_ConstAndVars())?
-    }catch (ParseException e){
-        handleError(e, "DeclarationOrNothing");
-    }
 }
 
 
