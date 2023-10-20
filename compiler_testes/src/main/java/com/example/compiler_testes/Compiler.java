@@ -170,7 +170,10 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
             }else if (expected.contains("<IDENTIFICADOR>")){
                 errorMsg.append("\nMsg: Faltando variavel para atribuir").append("\n");
                 addError(errorMsg.toString());
-            }
+            }else if(expected.contains("as")){
+                errorMsg.append("\nMsg: Faltando 'as' na atribuicao").append("\n");
+                addError(errorMsg.toString());
+                }
             else{
                 handleError(e, "atribuicao");
             }
@@ -404,10 +407,10 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         }else if (expected.contains("]")){
                      errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
                               addError(errorMsg.toString());
-
                  }
-        else{
-            handleError(e, "true result");
+        else if (expected.contains("]")){
+             errorMsg.append("\nMsg: Faltando iniciar bloco com '['").append("\n");
+              addError(errorMsg.toString());
         }
     }
 }
@@ -434,9 +437,10 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
             errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
             addError(errorMsg.toString());
         }
-        else{
-            handleError(e, "Untrue result");
-        }
+        else if (expected.contains("]")){
+                     errorMsg.append("\nMsg: Faltando iniciar bloco com '['").append("\n");
+                      addError(errorMsg.toString());
+                }
     }
 }
 
@@ -542,7 +546,13 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
         }else if (expected.contains("]")){
             errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
             addError(errorMsg.toString());
-        }
+        }else if (expected.contains("[")){
+             errorMsg.append("\nMsg: Faltando iniciar bloco com ']'").append("\n");
+             addError(errorMsg.toString());
+         }else if(expected.contains("<IDENTIFICADOR> <INTEGER>")){
+            errorMsg.append("\nMsg: Faltando elemento na expressao a ser avaliada").append("\n");
+            addError(errorMsg.toString());
+         }
         else{
             handleError(e, "Repeticao");
         }
@@ -550,15 +560,11 @@ String expected = formatExpectedTokens(e.expectedTokenSequences);
 }
 
   final public void Expressao() throws ParseException {
-    try {
-      ExpressaoAritOuLogica();
-      Expressao_();
+    ExpressaoAritOuLogica();
+    Expressao_();
 int line = getToken(1).beginLine;
             int column = getToken(1).beginColumn;
             addOk("Linha " + line + " Coluna " + column + " - " +  "Expressao");
-    } catch (ParseException e) {
-handleError(e, "expressao");
-    }
 }
 
 // the [] means that the token is optional, sooo, it's basically the OR Episolon
@@ -740,65 +746,49 @@ handleError(e, "ExpressaoAritOuLogica");
 }
 
   final public void Elemento() throws ParseException {
-    try {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case IDENTIFICADOR:{
-        jj_consume_token(IDENTIFICADOR);
-        Indice();
-        break;
-        }
-      case INTEGER:{
-        jj_consume_token(INTEGER);
-        break;
-        }
-      case REAL:{
-        jj_consume_token(REAL);
-        break;
-        }
-      case LITERAL:{
-        jj_consume_token(LITERAL);
-        break;
-        }
-      case TRUE:{
-        jj_consume_token(TRUE);
-        break;
-        }
-      case UNTRUE:{
-        jj_consume_token(UNTRUE);
-        break;
-        }
-      case OPEN_PAREN:{
-        jj_consume_token(OPEN_PAREN);
-        Expressao();
-        jj_consume_token(CLOSE_PAREN);
-        break;
-        }
-      case NOT_LOGIC:{
-        jj_consume_token(NOT_LOGIC);
-        jj_consume_token(OPEN_PAREN);
-        Expressao();
-        jj_consume_token(CLOSE_PAREN);
-        break;
-        }
-      default:
-        jj_la1[17] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case IDENTIFICADOR:{
+      jj_consume_token(IDENTIFICADOR);
+      Indice();
+      break;
       }
-    } catch (ParseException e) {
-String expected = formatExpectedTokens(e.expectedTokenSequences);
-        StringBuilder errorMsg = new StringBuilder();
-        errorMsg.append("Erro na Regra: ").append("elemento").append("\n");
-        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
-        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
-        errorMsg.append("Esperava: ").append(expected);
-
-        if (expected.contains("<IDENTIFICADOR> <INTEGER>")) {
-            errorMsg.append("\nMsg: Faltando elemento na expressao").append("\n");
-            addError(errorMsg.toString());
-        }else{
-            handleError(e, "elemento");
-        }
+    case INTEGER:{
+      jj_consume_token(INTEGER);
+      break;
+      }
+    case REAL:{
+      jj_consume_token(REAL);
+      break;
+      }
+    case LITERAL:{
+      jj_consume_token(LITERAL);
+      break;
+      }
+    case TRUE:{
+      jj_consume_token(TRUE);
+      break;
+      }
+    case UNTRUE:{
+      jj_consume_token(UNTRUE);
+      break;
+      }
+    case OPEN_PAREN:{
+      jj_consume_token(OPEN_PAREN);
+      Expressao();
+      jj_consume_token(CLOSE_PAREN);
+      break;
+      }
+    case NOT_LOGIC:{
+      jj_consume_token(NOT_LOGIC);
+      jj_consume_token(OPEN_PAREN);
+      Expressao();
+      jj_consume_token(CLOSE_PAREN);
+      break;
+      }
+    default:
+      jj_la1[17] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
     }
 }
 

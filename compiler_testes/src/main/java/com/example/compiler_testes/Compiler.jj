@@ -379,7 +379,10 @@ void Atribuicao(): {}{
             }else if (expected.contains("<IDENTIFICADOR>")){
                 errorMsg.append("\nMsg: Faltando variavel para atribuir").append("\n");
                 addError(errorMsg.toString());
-            }
+            }else if(expected.contains("as")){
+                errorMsg.append("\nMsg: Faltando 'as' na atribuicao").append("\n");
+                addError(errorMsg.toString());
+                }
             else{
                 handleError(e, "atribuicao");
             }
@@ -531,10 +534,10 @@ void trueResult(): {} {
         }else if (expected.contains("]")){
                      errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
                               addError(errorMsg.toString());
-
                  }
-        else{
-            handleError(e, "true result");
+        else if (expected.contains("]")){
+             errorMsg.append("\nMsg: Faltando iniciar bloco com '['").append("\n");
+              addError(errorMsg.toString());
         }
     }
 }
@@ -557,9 +560,10 @@ void UntrueResult(): {} {
             errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
             addError(errorMsg.toString());
         }
-        else{
-            handleError(e, "Untrue result");
-        }
+        else if (expected.contains("]")){
+                     errorMsg.append("\nMsg: Faltando iniciar bloco com '['").append("\n");
+                      addError(errorMsg.toString());
+                }
         }
 }
 
@@ -609,7 +613,13 @@ void Repeticao(): {} {
         }else if (expected.contains("]")){
             errorMsg.append("\nMsg: Faltando fechamento com ']'").append("\n");
             addError(errorMsg.toString());
-        }
+        }else if (expected.contains("[")){
+             errorMsg.append("\nMsg: Faltando iniciar bloco com ']'").append("\n");
+             addError(errorMsg.toString());
+         }else if(expected.contains("<IDENTIFICADOR> <INTEGER>")){
+            errorMsg.append("\nMsg: Faltando elemento na expressao a ser avaliada").append("\n");
+            addError(errorMsg.toString());
+         }
         else{
             handleError(e, "Repeticao");
         }
@@ -617,14 +627,10 @@ void Repeticao(): {} {
 }
 
 void Expressao(): {} {
-    try {
         ExpressaoAritOuLogica() Expressao_()
         {int line = getToken(1).beginLine;
             int column = getToken(1).beginColumn;
             addOk("Linha " + line + " Coluna " + column + " - " +  "Expressao");}
-    } catch (ParseException e) {
-        handleError(e, "expressao");
-    }
 }
 
 // the [] means that the token is optional, sooo, it's basically the OR Episolon
@@ -680,7 +686,7 @@ void MaiorPrioridade(): {} {
 }
 
 void Elemento(): {} {
-    try {
+//    try {
           < IDENTIFICADOR> Indice()
         | < INTEGER>
         | < REAL >
@@ -689,21 +695,21 @@ void Elemento(): {} {
         | < UNTRUE>
         | <OPEN_PAREN> Expressao() <CLOSE_PAREN>
         | <NOT_LOGIC> <OPEN_PAREN> Expressao() <CLOSE_PAREN>
-    } catch (ParseException e) {
-        String expected = formatExpectedTokens(e.expectedTokenSequences);
-        StringBuilder errorMsg = new StringBuilder();
-        errorMsg.append("Erro na Regra: ").append("elemento").append("\n");
-        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
-        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
-        errorMsg.append("Esperava: ").append(expected);
-
-        if (expected.contains("<IDENTIFICADOR> <INTEGER>")) {
-            errorMsg.append("\nMsg: Faltando elemento na expressao").append("\n");
-            addError(errorMsg.toString());
-        }else{
-            handleError(e, "elemento");
-        }
-    }
+//    } catch (ParseException e) {
+//        String expected = formatExpectedTokens(e.expectedTokenSequences);
+//        StringBuilder errorMsg = new StringBuilder();
+//        errorMsg.append("Erro na Regra: ").append("elemento").append("\n");
+//        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+//        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+//        errorMsg.append("Esperava: ").append(expected);
+//
+//        if (expected.contains("<IDENTIFICADOR> <INTEGER>")) {
+//            errorMsg.append("\nMsg: Faltando elemento na expressao").append("\n");
+//            addError(errorMsg.toString());
+//        }else{
+//            handleError(e, "elemento");
+//        }
+//    }
 }
 
 void Indice(): {} {
