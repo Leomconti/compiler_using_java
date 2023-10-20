@@ -17,6 +17,19 @@ public class Compiler implements CompilerConstants {
         StringBuilder errorMsg = new StringBuilder();
         List<String> expectedTokensList = new ArrayList<>();
 
+        if (e.currentToken.next.image.equals(".")) {
+                String expected = formatExpectedTokens(e.expectedTokenSequences);
+                errorMsg.append("Erro na Regra: ").append("saida").append("\n");
+                errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+                errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+                errorMsg.append("Esperava: ").append(expected);
+                errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n\n");
+                if (expected.contains("\",\",\"]\"")) {
+                    addError(errorMsg.toString());
+                    return;
+                }
+            }
+
         errorMsg.append("Erro na Regra: ").append(rule).append("\n");
         errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
         errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
@@ -28,7 +41,7 @@ public class Compiler implements CompilerConstants {
                 }
             }
 
-            errorMsg.append("Expected: ").append("\n");
+            errorMsg.append("Esperava: ");
             for (String token : expectedTokensList) {
                 errorMsg.append(token).append(" ");
             }
@@ -157,7 +170,19 @@ int line = getToken(1).beginLine;
             int column = getToken(1).beginColumn;
             addOk("Linha " + line + " Coluna " + column + " - " +  "Saida");
     } catch (ParseException e) {
-handleError(e, "saida");
+String expected = formatExpectedTokens(e.expectedTokenSequences);
+        StringBuilder errorMsg = new StringBuilder();
+        errorMsg.append("Erro na Regra: ").append("saida").append("\n");
+        errorMsg.append("Linha ").append(e.currentToken.next.beginLine).append(", Coluna ").append(e.currentToken.next.beginColumn).append("\n");
+        errorMsg.append("Encontrou: ").append(e.currentToken.next.image).append("\n");
+        errorMsg.append("Esperava: ").append(expected);
+
+        if (expected.contains("\",\",\"]\"")) {
+            errorMsg.append("\nMsg: Conclua o fechamento ou adicione ,").append("\n");
+            addError(errorMsg.toString());
+        }else{
+            handleError(e, "programa");
+        }
     }
 }
 
