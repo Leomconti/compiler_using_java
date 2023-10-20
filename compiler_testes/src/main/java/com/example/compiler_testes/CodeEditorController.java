@@ -123,6 +123,12 @@ public class CodeEditorController {
         }
 //        int qtdSinErrors = parser.token_source.foundSinErrors();
 //        String sintaticErrors = parser.token_source.getErroSintatico();
+
+        List<String> parserOk = parser.getOk();
+        for (String ok : parserOk) {
+            output.append(ok).append("\n");
+        }
+
         List<String> parserErrors = parser.getErrors();
         int qtdParserErrors = parserErrors.size();
 

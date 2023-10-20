@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Arrays;
 
 public class Compiler implements CompilerConstants {
-    private List<String> errors = new ArrayList<String>();
+    List<String> errors = new ArrayList<String>();
+    List<String> ok = new ArrayList<>();
 
     public static void main(String[] args) {
     }
@@ -42,6 +43,10 @@ public class Compiler implements CompilerConstants {
         return errors;
     }
 
+    public List<String> getOk() {
+        return ok;
+    }
+
     public void addError(String error) {
         errors.add(error);
     }
@@ -58,6 +63,10 @@ public class Compiler implements CompilerConstants {
         return expectedTokens.toString();
     }
 
+    public void addOk(String ook){
+        ok.add(ook);
+    }
+
   final public void programa() throws ParseException {
     try {
       jj_consume_token(DO);
@@ -71,6 +80,9 @@ public class Compiler implements CompilerConstants {
       ListaComandos();
       jj_consume_token(CLOSE_BRACKET);
       FinalPrograma();
+int line = getToken(1).beginLine;
+            int column = getToken(1).beginColumn;
+            addOk("Linha " + line + " Coluna " + column + " - " +  "programa");
     } catch (ParseException e) {
 String expected = formatExpectedTokens(e.expectedTokenSequences);
         StringBuilder errorMsg = new StringBuilder();
@@ -112,6 +124,9 @@ handleError(e, "FinalPrograma");
       ListaDeIdentificadores();
       jj_consume_token(AS);
       Expressao();
+int line = getToken(1).beginLine;
+            int column = getToken(1).beginColumn;
+            addOk("Linha " + line + " Coluna " + column + " - " +  "Atribuicao");
     } catch (ParseException e) {
 handleError(e, "atribuicao");
     }
@@ -124,6 +139,9 @@ handleError(e, "atribuicao");
       jj_consume_token(OPEN_BRACKET);
       ListaDeIdentificadores();
       jj_consume_token(CLOSE_BRACKET);
+int line = getToken(1).beginLine;
+            int column = getToken(1).beginColumn;
+            addOk("Linha " + line + " Coluna " + column + " - " +  "Entrada");
     } catch (ParseException e) {
 handleError(e, "entrada");
     }
@@ -135,6 +153,9 @@ handleError(e, "entrada");
       jj_consume_token(OPEN_BRACKET);
       listaIdentificadorConstante();
       jj_consume_token(CLOSE_BRACKET);
+int line = getToken(1).beginLine;
+            int column = getToken(1).beginColumn;
+            addOk("Linha " + line + " Coluna " + column + " - " +  "Saida");
     } catch (ParseException e) {
 handleError(e, "saida");
     }
@@ -248,6 +269,9 @@ handleError(e, "write_");
         jj_consume_token(-1);
         throw new ParseException();
       }
+int line = getToken(1).beginLine;
+            int column = getToken(1).beginColumn;
+            addOk("Linha " + line + " Coluna " + column + " - " +  "Selecao");
     } catch (ParseException e) {
 handleError(e, "selecao");
     }
@@ -343,22 +367,18 @@ handleError(e, "listaComandos");
 }
 
   final public void ComandoAdicional() throws ParseException {
-    try {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case AVALIATE:
-      case DESIGNATE:
-      case READ:
-      case WRITE:
-      case REPEAT:{
-        ListaComandos();
-        break;
-        }
-      default:
-        jj_la1[9] = jj_gen;
-        ;
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case AVALIATE:
+    case DESIGNATE:
+    case READ:
+    case WRITE:
+    case REPEAT:{
+      ListaComandos();
+      break;
       }
-    } catch (ParseException e) {
-handleError(e, "ComandoAdicional");
+    default:
+      jj_la1[9] = jj_gen;
+      ;
     }
 }
 
@@ -370,6 +390,9 @@ handleError(e, "ComandoAdicional");
       jj_consume_token(OPEN_BRACKET);
       ListaComandos();
       jj_consume_token(CLOSE_BRACKET);
+int line = getToken(1).beginLine;
+            int column = getToken(1).beginColumn;
+            addOk("Linha " + line + " Coluna " + column + " - " +  "Repeticao");
     } catch (ParseException e) {
 handleError(e, "repeticao");
     }
@@ -379,6 +402,9 @@ handleError(e, "repeticao");
     try {
       ExpressaoAritOuLogica();
       Expressao_();
+int line = getToken(1).beginLine;
+            int column = getToken(1).beginColumn;
+            addOk("Linha " + line + " Coluna " + column + " - " +  "Expressao");
     } catch (ParseException e) {
 handleError(e, "expressao");
     }
