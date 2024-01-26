@@ -1,2 +1,3 @@
 # compiler_2023
-Creating a compiler for the fictional language 2023.2 It will be developed in java using javacc and javafx for the interface
+- Capstone project for compilers class, created a compiler for a language I created in class and developed the entire structure throughout the semester. 
+- It was developed using Java for the code logic, JavaCC for the grammar/parser/compiler and JavaFx for the IDE like interface
